@@ -6,3 +6,4 @@ public interface MovementStrategy {
 
     void move(String agentName, Point position);
         }
+
