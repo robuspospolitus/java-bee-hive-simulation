@@ -5,7 +5,8 @@ import java.awt.Point;
 public class Queen extends Bee{
     int age;
     private Point coordinates;
-    Queen (int age){
+
+    Queen (int id, int age){
         this.age = age;
         this.coordinates = coordinates;
     }

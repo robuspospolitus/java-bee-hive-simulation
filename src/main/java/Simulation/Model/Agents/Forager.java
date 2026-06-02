@@ -8,7 +8,7 @@ public class Forager extends Bee {
     int age;
     private Point coordinates;
 
-    Forager (int age) {
+    public Forager(int id, int age) {
         this.age = age;
         this.coordinates;
     }
