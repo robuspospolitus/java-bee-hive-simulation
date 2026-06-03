@@ -26,16 +26,20 @@ public class SimulationEngine {
    // SimulationEngine sim = new SimulationEngine(int width, int height, int numWorkers,int numFlowers);
 
 void initializeSimulation(){
-    for (int i =0; i < numWorkers ; i++){
 
-        Bee worker = new Forager(i,10);
-        addAgent(worker);
+    for (int i =0; i < numWorkers/2 ; i++){
+
+        Bee forager = new Forager(i,10);
+        Bee storer = new Forager(i,10);
+        addAgent(forager);
+        addAgent(storer);
+
 
     }
         System.out.println("Simulation initialized");
 }
 
-int steps(){
+public int steps(){
     if (!isRunning) return currentTick;
 
     // 1. Create a copy of the list for safe loop execution
@@ -60,7 +64,7 @@ int steps(){
     return 0;
 }
 
-void run(int totalSteps){
+public void run(int totalSteps){
     this.isRunning = true;
     System.out.println("Starting simulation execution for " + totalSteps + " steps.");
 
