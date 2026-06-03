@@ -22,4 +22,9 @@ public class AgentContext {
         strategy.move(name, position);
     }
 
+    public Point getPosition() {
+        return this.position;
+    }
+
+
 }
