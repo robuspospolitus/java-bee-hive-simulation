@@ -21,6 +21,10 @@ public class TargetedMovement implements MovementStrategy {
         else if (position.y > target.y){
             position.y--;
         }
+
+        position.x = Math.max(0, Math.min(49, position.x));
+        position.y = Math.max(0, Math.min(49, position.y));
+
         double distance = position.distance(target);
         System.out.println(agentName + " leci do celu. Zostało: " + distance);
     }
