@@ -9,13 +9,13 @@ public class Cell {
     private double flowerChance;
 
     public Cell(int x, int y) {
-        Initialize(x, y);
         type = "grass";
+        Initialize(x, y);
 
     }
     public Cell(int x, int y, String type) {
-        Initialize(x, y);
         this.type = type;
+        Initialize(x, y);
     }
 
     private void Initialize(int x, int y) {
