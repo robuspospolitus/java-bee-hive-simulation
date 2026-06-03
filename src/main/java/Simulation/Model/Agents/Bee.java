@@ -1,4 +1,6 @@
 package Simulation.Model.Agents;
+import Simulation.Model.Board;
+
 import java.awt.Point;
 
 public abstract class Bee {
@@ -8,9 +10,9 @@ public abstract class Bee {
     private Point coordinates;
     static int currentNumBees;
 
-    abstract void move();
+    public abstract void move(Board board);
 
-    abstract Point findDestination();
+    abstract Point findDestination(Board board);
 
 
 }

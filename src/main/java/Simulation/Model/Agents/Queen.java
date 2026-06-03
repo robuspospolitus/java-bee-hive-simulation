@@ -1,5 +1,7 @@
 package Simulation.Model.Agents;
 
+import Simulation.Model.Board;
+
 import java.awt.Point;
 
 public class Queen extends Bee{
@@ -11,11 +13,11 @@ public class Queen extends Bee{
         this.coordinates = coordinates;
     }
 
-protected void move(){
+public void move(Board board){
     System.out.println ("Królowa się porusza");
 }
 
-protected Point findDestination(){
+protected Point findDestination(Board board){
     Point targetPosition = new Point (1,1);
     System.out.println ("Królowa znajduje destynację");
     return targetPosition;

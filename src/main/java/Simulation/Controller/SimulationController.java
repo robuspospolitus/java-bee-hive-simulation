@@ -1,5 +1,4 @@
 package Simulation.Controller;
-
 import Simulation.Model.SimulationEngine;
 import java.util.Scanner;
 
@@ -39,7 +38,7 @@ public class SimulationController {
 
         while (running) {
             System.out.print("\nCommand: ");
-            String command = scanner.next().toLowerCase();
+            String command = scanner.next().toUpperCase().trim();
 
             switch (command) {
                 case "I":

@@ -13,13 +13,16 @@ public class Forager extends Bee {
     int carriedPollen;
     int age;
 
-    public Forager(int id, int age) {
+    protected int sightRadius = 3;
+    private AgentContext movementContext;
+
+    public Forager(int age) {
         this.age = age;
         this.movementContext = new AgentContext("Forager", new RandomMovement());
     }
 
     @Override
-    protected void move() {
+    public void move(Board board) {
         movementContext.performMove();
         System.out.println("Zbieraczka się porusza");
     }
