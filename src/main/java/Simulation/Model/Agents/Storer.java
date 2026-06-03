@@ -6,7 +6,7 @@ public class Storer extends Bee{
     private Point coordinates;
     int age;
 
-    Queen (int age){
+    Storer (int id, int age){
         this.age = age;
         this.coordinates = coordinates;
     }

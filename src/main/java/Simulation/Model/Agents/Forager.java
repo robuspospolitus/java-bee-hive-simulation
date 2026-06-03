@@ -13,10 +13,7 @@ public class Forager extends Bee {
     int carriedPollen;
     int age;
 
-    protected int sightRadius = 3;
-    private AgentContext movementContext;
-
-    public Forager(int age) {
+    public Forager(int id, int age) {
         this.age = age;
         this.movementContext = new AgentContext("Forager", new RandomMovement());
     }

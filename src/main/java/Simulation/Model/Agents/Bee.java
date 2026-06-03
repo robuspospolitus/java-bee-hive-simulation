@@ -6,11 +6,11 @@ public abstract class Bee {
     float energy;
     int sightRadius;
     private Point coordinates;
+    static int currentNumBees;
 
     abstract void move();
 
     abstract Point findDestination();
-
 
 
 }
