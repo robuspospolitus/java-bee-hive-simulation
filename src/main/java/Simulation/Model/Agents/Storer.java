@@ -11,6 +11,7 @@ public class Storer extends Bee{
     public Storer (int age){
         this.age = age;
         this.coordinates = coordinates;
+        totalNumBees++;
     }
 
 

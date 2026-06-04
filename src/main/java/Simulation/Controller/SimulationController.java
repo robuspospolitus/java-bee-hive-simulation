@@ -1,4 +1,4 @@
-package Simulation.Controller;
+/*(package Simulation.Controller;
 import Simulation.Model.SimulationEngine;
 import java.util.Scanner;
 
@@ -14,20 +14,13 @@ public class SimulationController {
     public void start() {
         System.out.println("=== Ustawienia symulacji ===");
 
-        // 1. Gather user input from the console
-        System.out.print("Podaj szerokość planszy: ");
-        int width = readIntInput();
-
-        System.out.print("Podaj wyskokość planszy: ");
-        int height = readIntInput();
-
         System.out.print("Podaj liczbe robotnic: ");
         int workers = readIntInput();
 
         System.out.print("Podaj liczbe kwiatow: ");
         int flowers = readIntInput();
 
-        this.engine = new SimulationEngine(width, height, workers, flowers);
+        this.engine = new SimulationEngine(workers, flowers);
 
         runConsoleMenu();
     }
@@ -66,5 +59,63 @@ public class SimulationController {
             scanner.next();
         }
         return scanner.nextInt();
+    }
+
+
+
+}
+*/
+
+package Simulation.Controller;
+
+import Simulation.Model.SimulationEngine;
+import Simulation.View.GridBoard;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.util.Duration;
+
+public class SimulationController {
+    private SimulationEngine engine;
+    private final GridBoard gridBoard;
+    private Timeline gameLoop;
+
+    // The View passes the drawing canvas to the controller so it can tell it when to redraw
+    public SimulationController(GridBoard gridBoard) {
+        this.gridBoard = gridBoard;
+    }
+
+    public void start() {
+        System.out.println("=== Ustawienia symulacji ===");
+
+        System.out.print("Podaj liczbe robotnic: ");
+        int workers = 15;
+
+        System.out.print("Podaj liczbe kwiatow: ");
+        int flowers = 20;
+
+        this.engine = new SimulationEngine(workers, flowers);
+
+        startLoop();
+    }
+
+    private void startLoop() {
+        // Safety check: if they click "Start" twice, stop the old loop first
+        if (gameLoop != null) {
+            gameLoop.stop();
+        }
+
+        // Create a timer that ticks every 250 milliseconds (4 frames per second)
+        gameLoop = new Timeline(new KeyFrame(Duration.millis(250), event -> {
+
+            // Phase 1: Update the math (Model)
+            engine.steps();
+
+            // Phase 2: Draw the new math to the screen (View)
+            gridBoard.render(engine.getBoard());
+
+        }));
+
+        gameLoop.setCycleCount(Timeline.INDEFINITE); // Tell it to loop forever
+        gameLoop.play();
     }
 }
