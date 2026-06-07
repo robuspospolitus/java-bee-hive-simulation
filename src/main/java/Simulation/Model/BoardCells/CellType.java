@@ -4,6 +4,5 @@ public enum CellType {
     EMPTY,
     HIVE,
     MEADOW,
-    FLOWER,
     OBSTACLE
 }
