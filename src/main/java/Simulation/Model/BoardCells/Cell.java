@@ -20,7 +20,7 @@ public class Cell {
 
     private void Initialize(int x, int y) {
         regenerationRate = 1;
-        flowerChance = 0.5;
+        flowerChance = 0.3;
         hasFlower = type.equals(CellType.MEADOW) && Math.random() < flowerChance;
         this.x = x;
         this.y = y;
