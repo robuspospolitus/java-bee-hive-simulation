@@ -21,7 +21,13 @@ public class Board {
         // Initialize every single coordinate with a blank Cell object
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                grid[x][y] = new Cell(x, y);
+                if(x >= 14 && x <= 16 && y <= 2) {
+                    grid[x][y] = new Cell(x, y, CellType.EMPTY);
+                } else {
+                    grid[x][y] = x<12 ? new Cell(x, y, CellType.HIVE) :
+                            x==12 ? new Cell(x, y, CellType.OBSTACLE) :
+                                    new Cell(x, y, CellType.MEADOW);
+                }
             }
         }
     }

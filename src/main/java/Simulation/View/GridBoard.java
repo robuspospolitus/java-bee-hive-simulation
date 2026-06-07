@@ -3,6 +3,7 @@ package Simulation.View;
 import Simulation.Model.Board;
 import Simulation.Model.Agents.Bee;
 import Simulation.Model.Agents.Forager;
+import Simulation.Model.BoardCells.Cell;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -13,6 +14,7 @@ public class GridBoard extends Canvas {
     private final int TILE_SIZE = 16;
 
     // 1. Declare your image cache variables here
+    private Image flowerSprite;
     private Image beeSprite;
     private Image BoardView;
 
@@ -29,6 +31,7 @@ public class GridBoard extends Canvas {
             // getClass().getResource() looks inside the src/main/resources folder
             BoardView = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/BoardView.png")));
             beeSprite = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/Bee.png")));
+            flowerSprite = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/Flower.png")));
 
             // You can add more here later: queenSprite, hiveSprite, etc.
         } catch (NullPointerException e) {
@@ -51,6 +54,11 @@ public class GridBoard extends Canvas {
         // 5. Loop through the grid and draw the agents
         for (int x = 0; x < board.getWidth(); x++) {
             for (int y = 0; y < board.getHeight(); y++) {
+                // Draw flowers if any
+                Cell cell = board.getCell(x, y);
+                if (cell != null && cell.hasFlower() && flowerSprite != null) {
+                    gc.drawImage(flowerSprite, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                }
 
                 Bee bee = board.getAgentAt(x, y);
                 if (bee != null) {
