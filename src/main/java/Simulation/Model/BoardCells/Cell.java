@@ -12,17 +12,16 @@ public class Cell {
     public Cell(int x, int y) {
         this.type = CellType.EMPTY;
         Initialize(x, y);
-
     }
-    public Cell(int x, int y, String type) {
-        this.type = CellType.EMPTY;
+    public Cell(int x, int y, CellType type) {
+        this.type = type;
         Initialize(x, y);
     }
 
     private void Initialize(int x, int y) {
         regenerationRate = 1;
         flowerChance = 0.5;
-        hasFlower = type.equals("grass") && Math.random() < flowerChance;
+        hasFlower = type.equals(CellType.MEADOW) && Math.random() < flowerChance;
         this.x = x;
         this.y = y;
         agent = null;
