@@ -25,7 +25,7 @@ public class Forager extends Bee {
         this.spawnX = spawnX;
         this.spawnY = spawnY;
         this.spawnPosition = new Point(spawnX,spawnY);
-        this.movementContext = new AgentContext("Forager", new RandomMovement());
+        this.movementContext = new AgentContext("Forager"+ID, new RandomMovement(), this.spawnPosition);
         totalNumBees++;
     }
 
@@ -36,14 +36,19 @@ public class Forager extends Bee {
 
     @Override
     public void move(Board board) {
+        findDestination(board);
+        Point oldPos = new Point(movementContext.getPosition());
         movementContext.performMove();
+        Point newPos = movementContext.getPosition();
+
+        board.moveAgent(this, oldPos, newPos);
         System.out.println("Zbieraczka się porusza");
     }
 
     protected Point findDestination(Board board) {
         if (carriedPollen >= 10) {
             System.out.println("Going back to hive");
-            movementContext.setStrategy(new TargetedMovement());
+            movementContext.setStrategy(new TargetedMovement(new Point(0, 0)));
             return new Point(0, 0);
         }
 
@@ -58,7 +63,7 @@ public class Forager extends Bee {
                 if (checkX >= 0 && checkX < grid.length && checkY >= 0 && checkY < grid[0].length) {
                     if (grid[checkX][checkY] != null && !grid[checkX][checkY].isEmpty()) {
                         System.out.println("I'm seeing a flower");
-                        movementContext.setStrategy(new TargetedMovement());
+                        movementContext.setStrategy(new TargetedMovement(new Point(checkX, checkY)));
                         return new Point(checkX, checkY);
                     }
                 }
