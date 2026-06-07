@@ -3,11 +3,14 @@ package Simulation.Model.MovementStrategies;
 import java.awt.*;
 
 public class TargetedMovement implements MovementStrategy {
+    private Point target;
+
+    public TargetedMovement(Point target) {
+        this.target = target;
+    }
 
     @Override
-    public void move(String agentName, Point position){
-        Point target = new Point (50,50); //przykladowy shit
-
+    public void move(String agentName, Point position) {
         if(position.x < target.x){
             position.x++;
         }
@@ -22,8 +25,8 @@ public class TargetedMovement implements MovementStrategy {
             position.y--;
         }
 
-        position.x = Math.max(0, Math.min(49, position.x));
-        position.y = Math.max(0, Math.min(49, position.y));
+        position.x = Math.max(0, Math.min(31, position.x));
+        position.y = Math.max(0, Math.min(15, position.y));
 
         double distance = position.distance(target);
         System.out.println(agentName + " leci do celu. Zostało: " + distance);
