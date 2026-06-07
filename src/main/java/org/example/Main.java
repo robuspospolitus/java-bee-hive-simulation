@@ -1,11 +1,12 @@
 package org.example;
-import Simulation.Controller.*;
+import Simulation.View.MainWindow;
+import javafx.application.Application;
 
 public class Main {
 
     public static void main (String[] args) {
 
-        SimulationController simContr1 = new SimulationController();
+        Application.launch(MainWindow.class, args);
     }
 
 }

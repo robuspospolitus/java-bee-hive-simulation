@@ -11,7 +11,7 @@ public class AgentContext {
     public AgentContext(String name, MovementStrategy strategy) {
         this.name = name;
         this.strategy = strategy;
-        this.position = new Point(0, 0);
+        this.position = new Point(31, 15);
     }
 
     public void setStrategy(MovementStrategy strategy) {

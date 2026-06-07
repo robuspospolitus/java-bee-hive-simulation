@@ -12,13 +12,21 @@ public class Forager extends Bee {
     int numPollen;
     int carriedPollen;
     int age;
+    int spawnX;
+    int spawnY;
+    Point spawnPosition;
 
     protected int sightRadius = 3;
     private AgentContext movementContext;
 
-    public Forager(int age) {
+    public Forager(int ID, int age,int spawnX, int spawnY) {
+        this.ID = ID;
         this.age = age;
+        this.spawnX = spawnX;
+        this.spawnY = spawnY;
+        this.spawnPosition = new Point(spawnX,spawnY);
         this.movementContext = new AgentContext("Forager", new RandomMovement());
+        totalNumBees++;
     }
 
     @Override
@@ -57,4 +65,7 @@ public class Forager extends Bee {
         movementContext.setStrategy(new RandomMovement());
         return new Point(1, 1);
     }
+
+    public AgentContext getMovementContext() { return this.movementContext; }
+
 }

@@ -2,19 +2,20 @@ package Simulation.Model.BoardCells;
 import Simulation.Model.Agents.Bee;
 
 public class Cell {
-    private int x, y, pollenAmount, regenerationRate;
+    private int x, y;
+    private int pollenAmount, regenerationRate;
     private Bee agent;
-    private String type;
+    private CellType type;
     private boolean hasFlower;
     private double flowerChance;
 
     public Cell(int x, int y) {
-        type = "grass";
+        this.type = CellType.EMPTY;
         Initialize(x, y);
 
     }
     public Cell(int x, int y, String type) {
-        this.type = type;
+        this.type = CellType.EMPTY;
         Initialize(x, y);
     }
 
@@ -32,8 +33,18 @@ public class Cell {
         return false;
     }
 
-    public String getType() { return type; }
+    public int getX() { return x; }
+    public int getY() { return y; }
+
+    public CellType getType() { return type; }
+    public void setType() { this.type = type; }
+
     public int getPollenAmount() { return pollenAmount; }
     public void setPollenAmount(int amount) { pollenAmount = amount; }
+
+    public Bee getAgent() { return agent; }
+    public void setAgent(Bee agent) { this.agent = agent; }
+
     public void regeneratePollen() { pollenAmount += regenerationRate; }
+
 }

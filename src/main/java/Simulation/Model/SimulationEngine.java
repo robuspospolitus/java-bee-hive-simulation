@@ -3,6 +3,7 @@ import Simulation.Model.Agents.Bee;
 import Simulation.Model.Agents.Forager;
 import Simulation.Model.Agents.Storer;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,8 +16,8 @@ public class SimulationEngine {
     private int numFlowers;
 
 
-    public SimulationEngine(int width, int height, int numWorkers, int numFlowers) {
-        this.board = new Board();
+    public SimulationEngine(int numWorkers, int numFlowers) {
+        this.board = new Board(32, 16);
         this.agents = new ArrayList<>();
         this.currentTick = 0;
         this.numWorkers = numWorkers;
@@ -26,34 +27,44 @@ public class SimulationEngine {
 
 
     void initializeSimulation() {
+        // 1. Define the Hive's logical location (e.g., top left corner)
+        // Let's say it occupies tiles x: 2-5
+        //this.hive = new Hive(0,11);
 
-        for (int i = 0; i < numWorkers / 2; i++) {
+        // 2. Define the Meadow's logical location (e.g., bottom right)
+        // Let's say it occupies tiles x: 30-38, and y: 20-28
+        //this.meadow = new Meadow(13, 31);
 
-            Bee forager = new Forager(10);
-            Bee storer = new Storer(0);
+        // 3. Spawn initial Foragers INSIDE the logical hive coordinates
+        for (int i = 0; i < numWorkers; i++) {
+            // Give them a starting coordinate somewhere inside the Hive boundaries
+            int startX = 15;
+            int startY = 1;
+            int ID= Bee.getTotalNum();
+            Forager forager = new Forager(ID,10, startX, startY);
             addAgent(forager);
-            addAgent(storer);
         }
+
         System.out.println("Simulation initialized");
     }
 
     public int steps() {
         if (!isRunning) return currentTick;
-            List<Bee> currentAgents = new ArrayList<>(this.agents);
+        List<Bee> currentAgents = new ArrayList<>(this.agents);
 
-            for (Bee bee : currentAgents) {
-                bee.move(this.board);
-                //if (bee.getEnergy() <= 0) {
-                //    removeAgent(bee);
-                //}
-            }
+        for (Bee bee : currentAgents) {
+            bee.move(this.board);
+            //if (bee.getEnergy() <= 0) {
+            //    removeAgent(bee);
+            //}
+        }
 
-            //UPDATE ENVIRO
-            // board.regeneratePollen();
+        //UPDATE ENVIRO
+        // board.regeneratePollen();
 
-            this.currentTick++;
-            System.out.println("Steps ran");
-           return currentTick;
+        this.currentTick++;
+        System.out.println("Steps ran");
+        return currentTick;
     }
 
     public void run(int totalSteps) {
@@ -69,16 +80,26 @@ public class SimulationEngine {
     }
 
     void addAgent(Bee bee) {
-            this.agents.add(bee);
-            //  this.board.moveAgent(bee, null, bee.getCoordinates());
-            System.out.println("Dodano agenta o ID: ");
-        }
+        this.agents.add(bee);
 
-        void removeAgent (Bee bee){
-            //this.agents.remove(bee);
-            //this.board.moveAgent(null, bee.getCoordinates(), null);
-            System.out.println("Usunięto agenta o ID: ");
-        }
+        // 1. Get the starting coordinates of the bee
+        // Assuming your Forager/Bee class has a way to get its position:
+        Point startPos = bee.getMovementContext().getPosition();
 
+        // 2. Tell the board to place the bee. Old position is null!
+        this.board.moveAgent(bee, null, startPos);
+
+        // (Optional: Assuming your Bee has a getID() method)
+        System.out.println("Dodano agenta o ID: " + bee.getID());
     }
+
+    void removeAgent(Bee bee) {
+        //this.agents.remove(bee);
+        //this.board.moveAgent(null, bee.getCoordinates(), null);
+        System.out.println("Usunięto agenta o ID: ");
+    }
+
+    public Board getBoard (){return board;}
+
+}
 

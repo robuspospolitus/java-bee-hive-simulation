@@ -11,6 +11,7 @@ public class Queen extends Bee{
     Queen (int id, int age){
         this.age = age;
         this.coordinates = coordinates;
+        totalNumBees++;
     }
 
 public void move(Board board){
