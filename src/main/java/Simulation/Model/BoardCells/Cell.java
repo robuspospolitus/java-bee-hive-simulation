@@ -35,6 +35,8 @@ public class Cell {
     public int getX() { return x; }
     public int getY() { return y; }
 
+    public boolean hasFlower() { return hasFlower; }
+
     public CellType getType() { return type; }
     public void setType() { this.type = type; }
 
