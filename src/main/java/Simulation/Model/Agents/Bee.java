@@ -12,6 +12,10 @@ public abstract class Bee {
     static int totalNumBees;
     protected int ID;
 
+    public Bee() {
+        this.energy = 100.0f;
+    }
+
     public abstract void move(Board board);
 
     abstract Point findDestination(Board board);
@@ -28,5 +32,12 @@ public abstract class Bee {
         return null;
     }
 
+    public float getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(float energy) {
+        this.energy = energy;
+    }
 
 }

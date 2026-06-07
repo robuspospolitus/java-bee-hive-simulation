@@ -10,11 +10,14 @@ public class Board {
     private int width;
     private int height;
     private Cell[][] grid;
+    private Hive hive;
 
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
         this.grid = new Cell[width][height];
+
+        this.hive = new Hive();
 
         // Initialize every single coordinate with a blank Cell object
         for (int x = 0; x < width; x++) {
@@ -28,6 +31,11 @@ public class Board {
                 }
             }
         }
+    }
+
+
+    public Hive getHive() {
+        return this.hive;
     }
 
     // Regenerate pollen on Cells
