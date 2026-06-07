@@ -2,6 +2,7 @@ package Simulation.Model;
 import Simulation.Model.Agents.Bee;
 import Simulation.Model.Agents.Forager;
 import Simulation.Model.Agents.Storer;
+import Simulation.Model.BoardCells.Cell;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ public class SimulationEngine {
     private int currentTick;
     private boolean isRunning;
     private int numWorkers;
-    private int numFlowers;
+    //private int numFlowers;
 
 
     public SimulationEngine(int numWorkers, int numFlowers) {
@@ -21,7 +22,7 @@ public class SimulationEngine {
         this.agents = new ArrayList<>();
         this.currentTick = 0;
         this.numWorkers = numWorkers;
-        this.numFlowers = numFlowers;
+        //this.numFlowers = numFlowers;
         initializeSimulation();
     }
 
@@ -54,13 +55,26 @@ public class SimulationEngine {
 
         for (Bee bee : currentAgents) {
             bee.move(this.board);
+
+            // Gathering pollen
+            if (bee instanceof Forager) {
+                Forager forager = (Forager) bee;
+                Point pos = forager.getMovementContext().getPosition();
+                Cell currentCell = board.getCell(pos.x, pos.y);
+
+                if (currentCell != null && currentCell.hasFlower()) {
+                    int collectedPollen = currentCell.takePollen(4);
+                    if (collectedPollen > 0) {
+                        forager.collectPollen(collectedPollen);
+                    }
+                }
+            }
             //if (bee.getEnergy() <= 0) {
             //    removeAgent(bee);
             //}
         }
 
-        //UPDATE ENVIRO
-        // board.regeneratePollen();
+        board.regenerateEnvironment();
 
         this.currentTick++;
         System.out.println("Steps ran");
