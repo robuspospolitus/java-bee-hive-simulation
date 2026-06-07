@@ -29,6 +29,11 @@ public class Forager extends Bee {
         totalNumBees++;
     }
 
+    public void collectPollen(int amount) {
+        this.carriedPollen += amount;
+        System.out.println("Zbieraczka " + ID + " zebrala pylek. Posiada teraz: " + carriedPollen);
+    }
+
     @Override
     public void move(Board board) {
         movementContext.performMove();
