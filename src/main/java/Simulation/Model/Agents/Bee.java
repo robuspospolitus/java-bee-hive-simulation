@@ -9,12 +9,27 @@ public abstract class Bee {
     float energy;
     int sightRadius;
     //private Point coordinates;
-    static int totalNumBees;
+    static int totalNumBees = 0;
     protected int ID;
     protected int age;
 
-    public Bee() {
-        this.energy = 100.0f;
+    protected AgentContext movementContext; //i tak kazda pszczola musi to miec
+
+    public Bee(int ID, int age, int startX, int startY) {
+        this.ID = ID;
+        this.age = age;
+        this.energy = 100.0f; // Każda pszczoła startuje z pełną energią
+        totalNumBees++;       // Automatycznie zwiększamy licznik przy narodzinach
+    }
+
+    public void update(Board board){
+        this.age++;
+        this.burnEnergy(1.0f);
+
+        if(!this.isDead()){
+            this.move(board);
+            this.interactWithEnvironment(board);
+        }
     }
 
     public void burnEnergy(float amount){
@@ -22,6 +37,10 @@ public abstract class Bee {
         if(this.energy < 0){
             this.energy = 0;
         }
+    }
+
+    protected void interactWithEnvironment(Board board) {
+
     }
 
     public boolean isDead(){
@@ -48,7 +67,7 @@ public abstract class Bee {
     }
 
     public AgentContext getMovementContext() {
-        return null;
+        return this.movementContext;
     }
 
     public float getEnergy() {

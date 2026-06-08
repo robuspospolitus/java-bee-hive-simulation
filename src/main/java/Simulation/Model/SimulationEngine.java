@@ -43,7 +43,7 @@ public class SimulationEngine {
         if (!isRunning) return currentTick;
         for (int i = this.agents.size() - 1; i >= 0; i--) { //lecimy od tylu by wyrzucanie agentow nie psulo dzialania fora
             Bee bee = this.agents.get(i);
-            bee.move(this.board); //ruch, spadek energii i starzenie sie
+            bee.update(this.board);
 
             // Gathering pollen
             if (bee instanceof Forager) {
