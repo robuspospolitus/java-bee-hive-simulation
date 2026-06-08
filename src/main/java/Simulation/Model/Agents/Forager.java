@@ -45,7 +45,7 @@ public class Forager extends Bee {
         System.out.println("Zbieraczka się porusza");
 
         this.age++;
-        this.setEnergy(this.getEnergy() - 1);
+        this.burnEnergy(1.0f);
 
         if (newPos.x == 0 && newPos.y == 0 && this.carriedPollen > 0) { //wspolrzedne ula
             Hive ul = board.getHive();
@@ -67,10 +67,10 @@ public class Forager extends Bee {
     }
 
     protected Point findDestination(Board board) {
-        if (carriedPollen >= 10) {
-            System.out.println("Going back to hive");
-            movementContext.setStrategy(new TargetedMovement(new Point(0, 0))); //wspolrzedne ula
-            return new Point(0, 0);
+        if(this.getEnergy() < 25.0f || carriedPollen >= 10){
+            System.out.println("zbieraczka " + ID + " wraca do ula");
+            movementContext.setStrategy(new TargetedMovement(new Point (0,0))); //wspolrzedne ula
+            return new Point(0,0);
         }
 
         Point currentPos = this.movementContext.getPosition();

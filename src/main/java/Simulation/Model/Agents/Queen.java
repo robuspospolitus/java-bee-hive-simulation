@@ -7,19 +7,22 @@ import java.awt.Point;
 public class Queen extends Bee{
     private Point position;
     private int eggLayCooldown = 0; //licznik tur do zlozenia jaj
+    private AgentContext movementContext;
 
     public Queen (int ID, int age, int spawnX, int spawnY){
         this.ID = ID;
         this.age = age;
         this.position = new Point(spawnX, spawnY);
         this.setEnergy(100.0f);
+        this.movementContext = new AgentContext("Queen " + ID, null, this.position);
+
         totalNumBees++;
     }
 
     @Override
     public void move(Board board){
         this.age++;
-        this.setEnergy(this.getEnergy() - 0.5f);
+        this.burnEnergy(0.05f);
 
         if(eggLayCooldown > 0){
             eggLayCooldown--;
@@ -45,7 +48,7 @@ public class Queen extends Bee{
 
     @Override
     public AgentContext getMovementContext(){
-        return new AgentContext("Queen " + ID, null, this.position);
+        return this.movementContext;
     }
 
     protected void layEggs (){

@@ -34,7 +34,7 @@ public class Storer extends Bee{
         System.out.println("Magazynierka " + ID + " poruszyla sie");
 
         this.age++;
-        this.setEnergy(this.getEnergy() - 1);
+        this.burnEnergy(1.0f);
         zasoby(board);
     }
 
@@ -49,7 +49,7 @@ public class Storer extends Bee{
         Simulation.Model.Agents.Queen queen = board.getQueen();
         //Queen queen = board.getQueen;
         //karmienie krolowej
-        if(queen.getEnergy() < 40.0f){
+        if(queen != null && queen.getEnergy() < 40.0f){
             if(ul.getFoodAmount() > 0){
                 ul.setFoodAmount(ul.getFoodAmount() - 1);
                 queen.receiveFood();
