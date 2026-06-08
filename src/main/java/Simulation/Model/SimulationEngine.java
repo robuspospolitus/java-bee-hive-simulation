@@ -41,9 +41,8 @@ public class SimulationEngine {
 
     public int steps() {
         if (!isRunning) return currentTick;
-        List<Bee> currentAgents = new ArrayList<>(this.agents);
-
-        for (Bee bee : currentAgents) {
+        for (int i = this.agents.size() - 1; i >= 0; i--) { //lecimy od tylu by wyrzucanie agentow nie psulo dzialania fora
+            Bee bee = this.agents.get(i);
             bee.move(this.board); //ruch, spadek energii i starzenie sie
 
             // Gathering pollen
