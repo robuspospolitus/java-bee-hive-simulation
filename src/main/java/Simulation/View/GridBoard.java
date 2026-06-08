@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class GridBoard extends Canvas {
 
-    private final int TILE_SIZE = 16;
+    private final int TILE_SIZE = 32;
 
     // 1. Declare your image cache variables here
     private Image flowerSprite;

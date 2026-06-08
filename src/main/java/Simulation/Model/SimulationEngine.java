@@ -14,38 +14,28 @@ public class SimulationEngine {
     private int currentTick;
     private boolean isRunning;
     private int numWorkers;
-    //private int numFlowers;
 
 
-    public SimulationEngine(int numWorkers, int numFlowers) {
+    public SimulationEngine(int numWorkers, double flowerChance) {
+        Cell.setFlowerChance(flowerChance);
         this.board = new Board(32, 16);
         this.agents = new ArrayList<>();
         this.currentTick = 0;
         this.numWorkers = numWorkers;
-        //this.numFlowers = numFlowers;
         initializeSimulation();
     }
 
 
     void initializeSimulation() {
-        // 1. Define the Hive's logical location (e.g., top left corner)
-        // Let's say it occupies tiles x: 2-5
-        //this.hive = new Hive(0,11);
-
-        // 2. Define the Meadow's logical location (e.g., bottom right)
-        // Let's say it occupies tiles x: 30-38, and y: 20-28
-        //this.meadow = new Meadow(13, 31);
 
         // 3. Spawn initial Foragers INSIDE the logical hive coordinates
         for (int i = 0; i < numWorkers; i++) {
-            // Give them a starting coordinate somewhere inside the Hive boundaries
             int startX = 15;
             int startY = 1;
             int ID= Bee.getTotalNum();
             Forager forager = new Forager(ID,10, startX, startY);
             addAgent(forager);
         }
-
         System.out.println("Simulation initialized");
     }
 
@@ -87,10 +77,11 @@ public class SimulationEngine {
 
         for (int i = 0; i < totalSteps; i++) {
             steps();
-            this.isRunning = false;
-            System.out.println("Simulation run completed.");
         }
-        System.out.println("Steps ran");
+        this.isRunning = false;
+        System.out.println("Simulation run completed.");
+        System.out.println(totalSteps + " steps ran");
+
     }
 
     void addAgent(Bee bee) {
