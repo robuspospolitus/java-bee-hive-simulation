@@ -11,6 +11,7 @@ public abstract class Bee {
     private Point coordinates;
     static int totalNumBees;
     protected int ID;
+    protected int age;
 
     public Bee() {
         this.energy = 100.0f;
@@ -38,6 +39,10 @@ public abstract class Bee {
 
     public void setEnergy(float energy) {
         this.energy = energy;
+    }
+
+    public int getAge() {
+        return this.age;
     }
 
 }

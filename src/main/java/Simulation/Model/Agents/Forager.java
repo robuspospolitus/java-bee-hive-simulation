@@ -4,6 +4,7 @@ import Simulation.Model.MovementStrategies.AgentContext;
 import Simulation.Model.MovementStrategies.RandomMovement;
 import Simulation.Model.MovementStrategies.TargetedMovement;
 import Simulation.Model.Board;
+import Simulation.Model.Hive;
 import Simulation.Model.BoardCells.Cell;
 
 import java.awt.*;
@@ -11,7 +12,6 @@ import java.awt.*;
 public class Forager extends Bee {
     int numPollen;
     int carriedPollen;
-    int age;
     int spawnX;
     int spawnY;
     Point spawnPosition;
@@ -43,6 +43,27 @@ public class Forager extends Bee {
 
         board.moveAgent(this, oldPos, newPos);
         System.out.println("Zbieraczka się porusza");
+
+        this.age++;
+        this.setEnergy(this.getEnergy() - 1);
+
+        if (newPos.x == 0 && newPos.y == 0 && this.carriedPollen > 0) { //wspolrzedne ula
+            Hive ul = board.getHive();
+
+            //przekazujemy cały zebrany pyłek do ula
+            ul.setPollenAmount(ul.getPollenAmount() + this.carriedPollen);
+            System.out.println(" Zbieraczka " + ID + " rozładowała " + this.carriedPollen + " szt. pyłku do ula!");
+            this.carriedPollen = 0;
+
+            //Skoro jest w ulu to je
+            if (ul.getFoodAmount() > 0) {
+                ul.setFoodAmount(ul.getFoodAmount() - 1); // zjada jedzenie ula
+                this.setEnergy(100);
+                System.out.println(" Zbieraczka " + ID + " zjadła");
+            } else {
+                System.out.println(" Zbieraczka " + ID + " jest w ulu, ale glodna");
+            }
+        }
     }
 
     protected Point findDestination(Board board) {

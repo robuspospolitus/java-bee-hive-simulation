@@ -8,7 +8,6 @@ import Simulation.Model.MovementStrategies.RandomMovement;
 import java.awt.*;
 
 public class Storer extends Bee{
-    int age;
     int spawnX;
     int spawnY;
     Point spawnPosition;
@@ -33,7 +32,9 @@ public class Storer extends Bee{
         Point newPos = movementContext.getPosition();
         board.moveAgent(this, oldPos, newPos);
         System.out.println("Magazynierka " + ID + " poruszyla sie");
-        this.setEnergy(this.getEnergy() -1);
+
+        this.age++;
+        this.setEnergy(this.getEnergy() - 1);
         zasoby(board);
     }
 
