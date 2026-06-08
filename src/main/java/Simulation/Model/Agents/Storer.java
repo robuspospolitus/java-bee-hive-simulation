@@ -46,7 +46,17 @@ public class Storer extends Bee{
 
     private void zasoby(Board board){
         Hive ul = board.getHive();
+        Simulation.Model.Agents.Queen queen = board.getQueen();
+        //Queen queen = board.getQueen;
+        //karmienie krolowej
+        if(queen.getEnergy() < 40.0f){
+            if(ul.getFoodAmount() > 0){
+                ul.setFoodAmount(ul.getFoodAmount() - 1);
+                queen.receiveFood();
+            }
+        }
 
+        //same jedza
         if(this.getEnergy() < 20){
             if(ul.getFoodAmount() > 0){
                 ul.setFoodAmount(ul.getFoodAmount() - 1);
@@ -57,6 +67,8 @@ public class Storer extends Bee{
             }
         }
 
+
+        //wytwarzanie jedzenia/miodu
         if(ul.getPollenAmount() >= 2){
             ul.setPollenAmount(ul.getPollenAmount() - 2);
             ul.setHoneyAmount(ul.getHoneyAmount()+ 1);

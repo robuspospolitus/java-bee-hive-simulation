@@ -34,6 +34,10 @@ public class Queen extends Bee{
         this.eggLayCooldown = 15;  //co ile nowe jajko jest skladane
     }
 
+    public void receiveFood(){
+        this.setEnergy(100.0f);
+    }
+
     @Override
     Point findDestination(Board board){
         return this.position;

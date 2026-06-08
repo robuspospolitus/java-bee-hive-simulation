@@ -69,7 +69,7 @@ public class Forager extends Bee {
     protected Point findDestination(Board board) {
         if (carriedPollen >= 10) {
             System.out.println("Going back to hive");
-            movementContext.setStrategy(new TargetedMovement(new Point(0, 0)));
+            movementContext.setStrategy(new TargetedMovement(new Point(0, 0))); //wspolrzedne ula
             return new Point(0, 0);
         }
 

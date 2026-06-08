@@ -11,6 +11,7 @@ public class Board {
     private int height;
     private Cell[][] grid;
     private Hive hive;
+    private Simulation.Model.Agents.Queen queen;
 
     public Board(int width, int height) {
         this.width = width;
@@ -94,6 +95,14 @@ public class Board {
             return grid[x][y].getAgent();
         }
         return null;
+    }
+
+    public Simulation.Model.Agents.Queen getQueen() {
+        return this.queen;
+    }
+
+    public void setQueen(Simulation.Model.Agents.Queen queen) {
+        this.queen = queen;
     }
 
     private boolean isValidCoordinate(int x, int y) {
