@@ -84,16 +84,9 @@ public class SimulationController {
         this.gridBoard = gridBoard;
     }
 
-    public void start() {
-        System.out.println("=== Ustawienia symulacji ===");
+    public void start(int workers, double flowerChance) {
 
-        System.out.print("Podaj liczbe robotnic: ");
-        int workers = 15;
-
-        System.out.print("Podaj liczbe kwiatow: ");
-        int flowers = 20;
-
-        this.engine = new SimulationEngine(workers, flowers);
+        this.engine = new SimulationEngine(workers, flowerChance);
 
         startLoop();
     }
@@ -108,7 +101,7 @@ public class SimulationController {
         gameLoop = new Timeline(new KeyFrame(Duration.millis(250), event -> {
 
             // Phase 1: Update the math (Model)
-            engine.steps();
+            engine.run(5);
 
             // Phase 2: Draw the new math to the screen (View)
             gridBoard.render(engine.getBoard());
@@ -117,5 +110,12 @@ public class SimulationController {
 
         gameLoop.setCycleCount(Timeline.INDEFINITE); // Tell it to loop forever
         gameLoop.play();
+
+    }
+
+    public void stopLoop(){
+        if (gameLoop != null) {
+            gameLoop.stop();
+        }
     }
 }
