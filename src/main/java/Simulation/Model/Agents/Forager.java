@@ -6,10 +6,12 @@ import Simulation.Model.MovementStrategies.RandomMovement;
 import Simulation.Model.MovementStrategies.TargetedMovement;
 import Simulation.Model.Board;
 import Simulation.Model.BoardCells.Cell;
+import Simulation.Model.MovementStrategies.TeleportMovement;
 
 import java.awt.*;
 
 import static Simulation.Model.BoardCells.CellType.HIVE;
+import static Simulation.Model.BoardCells.CellType.POLLEN_STASH;
 
 public class Forager extends Bee {
     int numPollen=10;
@@ -19,7 +21,7 @@ public class Forager extends Bee {
     int spawnY;
     Point spawnPosition;
 
-    protected int sightRadius = 3;
+    protected int sightRadius = 4;
     private AgentContext movementContext;
 
     public Forager(int ID, int age,int spawnX, int spawnY) {
@@ -59,15 +61,21 @@ public class Forager extends Bee {
             movementContext.setStrategy(new TargetedMovement(board.getHiveEntrance()));
             return board.getHiveEntrance();}
 
-            if(grid[currentPos.x][currentPos.y].getType()==CellType.TELEPORT){
-               // movementContext.setStrategy(new TargetedMovement(board.getTeleportDestination(currentPos)));
+
+            if(grid[currentPos.x][currentPos.y].equals (grid [(board.getHiveEntrance()).x][board.getHiveEntrance().y])){
+                System.out.println("Teleporting");
+               movementContext.setStrategy(new TeleportMovement(board.getTeleportDestination(currentPos)));
                 return board.getTeleportDestination(currentPos);
             }
 
             if(grid[currentPos.x][currentPos.y].getType()==CellType.HIVE){
-                movementContext.setStrategy(new TargetedMovement(board.getStashDestination()));
-                return board.getTeleportDestination(currentPos);
+                System.out.println("About to stash pollen");
+                if(lookForCell(board, POLLEN_STASH)!=null){
+                    movementContext.setStrategy(new TargetedMovement(lookForCell(board, POLLEN_STASH)));
+                    return (lookForCell(board, POLLEN_STASH));
+                }
             }
+
         }
 
         for (int x = -sightRadius; x <= sightRadius; x++) {
@@ -83,13 +91,35 @@ public class Forager extends Bee {
                     }
                 }
             }
+            return null;
         }
-
 
         System.out.println("I don't see anything, flying random...");
         movementContext.setStrategy(new RandomMovement());
         return new Point(1, 1);
     }
+
+    private Point lookForCell(Board board, CellType destinationType){
+        Point currentPos = this.movementContext.getPosition();
+        Cell[][] grid = board.getGrid();
+
+        for (int x = -sightRadius; x <= sightRadius; x++) {
+            for (int y = -sightRadius; y <= sightRadius; y++) {
+                int checkX = currentPos.x + x;
+                int checkY = currentPos.y + y;
+
+                if (checkX >= 0 && checkX < grid.length && checkY >= 0 && checkY < grid[0].length) {
+                    if (grid[checkX][checkY] != null && !grid[checkX][checkY].isEmpty()&& grid[checkX][checkY].getType()==destinationType){
+                        System.out.println("I'm seeing a "+ destinationType+ " at ("+ checkX +", "+ checkY+")");
+                        movementContext.setStrategy(new TargetedMovement(new Point(checkX, checkY)));
+                        return new Point(checkX, checkY);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
 
     public AgentContext getMovementContext() { return this.movementContext; }
 

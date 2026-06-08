@@ -7,5 +7,5 @@ public enum CellType {
     OBSTACLE,
     TELEPORT,
     POLLEN_STASH,
-    HONNEY_STASH
+    HONEY_STASH
 }

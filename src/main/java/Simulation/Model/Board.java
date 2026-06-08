@@ -31,6 +31,15 @@ public class Board {
                 }
             }
         }
+
+        setStashCells();
+    }
+
+    private void setStashCells() {
+        for (int x = 0; x <= 2; x++){
+            grid[x][0].setType(CellType.POLLEN_STASH);
+            grid[x][1].setType(CellType.HONEY_STASH);
+    }
     }
 
     // Regenerate pollen on Cells
@@ -74,6 +83,17 @@ public class Board {
             return hiveEntrance;
         }
         return null;
+    }
+
+
+    public Point getStashDestination(CellType stashType){
+        if (stashType==CellType.POLLEN_STASH) {
+            return hiveExit;
+        } else if (stashType==CellType.HONEY_STASH) {
+            return hiveEntrance;
+        }
+        return null;
+
     }
 
     /*public void teleportAgent(Bee bee, Point enter, Point exit){

@@ -20,8 +20,8 @@ public class MainWindow extends Application {
         // 2. Create the Controller and give it the canvas
         SimulationController controller = new SimulationController(gridBoard);
 
-        Spinner<Integer> workerSpinner = new Spinner<>(1, 20, 10);
-        Spinner<Double> flowerSpinner = new Spinner<>(0.01, 0.9, 0.1, 0.02);
+        Spinner<Integer> workerSpinner = new Spinner<>(1, 20, 3);
+        Spinner<Double> flowerSpinner = new Spinner<>(0.01, 0.9, 0.01, 0.02);
 
         // 3. Create a simple button to launch it
         Button startBtn = new Button("Start Simulation");
