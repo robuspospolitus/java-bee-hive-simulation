@@ -1,5 +1,6 @@
 package Simulation.Model.Agents;
 
+import Simulation.Model.BoardCells.CellType;
 import Simulation.Model.MovementStrategies.AgentContext;
 import Simulation.Model.MovementStrategies.RandomMovement;
 import Simulation.Model.MovementStrategies.TargetedMovement;
@@ -8,8 +9,10 @@ import Simulation.Model.BoardCells.Cell;
 
 import java.awt.*;
 
+import static Simulation.Model.BoardCells.CellType.HIVE;
+
 public class Forager extends Bee {
-    int numPollen;
+    int numPollen=10;
     int carriedPollen;
     int age;
     int spawnX;
@@ -21,6 +24,7 @@ public class Forager extends Bee {
 
     public Forager(int ID, int age,int spawnX, int spawnY) {
         this.ID = ID;
+        this.carriedPollen=0;
         this.age = age;
         this.spawnX = spawnX;
         this.spawnY = spawnY;
@@ -42,18 +46,29 @@ public class Forager extends Bee {
         Point newPos = movementContext.getPosition();
 
         board.moveAgent(this, oldPos, newPos);
-        System.out.println("Zbieraczka się porusza");
+        System.out.println("Zbieraczka porusza sie na: "+ "X: "+ newPos.x + ", Y: " + newPos.y);
     }
 
     protected Point findDestination(Board board) {
-        if (carriedPollen >= 10) {
-            System.out.println("Going back to hive");
-            movementContext.setStrategy(new TargetedMovement(new Point(0, 0)));
-            return new Point(0, 0);
-        }
-
         Point currentPos = this.movementContext.getPosition();
         Cell[][] grid = board.getGrid();
+
+        if (carriedPollen >= numPollen) {
+            System.out.println("Going back to hive");
+            if(grid[currentPos.x][currentPos.y].getType()==CellType.MEADOW){
+            movementContext.setStrategy(new TargetedMovement(board.getHiveEntrance()));
+            return board.getHiveEntrance();}
+
+            if(grid[currentPos.x][currentPos.y].getType()==CellType.TELEPORT){
+               // movementContext.setStrategy(new TargetedMovement(board.getTeleportDestination(currentPos)));
+                return board.getTeleportDestination(currentPos);
+            }
+
+            if(grid[currentPos.x][currentPos.y].getType()==CellType.HIVE){
+                movementContext.setStrategy(new TargetedMovement(board.getStashDestination()));
+                return board.getTeleportDestination(currentPos);
+            }
+        }
 
         for (int x = -sightRadius; x <= sightRadius; x++) {
             for (int y = -sightRadius; y <= sightRadius; y++) {
@@ -61,8 +76,8 @@ public class Forager extends Bee {
                 int checkY = currentPos.y + y;
 
                 if (checkX >= 0 && checkX < grid.length && checkY >= 0 && checkY < grid[0].length) {
-                    if (grid[checkX][checkY] != null && !grid[checkX][checkY].isEmpty()) {
-                        System.out.println("I'm seeing a flower");
+                    if (grid[checkX][checkY] != null && !grid[checkX][checkY].isEmpty()&& grid[checkX][checkY].hasFlower()){
+                        System.out.println("I'm seeing a flower at ("+ checkX +", "+ checkY+")");
                         movementContext.setStrategy(new TargetedMovement(new Point(checkX, checkY)));
                         return new Point(checkX, checkY);
                     }

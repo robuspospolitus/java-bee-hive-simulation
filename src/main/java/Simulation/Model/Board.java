@@ -10,6 +10,9 @@ public class Board {
     private int width;
     private int height;
     private Cell[][] grid;
+    private Point hiveEntrance = new Point (15,1);
+    private Point hiveExit = new Point (11,1);
+
 
     public Board(int width, int height) {
         this.width = width;
@@ -19,8 +22,8 @@ public class Board {
         // Initialize every single coordinate with a blank Cell object
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if(x >= 14 && x <= 16 && y <= 2) {
-                    grid[x][y] = new Cell(x, y, CellType.EMPTY);
+                if((x==hiveEntrance.x && y==hiveEntrance.y)|| (x==hiveExit.x && y==hiveExit.y)){
+                    grid[x][y] = new Cell(x, y, CellType.TELEPORT);
                 } else {
                     grid[x][y] = x<12 ? new Cell(x, y, CellType.HIVE) :
                             x==12 ? new Cell(x, y, CellType.OBSTACLE) :
@@ -43,7 +46,7 @@ public class Board {
 
     // Checks if a coordinate is actually on the map, and if no other bee is there
     public boolean isValidMove(int x, int y) {
-        if (x < 0 || x >= width || y < 0 || y >= height) return false;
+        if (x < 0 || x > width || y < 0 || y > height) return false;
         if (grid[x][y].getType() == CellType.OBSTACLE) return false;
 
         return grid[x][y].isEmpty();
@@ -55,11 +58,35 @@ public class Board {
         if (oldPos != null) {
             grid[oldPos.x][oldPos.y].setAgent(null);
         }
+
         // Set the bee into the new cell
         if (newPos != null) {
             grid[newPos.x][newPos.y].setAgent(bee);
         }
     }
+
+
+    public Point getTeleportDestination(Point entrance) {
+
+        if (entrance.equals(hiveEntrance)) {
+            return hiveExit;
+        } else if (entrance.equals(hiveExit)) {
+            return hiveEntrance;
+        }
+        return null;
+    }
+
+    /*public void teleportAgent(Bee bee, Point enter, Point exit){
+        if (enter != null) {
+            grid[enter.x][enter.y].setAgent(null);
+        }
+        // Set the bee into the new cell
+        if (exit != null) {
+            grid[exit.x][exit.y].setAgent(bee);
+        }
+
+    }*/
+
 
     // --- View & Engine Helpers ---
 
@@ -103,4 +130,7 @@ public class Board {
     public Cell[][] getGrid() {
         return this.grid;
     }
+
+    public Point getHiveEntrance(){return hiveEntrance;}
+    public Point getHiveExit(){return hiveExit;}
 }

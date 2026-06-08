@@ -52,6 +52,7 @@ public class SimulationEngine {
                 Point pos = forager.getMovementContext().getPosition();
                 Cell currentCell = board.getCell(pos.x, pos.y);
 
+
                 if (currentCell != null && currentCell.hasFlower()) {
                     int collectedPollen = currentCell.takePollen(4);
                     if (collectedPollen > 0) {
