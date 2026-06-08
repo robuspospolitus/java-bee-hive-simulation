@@ -2,6 +2,7 @@ package Simulation.Model;
 import Simulation.Model.Agents.Bee;
 import Simulation.Model.Agents.Forager;
 import Simulation.Model.Agents.Storer;
+import Simulation.Model.Agents.Larva;
 import Simulation.Model.BoardCells.Cell;
 
 import java.awt.*;
@@ -45,7 +46,30 @@ public class SimulationEngine {
             Bee bee = this.agents.get(i);
             bee.update(this.board);
 
-            // Gathering pollen
+            //ewolucja larwy
+            if(bee instanceof Larva && bee.getAge() >= 30){
+                Point pos = bee.getBeePosition();
+                int id = bee.getID();
+                removeAgent(bee);
+                addAgent(new Storer(id, 0, pos.x, pos.y));
+                continue;
+            }
+
+            //zmiana roli ze wzgledu na wiek
+            if (bee instanceof Storer && bee.getAge() >= 40) {
+                Point pos = bee.getBeePosition();
+                int id = bee.getID(); // zachowujemy to samo ID
+
+                removeAgent(bee); // usuwamy magazynierke
+
+                // I na tym samym miejscu tworzymy zbieraczke z tym samym id i wiekiem
+                addAgent(new Forager(id, bee.getAge(), pos.x, pos.y));
+                System.out.println(" Magazynierka o ID " + id + "  awansowała na Zbieraczkę!");
+                continue;
+            }
+
+
+            // Gathering pollen //zdziala tlyko jak pszczola nie zmianiala roli w tej turze
             if (bee instanceof Forager) {
                 Forager forager = (Forager) bee;
                 Point pos = forager.getMovementContext().getPosition();
