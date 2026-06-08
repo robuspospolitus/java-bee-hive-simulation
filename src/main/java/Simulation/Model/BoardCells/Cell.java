@@ -7,26 +7,27 @@ public class Cell {
     private Bee agent;
     private CellType type;
     private boolean hasFlower;
-    private double flowerChance;
+    private static double flowerChance;
 
     public Cell(int x, int y) {
         this.type = CellType.EMPTY;
         Initialize(x, y);
     }
     public Cell(int x, int y, CellType type) {
-        this.type = type;
+        setType(type);
         Initialize(x, y);
     }
+
+
 
     private void Initialize(int x, int y) {
         regenerationRate = 1;
         maxPollenAmount = 24;
-        flowerChance = 0.3;
-        hasFlower = type.equals(CellType.MEADOW) && Math.random() < flowerChance;
         this.x = x;
         this.y = y;
-        this.pollenAmount = hasFlower ? maxPollenAmount : 0;
         agent = null;
+        hasFlower = type.equals(CellType.MEADOW) && Math.random() < flowerChance;
+        this.pollenAmount = hasFlower ? maxPollenAmount : 0;
     }
 
     public boolean isEmpty() {
@@ -52,7 +53,9 @@ public class Cell {
     public boolean hasFlower() { return hasFlower; }
 
     public CellType getType() { return type; }
-    public void setType(CellType typ) { this.type = typ; }
+    public void setType(CellType typ) {this.type = typ;}
+
+    public static void setFlowerChance(double Chance){flowerChance=Chance; }
 
     public int getPollenAmount() { return pollenAmount; }
     public void setPollenAmount(int amount) { pollenAmount = amount; }
