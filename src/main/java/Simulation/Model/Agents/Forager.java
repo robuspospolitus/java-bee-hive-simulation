@@ -149,7 +149,7 @@ public class Forager extends Bee {
 
                 if (checkX >= 0 && checkX < grid.length && checkY >= 0 && checkY < grid[0].length) {
                     Cell cell = grid[checkX][checkY];
-                    if (cell != null && !cell.isEmpty() && cell.hasFlower()) {
+                    if (cell != null && !cell.isEmpty() && cell.hasFlower() && cell.getAgent()==null) {
                         System.out.println("Zbieraczka " + ID + " widzi kwiat w punkcie [" + checkX + ", " + checkY + "]");
                         movementContext.setStrategy(new TargetedMovement(new Point(checkX, checkY)));
                         return new Point(checkX, checkY);
