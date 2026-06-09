@@ -44,4 +44,9 @@ public class Larva extends Bee {
     public Point getPosition() {
         return this.position;
     }
+    @Override
+    public boolean isDead() {
+        // Larvae don't die of starvation the same way adults do!
+        return false;
+    }
 }

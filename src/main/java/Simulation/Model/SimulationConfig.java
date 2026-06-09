@@ -10,6 +10,7 @@ public class SimulationConfig {
     public static final float ENERGY_CONSUMPTION_QUEEN = 0.05f;
     public static final float ENERGY_CONSUMPTION_FORAGER = 1.0f;
     public static final int INITIAL_HIVE_FOOD = 20;
-    public static final int LARVA_FEEDINGS_NEEDED = 2;
+    public static final int LARVA_FEEDINGS_NEEDED = 10;
+    public static final int TICKS_TO_EVOLVE = 50;
 
 }

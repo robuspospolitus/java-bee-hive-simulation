@@ -105,6 +105,10 @@ public class Storer extends Bee{
 
     }
 
+    public boolean isReadyToEvolve() {
+        return this.age >= SimulationConfig.TICKS_TO_EVOLVE;
+    }
+
     public AgentContext getMovementContext(){
         return this.movementContext;
     }

@@ -59,7 +59,7 @@ public class SimulationEngine {
         if (!isRunning) return currentTick;
         for (int i = this.agents.size() - 1; i >= 0; i--) { //lecimy od tylu by wyrzucanie agentow nie psulo dzialania fora
             Bee bee = this.agents.get(i);
-
+            // TRANSFORM LARVAE INTO STORERS (feeding is automatic each tick)
             if (bee instanceof Larva larva) {
                 if (larva.isReadyToTransform()) {
                     Point larvaPos = larva.getBeePosition();
@@ -69,7 +69,21 @@ public class SimulationEngine {
                     addAgent(newStorer);
                     continue;
                 }
+                else larva.beFed();
             }
+            // TRANSFORM STORERS INTO FORAGERS IF OLD ENOUGH
+            if (bee instanceof Storer storer) {
+                if (storer.isReadyToEvolve()) {
+                    Point storerPos = storer.getMovementContext().getPosition();
+                    int storerId = storer.getID();
+                    removeAgent(storer);
+                    Forager newForager = new Forager(storerId, 0, storerPos.x, storerPos.y);
+                    addAgent(newForager);
+                    System.out.println("Magazynierka " + storerId + " stala sie Zbieraczka!");
+                    continue;
+                }
+            }
+
             bee.move(this.board); // ruch, spadek energii i starzenie sie
 
             // Gathering pollen
@@ -82,16 +96,6 @@ public class SimulationEngine {
             }
         }
 
-       /* Queen queen = board.getQueen();
-        if (queen != null && queen.canLayEgg()) {
-            int newId = this.agents.size();
-            if(queen.canLayEgg()){
-                Larva newLarva = queen.layEggs(newId);
-                this.agents.add(newLarva);
-                this.board.moveAgent(newLarva, null, newLarva.getBeePosition());
-                queen.resetEggCooldown();
-            }
-        }*/
 
         Queen queen = board.getQueen();
         if (queen != null && queen.canLayEgg()) {
