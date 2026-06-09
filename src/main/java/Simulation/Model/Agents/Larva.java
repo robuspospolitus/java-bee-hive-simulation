@@ -8,12 +8,12 @@ public class Larva extends Bee {
 
     public Larva (int ID, int age, int startX, int startY){
         super(ID, age, startX, startY);
+        this.setEnergy(40.0f);
         this.movementContext = new AgentContext("Larva " + ID, new RandomMovement(), new Point(startX, startY));
     }
 
     @Override
     public void move(Board board){
-
     }
 
     @Override

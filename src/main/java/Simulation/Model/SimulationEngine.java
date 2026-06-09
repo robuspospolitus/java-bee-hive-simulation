@@ -48,6 +48,11 @@ public class SimulationEngine {
             Bee bee = this.agents.get(i);
             bee.update(this.board);
 
+            if (bee.isDead()) {
+                removeAgent(bee);
+                continue;
+            }
+
             //sytem  skladania larw
             if(bee instanceof Queen){
                 Queen queen = (Queen) bee; //robimy to po to aby miec dostep do metod Queen
@@ -100,9 +105,7 @@ public class SimulationEngine {
                     }
                 }
             }
-            if (bee.isDead()) {
-                removeAgent(bee);
-            }
+
         }
 
         board.regenerateEnvironment();

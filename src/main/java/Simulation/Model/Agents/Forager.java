@@ -12,16 +12,10 @@ import java.awt.*;
 public class Forager extends Bee {
     private int numPollen = 10;
     private int carriedPollen = 0;
-    private int spawnX;
-    private int spawnY;
-    private Point spawnPosition;
 
     public Forager(int ID, int age, int spawnX, int spawnY) {
         super(ID, age, spawnX, spawnY);
-        this.spawnX = spawnX;
-        this.spawnY = spawnY;
-        this.spawnPosition = new Point(spawnX, spawnY);
-        this.movementContext = new AgentContext("Forager" + ID, new RandomMovement(), this.spawnPosition);
+        this.movementContext = new AgentContext("Forager" + ID, new RandomMovement(), new Point(spawnX, spawnY));
         this.sightRadius = 3;
     }
 
