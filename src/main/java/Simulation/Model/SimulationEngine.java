@@ -108,7 +108,7 @@ public class SimulationEngine {
 
         // 3. Usuwamy pszczołę z listy żywych agentów
         this.agents.remove(bee);
-        System.out.println("Usunięto agenta o ID: ");
+        System.out.println("Usunięto agenta o ID: "+ bee.getID());
     }
 
     public Board getBoard (){return board;}

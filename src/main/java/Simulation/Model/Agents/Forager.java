@@ -58,7 +58,7 @@ public class Forager extends Bee {
         this.age++;
         this.burnEnergy(1.0f);
 
-        if (newPos.x == 0 && newPos.y == 0 && this.carriedPollen > 0) { //wspolrzedne ula
+        if (newPos.equals(board.getStashDestination(POLLEN_STASH)) && this.carriedPollen > 0) { //wspolrzedne ula
             Hive ul = board.getHive();
 
             //przekazujemy cały zebrany pyłek do ula
@@ -78,22 +78,19 @@ public class Forager extends Bee {
     }
 
     protected Point findDestination(Board board) {
-        if(this.getEnergy() < 25.0f || carriedPollen >= 10){
-            System.out.println("zbieraczka " + ID + " wraca do ula");
-            movementContext.setStrategy(new TargetedMovement(new Point (0,0))); //wspolrzedne ula
-            return new Point(0,0);
-        }
-
         Point currentPos = this.movementContext.getPosition();
         Cell[][] grid = board.getGrid();
 
-        if(currentPos.equals(board.getHiveEntrance())){
-            System.out.println("Teleporting");
-            movementContext.setStrategy(new TeleportMovement(board.getTeleportDestination(currentPos)));
-            return board.getTeleportDestination(currentPos);
-        }
 
-        if (carriedPollen >= numPollen) {
+        if (this.getEnergy() < 25.0f || carriedPollen >= 10) {
+            System.out.println("zbieraczka " + ID + " wraca do ula");
+
+            if(currentPos.equals(board.getHiveEntrance())){
+                System.out.println("Teleporting");
+                movementContext.setStrategy(new TeleportMovement(board.getTeleportDestination(currentPos)));
+                return board.getTeleportDestination(currentPos);
+            }
+
             if(grid[currentPos.x][currentPos.y].getType()==CellType.MEADOW){
                 System.out.println("Going back to hive");
                 movementContext.setStrategy(new TargetedMovement(board.getHiveEntrance()));
@@ -106,7 +103,6 @@ public class Forager extends Bee {
                     movementContext.setStrategy(new TargetedMovement(lookForCell(board, POLLEN_STASH)));
                     return (lookForCell(board, POLLEN_STASH));
                 }*/
-
                     movementContext.setStrategy(new TargetedMovement(board.getStashDestination(POLLEN_STASH)));
                     return board.getStashDestination(POLLEN_STASH);
             }
