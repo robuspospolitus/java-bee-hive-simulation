@@ -1,6 +1,7 @@
 package Simulation.Model.Agents;
 import Simulation.Model.Board;
 import Simulation.Model.MovementStrategies.AgentContext;
+import Simulation.Model.SimulationConfig;
 
 import java.awt.Point;
 
@@ -13,7 +14,7 @@ public class Queen extends Bee{
         this.ID = ID;
         this.age = age;
         this.position = new Point(spawnX, spawnY);
-        this.setEnergy(100.0f);
+        this.setEnergy(SimulationConfig.ENERGY_FULL);
         this.movementContext = new AgentContext("Queen " + ID, null, this.position);
 
         totalNumBees++;
@@ -22,7 +23,7 @@ public class Queen extends Bee{
     @Override
     public void move(Board board){
         this.age++;
-        this.burnEnergy(0.05f);
+        this.burnEnergy(SimulationConfig.ENERGY_CONSUMPTION_QUEEN);
 
         if(eggLayCooldown > 0){
             eggLayCooldown--;
@@ -33,12 +34,12 @@ public class Queen extends Bee{
         return eggLayCooldown == 0 && this.getEnergy() > 30; //ile musi miec energi by zmiesc jajo
     }
 
-    public void resetEggColldown(){
-        this.eggLayCooldown = 15;  //co ile nowe jajko jest skladane
+    public void resetEggCooldown(){
+        this.eggLayCooldown = SimulationConfig.EGG_LAY_COOLDOWN;
     }
 
     public void receiveFood(){
-        this.setEnergy(100.0f);
+        this.setEnergy(SimulationConfig.ENERGY_FULL);
     }
 
     @Override

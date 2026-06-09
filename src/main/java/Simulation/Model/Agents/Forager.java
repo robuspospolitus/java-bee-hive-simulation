@@ -13,20 +13,17 @@ import java.awt.*;
 
 import static Simulation.Model.BoardCells.CellType.HIVE;
 import static Simulation.Model.BoardCells.CellType.POLLEN_STASH;
+import Simulation.Model.SimulationConfig;
 
 public class Forager extends Bee {
-    int numPollen=10;
-    int carriedPollen;
-    int spawnX;
-    int spawnY;
-    Point spawnPosition;
-
-    protected int sightRadius = 4;
+    private int spawnX, spawnY;
+    private Point spawnPosition;
     private AgentContext movementContext;
 
     public Forager(int ID, int age,int spawnX, int spawnY) {
-        this.ID = ID;
+        this.sightRadius = 4;
         this.carriedPollen=0;
+        this.ID = ID;
         this.age = age;
         this.spawnX = spawnX;
         this.spawnY = spawnY;
@@ -36,7 +33,10 @@ public class Forager extends Bee {
     }
 
     public void collectPollen(int amount) {
-        this.carriedPollen += amount;
+        int spaceAvailable = SimulationConfig.MAX_POLLEN_CAPACITY - this.carriedPollen;
+        int amountToTake = Math.min(amount, spaceAvailable);
+
+        this.carriedPollen += amountToTake;
         System.out.println("Zbieraczka " + ID + " zebrala pylek. Posiada teraz: " + carriedPollen);
     }
 
@@ -56,7 +56,7 @@ public class Forager extends Bee {
         }
 
         this.age++;
-        this.burnEnergy(1.0f);
+        this.burnEnergy(SimulationConfig.ENERGY_CONSUMPTION_FORAGER);
 
         if (newPos.equals(board.getStashDestination(POLLEN_STASH)) && this.carriedPollen > 0) { //wspolrzedne ula
             Hive ul = board.getHive();
@@ -69,7 +69,7 @@ public class Forager extends Bee {
             //Skoro jest w ulu to je
             if (ul.getFoodAmount() > 0) {
                 ul.setFoodAmount(ul.getFoodAmount() - 1); // zjada jedzenie ula
-                this.setEnergy(100);
+                this.setEnergy(SimulationConfig.ENERGY_FULL);
                 System.out.println(" Zbieraczka " + ID + " zjadła");
             } else {
                 System.out.println(" Zbieraczka " + ID + " jest w ulu, ale glodna");
@@ -79,53 +79,41 @@ public class Forager extends Bee {
 
     protected Point findDestination(Board board) {
         Point currentPos = this.movementContext.getPosition();
-        Cell[][] grid = board.getGrid();
+        Cell currentCell = board.getCell(currentPos.x, currentPos.y);
 
-
-        if (this.getEnergy() < 25.0f || carriedPollen >= 10) {
-            System.out.println("zbieraczka " + ID + " leci zdac pylek");
+        if (this.getEnergy() < SimulationConfig.ENERGY_THRESHOLD_RETURN || carriedPollen >= SimulationConfig.MAX_POLLEN_CAPACITY) {
+            System.out.println("Zbieraczka " + ID + " leci zdac pylek");
 
             if(currentPos.equals(board.getHiveEntrance())){
-                System.out.println("zbieraczka " + ID + " teleportuje sie");
+                System.out.println("Zbieraczka " + ID + " teleportuje sie");
                 movementContext.setStrategy(new TeleportMovement(board.getTeleportDestination(currentPos)));
                 return board.getTeleportDestination(currentPos);
             }
-
-            if(grid[currentPos.x][currentPos.y].getType()==CellType.MEADOW){
+            if (currentCell.getType() == CellType.MEADOW) {
                 System.out.println("Going back to hive");
                 movementContext.setStrategy(new TargetedMovement(board.getHiveEntrance()));
                 return board.getHiveEntrance();
             }
-
-            if(grid[currentPos.x][currentPos.y].getType()==CellType.HIVE || currentPos.equals(board.getHiveExit())){
+            if(currentCell.getType() == CellType.HIVE || currentPos.equals(board.getHiveExit())){
                 System.out.println("About to stash pollen");
-                    movementContext.setStrategy(new TargetedMovement(board.getStashDestination(POLLEN_STASH)));
-                    return board.getStashDestination(POLLEN_STASH);
-            }
-
-        }
-
-        for (int x = -sightRadius; x <= sightRadius; x++) {
-            for (int y = -sightRadius; y <= sightRadius; y++) {
-                int checkX = currentPos.x + x;
-                int checkY = currentPos.y + y;
-
-                if (checkX >= 0 && checkX < grid.length && checkY >= 0 && checkY < grid[0].length) {
-                    if (grid[checkX][checkY] != null && !grid[checkX][checkY].isEmpty()&& grid[checkX][checkY].hasFlower()){
-                        System.out.println("zbieraczka " + ID +" is seeing a flower at ("+ checkX +", "+ checkY+")");
-                        movementContext.setStrategy(new TargetedMovement(new Point(checkX, checkY)));
-                        return new Point(checkX, checkY);
-                    }
-                }
+                movementContext.setStrategy(new TargetedMovement(board.getStashDestination(POLLEN_STASH)));
+                return board.getStashDestination(POLLEN_STASH);
             }
         }
 
+        // Looking for flowers
+        Point flower = findClosestTarget(board, CellType.MEADOW);
+        if (flower != null) {
+            return flower;
+        }
+
+        // Nothing in sight
         System.out.println("I don't see anything, flying random...");
         movementContext.setStrategy(new RandomMovement());
-        return new Point(1, 1);
+        return currentPos;
     }
 
-    private Point lookForCell(Board board, CellType destinationType){
+    private Point findClosestTarget(Board board, CellType typeToFind) {
         Point currentPos = this.movementContext.getPosition();
         Cell[][] grid = board.getGrid();
 
@@ -135,8 +123,9 @@ public class Forager extends Bee {
                 int checkY = currentPos.y + y;
 
                 if (checkX >= 0 && checkX < grid.length && checkY >= 0 && checkY < grid[0].length) {
-                    if (grid[checkX][checkY] != null && !grid[checkX][checkY].isEmpty()&& grid[checkX][checkY].getType()==destinationType){
-                        System.out.println("I'm seeing a "+ destinationType+ " at ("+ checkX +", "+ checkY+")");
+                    Cell cell = grid[checkX][checkY];
+                    if (cell != null && !cell.isEmpty() && cell.hasFlower()) {
+                        System.out.println("Zbieraczka " + ID + " widzi kwiat w punkcie [" + checkX + ", " + checkY + "]");
                         movementContext.setStrategy(new TargetedMovement(new Point(checkX, checkY)));
                         return new Point(checkX, checkY);
                     }
@@ -146,7 +135,16 @@ public class Forager extends Bee {
         return null;
     }
 
+    @Override
+    public void interact(Cell cell) {
+        if (cell != null && cell.hasFlower()) {
+            int collectedPollen = cell.takePollen(SimulationConfig.POLLEN_COLLECTION_AMOUNT);
+            if (collectedPollen > 0) {
+                this.carriedPollen += collectedPollen;
+                System.out.println("Zbieraczka " + ID + " zebrała " + collectedPollen + " pyłku. Posiada teraz: " + carriedPollen + "/" + SimulationConfig.MAX_POLLEN_CAPACITY);
+            }
+        }
+    }
 
     public AgentContext getMovementContext() { return this.movementContext; }
-
 }

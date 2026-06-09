@@ -1,20 +1,22 @@
 package Simulation.Model.Agents;
 import Simulation.Model.Board;
+import Simulation.Model.BoardCells.Cell;
 import Simulation.Model.MovementStrategies.AgentContext;
+import Simulation.Model.SimulationConfig;
 
 import java.awt.Point;
 
 public abstract class Bee {
-    int carryCapacity;
-    float energy;
-    int sightRadius;
-    //private Point coordinates;
+    protected int carryCapacity, carriedPollen;
+    protected float energy;
+    protected int sightRadius;
     static int totalNumBees;
     protected int ID;
     protected int age;
 
     public Bee() {
-        this.energy = 100.0f;
+        this.energy = SimulationConfig.ENERGY_FULL;
+        this.carryCapacity = SimulationConfig.MAX_POLLEN_CAPACITY;
     }
 
     public void burnEnergy(float amount){
@@ -62,5 +64,7 @@ public abstract class Bee {
     public int getAge() {
         return this.age;
     }
+
+    public void interact(Cell cell) { }
 
 }
