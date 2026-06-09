@@ -83,10 +83,10 @@ public class Forager extends Bee {
 
 
         if (this.getEnergy() < 25.0f || carriedPollen >= 10) {
-            System.out.println("zbieraczka " + ID + " wraca do ula");
+            System.out.println("zbieraczka " + ID + " leci zdac pylek");
 
             if(currentPos.equals(board.getHiveEntrance())){
-                System.out.println("Teleporting");
+                System.out.println("zbieraczka " + ID + " teleportuje sie");
                 movementContext.setStrategy(new TeleportMovement(board.getTeleportDestination(currentPos)));
                 return board.getTeleportDestination(currentPos);
             }
@@ -97,12 +97,8 @@ public class Forager extends Bee {
                 return board.getHiveEntrance();
             }
 
-            if(grid[currentPos.x][currentPos.y].getType()==CellType.HIVE){
+            if(grid[currentPos.x][currentPos.y].getType()==CellType.HIVE || currentPos.equals(board.getHiveExit())){
                 System.out.println("About to stash pollen");
-                /*if(lookForCell(board, POLLEN_STASH)!=null){
-                    movementContext.setStrategy(new TargetedMovement(lookForCell(board, POLLEN_STASH)));
-                    return (lookForCell(board, POLLEN_STASH));
-                }*/
                     movementContext.setStrategy(new TargetedMovement(board.getStashDestination(POLLEN_STASH)));
                     return board.getStashDestination(POLLEN_STASH);
             }
@@ -116,7 +112,7 @@ public class Forager extends Bee {
 
                 if (checkX >= 0 && checkX < grid.length && checkY >= 0 && checkY < grid[0].length) {
                     if (grid[checkX][checkY] != null && !grid[checkX][checkY].isEmpty()&& grid[checkX][checkY].hasFlower()){
-                        System.out.println("I'm seeing a flower at ("+ checkX +", "+ checkY+")");
+                        System.out.println("zbieraczka " + ID +" is seeing a flower at ("+ checkX +", "+ checkY+")");
                         movementContext.setStrategy(new TargetedMovement(new Point(checkX, checkY)));
                         return new Point(checkX, checkY);
                     }
