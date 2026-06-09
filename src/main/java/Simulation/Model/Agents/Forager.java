@@ -104,7 +104,7 @@ public class Forager extends Bee {
         }
 
         // Looking for flowers
-        Point flower = findClosestTarget(board, CellType.MEADOW); // zakładam, że Meadow zawiera kwiaty
+        Point flower = findClosestTarget(board, CellType.MEADOW);
         if (flower != null) {
             return flower;
         }
@@ -126,8 +126,8 @@ public class Forager extends Bee {
 
                 if (checkX >= 0 && checkX < board.getWidth() && checkY >= 0 && checkY < board.getHeight()) {
                     Cell cell = grid[checkX][checkY];
-                    if (cell != null && cell.getType() == typeToFind && !cell.isEmpty()) {
-                        System.out.println("Zbieraczka " + ID + " widzi " + typeToFind + " w punkcie [" + checkX + ", " + checkY + "]");
+                    if (cell != null && cell.getType() == typeToFind && cell.hasFlower()) {
+                        System.out.println("Zbieraczka " + ID + " widzi kwiat w punkcie [" + checkX + ", " + checkY + "]");
                         movementContext.setStrategy(new TargetedMovement(new Point(checkX, checkY)));
                         return new Point(checkX, checkY);
                     }
