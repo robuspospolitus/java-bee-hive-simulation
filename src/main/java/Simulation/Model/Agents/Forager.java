@@ -16,15 +16,14 @@ import static Simulation.Model.BoardCells.CellType.POLLEN_STASH;
 import Simulation.Model.SimulationConfig;
 
 public class Forager extends Bee {
-    private int carriedPollen, spawnX, spawnY;
+    private int spawnX, spawnY;
     private Point spawnPosition;
-
-    protected int sightRadius = 4;
     private AgentContext movementContext;
 
     public Forager(int ID, int age,int spawnX, int spawnY) {
-        this.ID = ID;
+        this.sightRadius = 4;
         this.carriedPollen=0;
+        this.ID = ID;
         this.age = age;
         this.spawnX = spawnX;
         this.spawnY = spawnY;
@@ -136,5 +135,17 @@ public class Forager extends Bee {
         }
         return null;
     }
+
+    @Override
+    public void interact(Cell cell) {
+        if (cell != null && cell.hasFlower()) {
+            int collectedPollen = cell.takePollen(SimulationConfig.POLLEN_COLLECTION_AMOUNT);
+            if (collectedPollen > 0) {
+                this.carriedPollen += collectedPollen;
+                System.out.println("Zbieraczka " + ID + " zebrała " + collectedPollen + " pyłku. Posiada teraz: " + carriedPollen + "/" + SimulationConfig.MAX_POLLEN_CAPACITY);
+            }
+        }
+    }
+
     public AgentContext getMovementContext() { return this.movementContext; }
 }

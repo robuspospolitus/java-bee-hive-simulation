@@ -43,22 +43,13 @@ public class SimulationEngine {
         if (!isRunning) return currentTick;
         for (int i = this.agents.size() - 1; i >= 0; i--) { //lecimy od tylu by wyrzucanie agentow nie psulo dzialania fora
             Bee bee = this.agents.get(i);
-            bee.move(this.board); //ruch, spadek energii i starzenie sie
+            bee.move(this.board); // ruch, spadek energii i starzenie sie
 
             // Gathering pollen
-            if (bee instanceof Forager) {
-                Forager forager = (Forager) bee;
-                Point pos = forager.getMovementContext().getPosition();
-                Cell currentCell = board.getCell(pos.x, pos.y);
+            Point pos = bee.getBeePosition();
+            Cell currentCell = board.getCell(pos.x, pos.y);
+            bee.interact(currentCell);
 
-
-                if (currentCell != null && currentCell.hasFlower()) {
-                    int collectedPollen = currentCell.takePollen(SimulationConfig.POLLEN_COLLECTION_AMOUNT);
-                    if (collectedPollen > 0) {
-                        forager.collectPollen(collectedPollen);
-                    }
-                }
-            }
             if (bee.isDead()) {
                 removeAgent(bee);
             }
