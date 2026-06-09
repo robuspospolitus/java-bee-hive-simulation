@@ -1,8 +1,7 @@
 package Simulation.View;
 
+import Simulation.Model.Agents.*;
 import Simulation.Model.Board;
-import Simulation.Model.Agents.Bee;
-import Simulation.Model.Agents.Forager;
 import Simulation.Model.BoardCells.Cell;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -17,6 +16,9 @@ public class GridBoard extends Canvas {
     private Image flowerSprite;
     private Image beeSprite;
     private Image BoardView;
+    private Image queenSprite;
+    private Image larvaSprite;
+    private Image storerSprite;
 
     public GridBoard(int gridWidth, int gridHeight) {
         setWidth(gridWidth * TILE_SIZE);
@@ -31,6 +33,9 @@ public class GridBoard extends Canvas {
             // getClass().getResource() looks inside the src/main/resources folder
             BoardView = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/BoardView.png")));
             beeSprite = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/Bee.png")));
+            queenSprite = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/BeeQueen.png")));
+            storerSprite = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/BeeStorer.png")));
+            larvaSprite = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/Larvae.png")));
             flowerSprite = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/Flower.png")));
 
             // You can add more here later: queenSprite, hiveSprite, etc.
@@ -63,12 +68,19 @@ public class GridBoard extends Canvas {
                 Bee bee = board.getAgentAt(x, y);
                 if (bee != null) {
                     if (bee instanceof Forager && beeSprite != null) {
+
+                        gc.drawImage(beeSprite, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);}
+                        else if (bee instanceof Storer && beeSprite != null) {
+                            gc.drawImage(storerSprite, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                        } else if (bee instanceof Queen && beeSprite != null) {
+                            gc.drawImage(queenSprite, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE); }
+                        else if (bee instanceof Larva && beeSprite != null) {
                         // Draw the sprite instead of the oval!
-                        gc.drawImage(beeSprite, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
-                    } else {
+                        gc.drawImage(larvaSprite, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);}
+                        else {
                         // Fallback if it's a bee we don't have a sprite for yet
-                        gc.setFill(javafx.scene.paint.Color.YELLOW);
-                        gc.fillOval(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
+                            gc.setFill(javafx.scene.paint.Color.YELLOW);
+                            gc.fillOval(x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                     }
                 }
             }
