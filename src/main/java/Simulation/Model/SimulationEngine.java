@@ -30,7 +30,7 @@ public class SimulationEngine {
 
         // 3. Spawn initial Foragers INSIDE the logical hive coordinates
         for (int i = 0; i < numWorkers; i++) {
-            int startX = 15;
+            int startX = 16;
             int startY = 1;
             int ID= Bee.getTotalNum();
             Forager forager = new Forager(ID,10, startX, startY);
@@ -50,6 +50,7 @@ public class SimulationEngine {
                 Forager forager = (Forager) bee;
                 Point pos = forager.getMovementContext().getPosition();
                 Cell currentCell = board.getCell(pos.x, pos.y);
+
 
                 if (currentCell != null && currentCell.hasFlower()) {
                     int collectedPollen = currentCell.takePollen(4);

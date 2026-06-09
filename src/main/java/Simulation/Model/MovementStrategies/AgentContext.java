@@ -26,5 +26,10 @@ public class AgentContext {
         return this.position;
     }
 
+    public void setPosition(Point pos) {
+       this.position = pos;
+    }
+
+
 
 }
