@@ -70,7 +70,7 @@ public class Board {
        // return grid[x][y].isEmpty();
     }
 
-    // Handles the actual teleportation of a bee from old cell to new cell
+    // Handles moving bee from old cell to new cell
     public void moveAgent(Bee bee, Point oldPos, Point newPos) {
 
             // Clear the old cell if the bee was already on the board

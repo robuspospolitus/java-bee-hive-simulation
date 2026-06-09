@@ -82,10 +82,10 @@ public class Forager extends Bee {
         Cell currentCell = board.getCell(currentPos.x, currentPos.y);
 
         if (this.getEnergy() < SimulationConfig.ENERGY_THRESHOLD_RETURN || carriedPollen >= SimulationConfig.MAX_POLLEN_CAPACITY) {
-            System.out.println("Zbieraczka " + ID + " wraca do ula");
+            System.out.println("Zbieraczka " + ID + " leci zdac pylek");
 
-            if (currentPos.equals(board.getHiveEntrance())) {
-                System.out.println("Teleporting");
+            if(currentPos.equals(board.getHiveEntrance())){
+                System.out.println("Zbieraczka " + ID + " teleportuje sie");
                 movementContext.setStrategy(new TeleportMovement(board.getTeleportDestination(currentPos)));
                 return board.getTeleportDestination(currentPos);
             }
@@ -94,11 +94,10 @@ public class Forager extends Bee {
                 movementContext.setStrategy(new TargetedMovement(board.getHiveEntrance()));
                 return board.getHiveEntrance();
             }
-            if (currentCell.getType() == CellType.HIVE) {
+            if(currentCell.getType() == CellType.HIVE || currentPos.equals(board.getHiveExit())){
                 System.out.println("About to stash pollen");
-                Point stash = board.getStashDestination(CellType.POLLEN_STASH);
-                movementContext.setStrategy(new TargetedMovement(stash));
-                return stash;
+                movementContext.setStrategy(new TargetedMovement(board.getStashDestination(POLLEN_STASH)));
+                return board.getStashDestination(POLLEN_STASH);
             }
         }
 
@@ -123,9 +122,9 @@ public class Forager extends Bee {
                 int checkX = currentPos.x + x;
                 int checkY = currentPos.y + y;
 
-                if (checkX >= 0 && checkX < board.getWidth() && checkY >= 0 && checkY < board.getHeight()) {
+                if (checkX >= 0 && checkX < grid.length && checkY >= 0 && checkY < grid[0].length) {
                     Cell cell = grid[checkX][checkY];
-                    if (cell != null && cell.getType() == typeToFind && cell.hasFlower()) {
+                    if (cell != null && !cell.isEmpty() && cell.hasFlower()) {
                         System.out.println("Zbieraczka " + ID + " widzi kwiat w punkcie [" + checkX + ", " + checkY + "]");
                         movementContext.setStrategy(new TargetedMovement(new Point(checkX, checkY)));
                         return new Point(checkX, checkY);
