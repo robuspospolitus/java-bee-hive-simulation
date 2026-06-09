@@ -47,7 +47,7 @@ public class Forager extends Bee {
         movementContext.performMove(board);
         Point newPos = movementContext.getPosition();
 
-          if (board.isValidMove(newPos.x, newPos.y)) {
+        if (board.isValidMove(newPos.x, newPos.y)) {
             board.moveAgent(this, oldPos, newPos);
             System.out.println("Zbieraczka porusza sie na: X: "+ newPos.x + ", Y: " + newPos.y);
         } else {
@@ -102,7 +102,7 @@ public class Forager extends Bee {
             }
             // eat
             if (this.energy <= 30) {
-                System.out.println("Zbieraczka " + ID + " jest glodna i leci do HONEY_STASH");
+                System.out.println("Zbieraczka " + ID + " jest glodna i leci do magazynu z miodem");
                 movementContext.setStrategy(new TargetedMovement(board.getStashDestination(HONEY_STASH)));
                 return board.getStashDestination(HONEY_STASH);
             }

@@ -55,7 +55,9 @@ public class SimulationEngine {
             }
         }
 
-        board.regenerateEnvironment();
+        if (this.currentTick % SimulationConfig.POLLEN_REGENERATION_TIME == 0) {
+            board.regenerateEnvironment();
+        }
 
         this.currentTick++;
         System.out.println("Steps ran");

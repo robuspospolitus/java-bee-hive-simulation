@@ -5,6 +5,7 @@ public class SimulationConfig {
     public static final float ENERGY_THRESHOLD_RETURN = 25.0f;
     public static final float ENERGY_FULL = 100.0f;
     public static final int POLLEN_COLLECTION_AMOUNT = 4;
+    public static final int POLLEN_REGENERATION_TIME = 10;
     public static final int EGG_LAY_COOLDOWN = 15;
     public static final float ENERGY_CONSUMPTION_QUEEN = 0.05f;
     public static final float ENERGY_CONSUMPTION_FORAGER = 1.0f;
