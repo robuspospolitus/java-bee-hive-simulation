@@ -12,5 +12,6 @@ public class SimulationConfig {
     public static final int INITIAL_HIVE_FOOD = 20;
     public static final int LARVA_FEEDINGS_NEEDED = 10;
     public static final int TICKS_TO_EVOLVE = 50;
+    public static final int MAX_BEE_AGE = 50;
 
 }
