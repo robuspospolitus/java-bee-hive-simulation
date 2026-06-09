@@ -3,6 +3,7 @@ import Simulation.Model.Agents.Bee;
 import Simulation.Model.Agents.Forager;
 import Simulation.Model.Agents.Storer;
 import Simulation.Model.BoardCells.Cell;
+import Simulation.Model.BoardCells.CellType;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -27,14 +28,16 @@ public class SimulationEngine {
 
 
     void initializeSimulation() {
+        // Spawn initial Foragers INSIDE the logical hive coordinates
+        int defaultSpawnX = 16;
+        int defaultSpawnY = 1;
 
-        // 3. Spawn initial Foragers INSIDE the logical hive coordinates
         for (int i = 0; i < numWorkers; i++) {
-            int startX = 16;
-            int startY = 1;
-            int ID= Bee.getTotalNum();
-            Forager forager = new Forager(ID,10, startX, startY);
-            addAgent(forager);
+            Point safePos = findEmptySpawnPosition(this.board, defaultSpawnX, defaultSpawnY);
+            Forager newBee = new Forager(i, 0, safePos.x, safePos.y);
+
+            this.agents.add(newBee);
+            this.board.getCell(safePos.x, safePos.y).setAgent(newBee);
         }
         System.out.println("Simulation initialized");
     }
@@ -106,5 +109,25 @@ public class SimulationEngine {
 
     public Board getBoard (){return board;}
 
+    private Point findEmptySpawnPosition(Board board, int startX, int startY) {
+        int maxRadius = Math.max(board.getWidth(), board.getHeight());
+
+        for (int radius = 0; radius < maxRadius; radius++) {
+            for (int x = startX - radius; x <= startX + radius; x++) {
+                for (int y = startY - radius; y <= startY + radius; y++) {
+                    boolean isInsideHive = x >= 0 && x < 12;
+                    boolean isWithinHeight = y >= 0 && y < board.getHeight();
+
+                    if (isInsideHive && isWithinHeight) {
+                        Cell cell = board.getCell(x, y);
+                        if (cell != null && cell.getType() != CellType.OBSTACLE && cell.getAgent() == null) {
+                            return new Point(x, y);
+                        }
+                    }
+                }
+            }
+        }
+        return new Point(startX, startY);
+    }
 }
 
