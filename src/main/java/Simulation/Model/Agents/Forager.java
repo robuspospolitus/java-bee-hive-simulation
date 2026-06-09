@@ -13,9 +13,9 @@ import java.awt.*;
 
 import static Simulation.Model.BoardCells.CellType.HIVE;
 import static Simulation.Model.BoardCells.CellType.POLLEN_STASH;
+import Simulation.Model.SimulationConfig;
 
 public class Forager extends Bee {
-    private int maxPollenCapacity=10;
     private int carriedPollen, spawnX, spawnY;
     private Point spawnPosition;
 
@@ -34,7 +34,7 @@ public class Forager extends Bee {
     }
 
     public void collectPollen(int amount) {
-        int spaceAvailable = maxPollenCapacity - this.carriedPollen;
+        int spaceAvailable = SimulationConfig.MAX_POLLEN_CAPACITY - this.carriedPollen;
         int amountToTake = Math.min(amount, spaceAvailable);
 
         this.carriedPollen += amountToTake;
@@ -57,7 +57,7 @@ public class Forager extends Bee {
         }
 
         this.age++;
-        this.burnEnergy(1.0f);
+        this.burnEnergy(SimulationConfig.ENERGY_CONSUMPTION_FORAGER);
 
         if (newPos.equals(board.getStashDestination(POLLEN_STASH)) && this.carriedPollen > 0) { //wspolrzedne ula
             Hive ul = board.getHive();
@@ -70,7 +70,7 @@ public class Forager extends Bee {
             //Skoro jest w ulu to je
             if (ul.getFoodAmount() > 0) {
                 ul.setFoodAmount(ul.getFoodAmount() - 1); // zjada jedzenie ula
-                this.setEnergy(100);
+                this.setEnergy(SimulationConfig.ENERGY_FULL);
                 System.out.println(" Zbieraczka " + ID + " zjadła");
             } else {
                 System.out.println(" Zbieraczka " + ID + " jest w ulu, ale glodna");
@@ -82,7 +82,7 @@ public class Forager extends Bee {
         Point currentPos = this.movementContext.getPosition();
         Cell currentCell = board.getCell(currentPos.x, currentPos.y);
 
-        if (this.getEnergy() < 25.0f || carriedPollen >= maxPollenCapacity) {
+        if (this.getEnergy() < SimulationConfig.ENERGY_THRESHOLD_RETURN || carriedPollen >= SimulationConfig.MAX_POLLEN_CAPACITY) {
             System.out.println("Zbieraczka " + ID + " wraca do ula");
 
             if (currentPos.equals(board.getHiveEntrance())) {

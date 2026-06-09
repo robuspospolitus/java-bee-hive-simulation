@@ -53,7 +53,7 @@ public class SimulationEngine {
 
 
                 if (currentCell != null && currentCell.hasFlower()) {
-                    int collectedPollen = currentCell.takePollen(4);
+                    int collectedPollen = currentCell.takePollen(SimulationConfig.POLLEN_COLLECTION_AMOUNT);
                     if (collectedPollen > 0) {
                         forager.collectPollen(collectedPollen);
                     }

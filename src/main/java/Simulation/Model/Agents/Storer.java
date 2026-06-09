@@ -4,6 +4,7 @@ import Simulation.Model.Board;
 import Simulation.Model.Hive;
 import Simulation.Model.MovementStrategies.AgentContext;
 import Simulation.Model.MovementStrategies.RandomMovement;
+import Simulation.Model.SimulationConfig;
 
 import java.awt.*;
 
@@ -57,16 +58,15 @@ public class Storer extends Bee{
         }
 
         //same jedza
-        if(this.getEnergy() < 20){
+        if(this.getEnergy() < SimulationConfig.ENERGY_THRESHOLD_RETURN){
             if(ul.getFoodAmount() > 0){
                 ul.setFoodAmount(ul.getFoodAmount() - 1);
-                this.setEnergy((100));
+                this.setEnergy(SimulationConfig.ENERGY_FULL);
                 System.out.println("Magazynierka " + ID + "zjadla, energia 100%");
             } else {
                 System.out.println("Magazynierka " + ID + " glodna, nie zjadla");
             }
         }
-
 
         //wytwarzanie jedzenia/miodu
         if(ul.getPollenAmount() >= 2){

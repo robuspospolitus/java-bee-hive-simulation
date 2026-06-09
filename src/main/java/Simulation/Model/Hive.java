@@ -7,7 +7,7 @@ public class Hive {
     public Hive() {
         this.pollenAmount = 0;
         this.honeyAmount = 0;
-        this.foodAmount = 20; // cos na start
+        this.foodAmount = SimulationConfig.INITIAL_HIVE_FOOD;
     }
 
     public int getPollenAmount() { return pollenAmount; }

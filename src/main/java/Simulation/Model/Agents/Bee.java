@@ -1,6 +1,7 @@
 package Simulation.Model.Agents;
 import Simulation.Model.Board;
 import Simulation.Model.MovementStrategies.AgentContext;
+import Simulation.Model.SimulationConfig;
 
 import java.awt.Point;
 
@@ -14,7 +15,7 @@ public abstract class Bee {
     protected int age;
 
     public Bee() {
-        this.energy = 100.0f;
+        this.energy = SimulationConfig.ENERGY_FULL;
     }
 
     public void burnEnergy(float amount){
