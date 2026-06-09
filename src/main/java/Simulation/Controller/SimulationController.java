@@ -78,6 +78,7 @@ public class SimulationController {
     private SimulationEngine engine;
     private final GridBoard gridBoard;
     private Timeline gameLoop;
+    private boolean isSimActive = false;
 
     // The View passes the drawing canvas to the controller so it can tell it when to redraw
     public SimulationController(GridBoard gridBoard) {
@@ -87,7 +88,12 @@ public class SimulationController {
     public void start(int workers, double flowerChance) {
 
         this.engine = new SimulationEngine(workers, flowerChance);
+        isSimActive=true;
+        startLoop();
+    }
 
+    public void continueLoop(){
+        if(isSimActive)
         startLoop();
     }
 

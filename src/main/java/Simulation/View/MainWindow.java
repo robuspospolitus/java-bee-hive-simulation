@@ -34,12 +34,12 @@ public class MainWindow extends Application {
         });
         Button stopBtn = new Button("Stop Simulation");
         stopBtn.setOnAction(event -> controller.stopLoop());
-        //Button stepBtn = new Button("Next Step");
-       // stepBtn.setOnAction(event -> controller.step());
+        Button continueBtn = new Button("Continue Old Simulation");
+        continueBtn.setOnAction(event -> controller.continueLoop());
 
         // 4. Stack them in a simple layout (Button on top, Map on bottom)
 
-        VBox controls = new VBox(5, startBtn, stopBtn,
+        VBox controls = new VBox(5, startBtn, stopBtn, continueBtn,
                 new Label("Number of Workers:"), workerSpinner,
                 new Label("Chance for flower appearing:"), flowerSpinner);
 
@@ -51,7 +51,7 @@ public class MainWindow extends Application {
         //layout.getChildren().addAll(startBtn, stopBtn);
         Scene scene = new Scene(layout, 1280, 640);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Test Run");
+        primaryStage.setTitle("Bee Simulation");
         primaryStage.show();
     }
 

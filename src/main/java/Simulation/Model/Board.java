@@ -19,9 +19,12 @@ public class Board {
         // Initialize every single coordinate with a blank Cell object
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if(x >= 14 && x <= 16 && y <= 2) {
-                    grid[x][y] = new Cell(x, y, CellType.EMPTY);
-                } else {
+                if((x==hiveEntrance.x && y==hiveEntrance.y)|| (x==hiveExit.x && y==hiveExit.y)){
+                   grid[x][y] = new Cell(x, y, CellType.TELEPORT);
+                } else if(x<=16 && x>=14 && y<=2){
+                    grid[x][y] = new Cell (x,y, CellType.EMPTY);
+                }
+                else {
                     grid[x][y] = x<12 ? new Cell(x, y, CellType.HIVE) :
                             x==12 ? new Cell(x, y, CellType.OBSTACLE) :
                                     new Cell(x, y, CellType.MEADOW);
