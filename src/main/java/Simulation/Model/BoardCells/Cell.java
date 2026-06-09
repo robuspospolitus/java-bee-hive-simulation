@@ -9,16 +9,10 @@ public class Cell {
     private boolean hasFlower;
     private static double flowerChance;
 
-    public Cell(int x, int y) {
-        this.type = CellType.EMPTY;
-        Initialize(x, y);
-    }
     public Cell(int x, int y, CellType type) {
-        setType(type);
+        setType(type!=null ? type : CellType.EMPTY);
         Initialize(x, y);
     }
-
-
 
     private void Initialize(int x, int y) {
         regenerationRate = 1;
