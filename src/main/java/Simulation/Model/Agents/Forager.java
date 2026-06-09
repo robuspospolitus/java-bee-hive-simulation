@@ -69,12 +69,11 @@ public class Forager extends Bee {
         if (newPos.equals(board.getStashDestination(HONEY_STASH)) && this.energy <= 30) {
             Hive ul = board.getHive();
             int energyNeeded = 100 - (int)this.energy;
-            int honeyAvailable = ul.getHoneyAmount();
-            int toConsume = Math.min(energyNeeded, honeyAvailable);
-
-            ul.setHoneyAmount(honeyAvailable - toConsume);
+            int foodAvailable = ul.getFoodAmount();
+            int toConsume = Math.min(energyNeeded, foodAvailable);
+            ul.setFoodAmount(foodAvailable - toConsume);
             this.energy += toConsume;
-            System.out.println("Zbieraczka " + ID + " zjadła " + toConsume + " miodu ze spiżarni. Zostało miodu: " + ul.getHoneyAmount() + ". Energia pszczoły: " + this.energy);
+            System.out.println("Zbieraczka " + ID + " zjadła " + toConsume + " miodu ze spiżarni. Zostało miodu: " + ul.getFoodAmount() + ". Energia pszczoły: " + this.energy);
         }
 
     }

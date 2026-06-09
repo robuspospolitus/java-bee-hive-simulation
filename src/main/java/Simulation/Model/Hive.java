@@ -6,7 +6,6 @@ public class Hive {
 
     public Hive() {
         this.pollenAmount = 0;
-        this.honeyAmount = 0;
         this.foodAmount = SimulationConfig.INITIAL_HIVE_FOOD;
     }
 
@@ -31,9 +30,6 @@ public class Hive {
 
     public int getPollenAmount() { return pollenAmount; }
     public void setPollenAmount(int pollenAmount) { this.pollenAmount = pollenAmount; }
-
-    public int getHoneyAmount() { return honeyAmount; }
-    public void setHoneyAmount(int honeyAmount) { this.honeyAmount = honeyAmount; }
 
     public int getFoodAmount() { return foodAmount; }
     public void setFoodAmount(int foodAmount) { this.foodAmount = foodAmount; }

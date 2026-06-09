@@ -69,9 +69,8 @@ public class Storer extends Bee{
         }
 
         //wytwarzanie jedzenia/miodu
-        if(ul.getPollenAmount() >= 2){
-            ul.setPollenAmount(ul.getPollenAmount() - 2);
-            ul.setHoneyAmount(ul.getHoneyAmount()+ 1);
+        if(ul.getPollenAmount() > 0){
+            ul.setPollenAmount(ul.getPollenAmount() - 1);
             ul.setFoodAmount(ul.getFoodAmount() + 1);
         }
 
