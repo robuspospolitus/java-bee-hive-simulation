@@ -2,6 +2,7 @@ package Simulation.Model;
 import Simulation.Model.Agents.Bee;
 import Simulation.Model.Agents.Forager;
 import Simulation.Model.Agents.Storer;
+import Simulation.Model.Agents.Queen;
 import Simulation.Model.Agents.Larva;
 import Simulation.Model.BoardCells.Cell;
 
@@ -28,6 +29,7 @@ public class SimulationEngine {
 
 
     void initializeSimulation() {
+        addAgent(new Queen(Bee.getTotalNum(), 0, 15,5)); //zamiast 15,5 wspolrzedne ula
 
         // 3. Spawn initial Foragers INSIDE the logical hive coordinates
         for (int i = 0; i < numWorkers; i++) {
@@ -45,6 +47,22 @@ public class SimulationEngine {
         for (int i = this.agents.size() - 1; i >= 0; i--) { //lecimy od tylu by wyrzucanie agentow nie psulo dzialania fora
             Bee bee = this.agents.get(i);
             bee.update(this.board);
+
+            //sytem  skladania larw
+            if(bee instanceof Queen){
+                Queen queen = (Queen) bee; //robimy to po to aby miec dostep do metod Queen
+                if(queen.canLayEgg()){
+                    Point pos = queen.getBeePosition();
+                    int newID = Bee.getTotalNum();
+
+                    addAgent(new Larva(newID, 0, pos.x, pos.y)); //nowa larwa na pozycji krolowej
+
+                    queen.burnEnergy(10.0f);
+                    queen.resetEggCooldown();
+                    System.out.println("Krolowa zlozyla larwe");
+                }
+                continue;
+            }
 
             //ewolucja larwy
             if(bee instanceof Larva && bee.getAge() >= 30){

@@ -1,31 +1,31 @@
 package Simulation.Model.Agents;
 import Simulation.Model.Board;
 import Simulation.Model.MovementStrategies.AgentContext;
+import Simulation.Model.MovementStrategies.RandomMovement;
 
 import java.awt.Point;
 
 public class Queen extends Bee{
-    private Point position;
+    //private Point position;
     private int eggLayCooldown = 0; //licznik tur do zlozenia jaj
-    private AgentContext movementContext;
+    //private AgentContext movementContext;
 
     public Queen (int ID, int age, int spawnX, int spawnY){
-        this.ID = ID;
-        this.age = age;
-        this.position = new Point(spawnX, spawnY);
+        super(ID, age, spawnX, spawnY);
         this.setEnergy(100.0f);
-        this.movementContext = new AgentContext("Queen " + ID, null, this.position);
+        this.movementContext = new AgentContext("Queen " + ID, new RandomMovement(), new Point(spawnX, spawnY));
 
-        totalNumBees++;
     }
 
     @Override
     public void move(Board board){
-        this.age++;
-        this.burnEnergy(0.05f);
 
+    }
+
+    @Override
+    protected void interactWithEnvironment(Board board){
         if(eggLayCooldown > 0){
-            eggLayCooldown--;
+            eggLayCooldown--; //co ture odliczamy do nowej larwy
         }
     }
 
@@ -33,8 +33,8 @@ public class Queen extends Bee{
         return eggLayCooldown == 0 && this.getEnergy() > 30; //ile musi miec energi by zmiesc jajo
     }
 
-    public void resetEggColldown(){
-        this.eggLayCooldown = 15;  //co ile nowe jajko jest skladane
+    public void resetEggCooldown(){
+        this.eggLayCooldown = 15;  //co ile nowa larwa jest skladana
     }
 
     public void receiveFood(){
@@ -42,8 +42,8 @@ public class Queen extends Bee{
     }
 
     @Override
-    Point findDestination(Board board){
-        return this.position;
+    protected Point findDestination(Board board){
+        return this.getBeePosition();
     }
 
     @Override
