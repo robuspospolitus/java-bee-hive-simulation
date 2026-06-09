@@ -47,33 +47,44 @@ public class Forager extends Bee {
         movementContext.performMove();
         Point newPos = movementContext.getPosition();
 
-        board.moveAgent(this, oldPos, newPos);
-        System.out.println("Zbieraczka porusza sie na: "+ "X: "+ newPos.x + ", Y: " + newPos.y);
+        if (board.isValidMove(newPos.x, newPos.y)) {
+            board.moveAgent(this, oldPos, newPos);
+            System.out.println("Zbieraczka porusza sie na: X: "+ newPos.x + ", Y: " + newPos.y);
+        } else {
+            movementContext.setPosition(oldPos);
+            System.out.println("Bee" + ID + " bumped into an obstacle.");
+        }
+
+       // board.moveAgent(this, oldPos, newPos);
+       //System.out.println("Zbieraczka porusza sie na: "+ "X: "+ newPos.x + ", Y: " + newPos.y);
     }
 
     protected Point findDestination(Board board) {
         Point currentPos = this.movementContext.getPosition();
         Cell[][] grid = board.getGrid();
 
+        if(currentPos.equals(board.getHiveEntrance())){
+            System.out.println("Teleporting");
+            movementContext.setStrategy(new TeleportMovement(board.getTeleportDestination(currentPos)));
+            return board.getTeleportDestination(currentPos);
+        }
+
         if (carriedPollen >= numPollen) {
-            System.out.println("Going back to hive");
             if(grid[currentPos.x][currentPos.y].getType()==CellType.MEADOW){
-            movementContext.setStrategy(new TargetedMovement(board.getHiveEntrance()));
-            return board.getHiveEntrance();}
-
-
-            if(grid[currentPos.x][currentPos.y].equals (grid [(board.getHiveEntrance()).x][board.getHiveEntrance().y])){
-                System.out.println("Teleporting");
-               movementContext.setStrategy(new TeleportMovement(board.getTeleportDestination(currentPos)));
-                return board.getTeleportDestination(currentPos);
+                System.out.println("Going back to hive");
+                movementContext.setStrategy(new TargetedMovement(board.getHiveEntrance()));
+                return board.getHiveEntrance();
             }
 
             if(grid[currentPos.x][currentPos.y].getType()==CellType.HIVE){
                 System.out.println("About to stash pollen");
-                if(lookForCell(board, POLLEN_STASH)!=null){
+                /*if(lookForCell(board, POLLEN_STASH)!=null){
                     movementContext.setStrategy(new TargetedMovement(lookForCell(board, POLLEN_STASH)));
                     return (lookForCell(board, POLLEN_STASH));
-                }
+                }*/
+
+                    movementContext.setStrategy(new TargetedMovement(board.getStashDestination(POLLEN_STASH)));
+                    return board.getStashDestination(POLLEN_STASH);
             }
 
         }
@@ -91,7 +102,6 @@ public class Forager extends Bee {
                     }
                 }
             }
-            return null;
         }
 
         System.out.println("I don't see anything, flying random...");

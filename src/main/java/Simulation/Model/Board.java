@@ -23,7 +23,7 @@ public class Board {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if((x==hiveEntrance.x && y==hiveEntrance.y)|| (x==hiveExit.x && y==hiveExit.y)){
-                    grid[x][y] = new Cell(x, y, CellType.TELEPORT);
+                   grid[x][y] = new Cell(x, y, CellType.TELEPORT);
                 } else {
                     grid[x][y] = x<12 ? new Cell(x, y, CellType.HIVE) :
                             x==12 ? new Cell(x, y, CellType.OBSTACLE) :
@@ -55,23 +55,24 @@ public class Board {
 
     // Checks if a coordinate is actually on the map, and if no other bee is there
     public boolean isValidMove(int x, int y) {
-        if (x < 0 || x > width || y < 0 || y > height) return false;
+        if (x < 0 || x >= width || y < 0 || y >= height) return false;
         if (grid[x][y].getType() == CellType.OBSTACLE) return false;
-
-        return grid[x][y].isEmpty();
+        return true;
+       // return grid[x][y].isEmpty();
     }
 
     // Handles the actual teleportation of a bee from old cell to new cell
     public void moveAgent(Bee bee, Point oldPos, Point newPos) {
-        // Clear the old cell if the bee was already on the board
-        if (oldPos != null) {
-            grid[oldPos.x][oldPos.y].setAgent(null);
-        }
 
-        // Set the bee into the new cell
-        if (newPos != null) {
-            grid[newPos.x][newPos.y].setAgent(bee);
-        }
+            // Clear the old cell if the bee was already on the board
+            if (oldPos != null) {
+                grid[oldPos.x][oldPos.y].setAgent(null);
+            }
+
+            // Set the bee into the new cell
+            if (newPos != null) {
+                grid[newPos.x][newPos.y].setAgent(bee);
+            }
     }
 
 
@@ -88,38 +89,12 @@ public class Board {
 
     public Point getStashDestination(CellType stashType){
         if (stashType==CellType.POLLEN_STASH) {
-            return hiveExit;
+            return new Point (0,0);
         } else if (stashType==CellType.HONEY_STASH) {
-            return hiveEntrance;
+            return new Point (0,1);
         }
         return null;
-
     }
-
-    /*public void teleportAgent(Bee bee, Point enter, Point exit){
-        if (enter != null) {
-            grid[enter.x][enter.y].setAgent(null);
-        }
-        // Set the bee into the new cell
-        if (exit != null) {
-            grid[exit.x][exit.y].setAgent(bee);
-        }
-
-    }*/
-
-
-    // --- View & Engine Helpers ---
-
-    // Allows SimulationEngine to paint "Hive" or "Meadow" zones onto the grid
-//    public void setZoneType(int startX, int endX, int startY, int endY, CellType type) {
-//        for (int x = startX; x <= endX; x++) {
-//            for (int y = startY; y <= endY; y++) {
-//                if (isValidCoordinate(x, y)) {
-//                    grid[x][y].setType(CellType.EMPTY);
-//                }
-//            }
-//        }
-//    }
 
     public Cell getCell(int x, int y) {
         if (isValidCoordinate(x, y)) {

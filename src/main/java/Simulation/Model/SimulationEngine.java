@@ -30,7 +30,7 @@ public class SimulationEngine {
 
         // 3. Spawn initial Foragers INSIDE the logical hive coordinates
         for (int i = 0; i < numWorkers; i++) {
-            int startX = 15;
+            int startX = 16;
             int startY = 1;
             int ID= Bee.getTotalNum();
             Forager forager = new Forager(ID,10, startX, startY);
