@@ -1,7 +1,5 @@
 package Simulation.Model;
-import Simulation.Model.Agents.Bee;
-import Simulation.Model.Agents.Forager;
-import Simulation.Model.Agents.Storer;
+import Simulation.Model.Agents.*;
 import Simulation.Model.BoardCells.Cell;
 import Simulation.Model.BoardCells.CellType;
 
@@ -32,6 +30,7 @@ public class SimulationEngine {
         int defaultSpawnX = 16;
         int defaultSpawnY = 1;
 
+        // Foragers spawn
         for (int i = 0; i < numWorkers; i++) {
             Point safePos = findEmptySpawnPosition(this.board, defaultSpawnX, defaultSpawnY);
             Forager newBee = new Forager(i, 0, safePos.x, safePos.y);
@@ -39,6 +38,11 @@ public class SimulationEngine {
             this.agents.add(newBee);
             this.board.getCell(safePos.x, safePos.y).setAgent(newBee);
         }
+        // Queen spawn (yellow dot)
+        Queen queen = new Queen(Bee.getTotalNum(), 0, 8, 1);
+        this.agents.add(queen);
+        this.board.setQueen(queen);
+        this.board.getCell(8, 1).setAgent(queen);
         System.out.println("Simulation initialized");
     }
 
@@ -55,6 +59,17 @@ public class SimulationEngine {
 
             if (bee.isDead()) {
                 removeAgent(bee);
+            }
+        }
+
+        Queen queen = board.getQueen();
+        if (queen != null && queen.canLayEgg()) {
+            int newId = this.agents.size();
+            if(queen.canLayEgg()){
+                Larva newLarva = queen.layEggs(newId);
+                this.agents.add(newLarva);
+                this.board.moveAgent(newLarva, null, newLarva.getBeePosition());
+                queen.resetEggCooldown();
             }
         }
 
