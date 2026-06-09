@@ -52,8 +52,9 @@ public class Queen extends Bee{
         return this.movementContext;
     }
 
-    protected void layEggs (){
+    protected Larva layEggs(int newId){
         System.out.println ("Jaja zostały złożone przez królową");
+        return new Larva(newId, (int)this.position.getX(), (int)this.position.getY());
     }
 
 
