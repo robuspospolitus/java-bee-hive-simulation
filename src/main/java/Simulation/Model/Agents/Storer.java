@@ -51,16 +51,16 @@ public class Storer extends Bee{
         //Queen queen = board.getQueen;
         //karmienie krolowej
         if(queen != null && queen.getEnergy() < 40.0f){
-            if(ul.getFoodAmount() > 0){
-                ul.setFoodAmount(ul.getFoodAmount() - 1);
+            if(ul.getHoneyAmount() > 0){
+                ul.setHoneyAmount(ul.getHoneyAmount() - 1);
                 queen.receiveFood();
             }
         }
 
         //same jedza
         if(this.getEnergy() < SimulationConfig.ENERGY_THRESHOLD_RETURN){
-            if(ul.getFoodAmount() > 0){
-                ul.setFoodAmount(ul.getFoodAmount() - 1);
+            if(ul.getHoneyAmount() > 0){
+                ul.setHoneyAmount(ul.getHoneyAmount() - 1);
                 this.setEnergy(SimulationConfig.ENERGY_FULL);
                 System.out.println("Magazynierka " + ID + "zjadla, energia 100%");
             } else {
@@ -71,7 +71,7 @@ public class Storer extends Bee{
         //wytwarzanie jedzenia/miodu
         if(ul.getPollenAmount() > 0){
             ul.setPollenAmount(ul.getPollenAmount() - 1);
-            ul.setFoodAmount(ul.getFoodAmount() + 1);
+            ul.setHoneyAmount(ul.getHoneyAmount() + 1);
         }
 
     }

@@ -2,23 +2,22 @@ package Simulation.Model;
 public class Hive {
     private int pollenAmount;
     private int honeyAmount;
-    private int foodAmount;
 
     public Hive() {
         this.pollenAmount = 0;
-        this.foodAmount = SimulationConfig.INITIAL_HIVE_FOOD;
+        this.honeyAmount = SimulationConfig.INITIAL_HIVE_FOOD;
     }
 
     public synchronized int consumeFood(int amountNeeded) {
-        if (this.foodAmount <= 0) {
+        if (this.honeyAmount <= 0) {
             return 0;
         }
-        if (this.foodAmount >= amountNeeded) {
-            this.foodAmount -= amountNeeded;
+        if (this.honeyAmount >= amountNeeded) {
+            this.honeyAmount -= amountNeeded;
             return amountNeeded;
         } else {
-            int availableFood = this.foodAmount;
-            this.foodAmount = 0;
+            int availableFood = this.honeyAmount;
+            this.honeyAmount = 0;
             return availableFood;
         }
     }
@@ -31,6 +30,6 @@ public class Hive {
     public int getPollenAmount() { return pollenAmount; }
     public void setPollenAmount(int pollenAmount) { this.pollenAmount = pollenAmount; }
 
-    public int getFoodAmount() { return foodAmount; }
-    public void setFoodAmount(int foodAmount) { this.foodAmount = foodAmount; }
+    public int getHoneyAmount() { return honeyAmount; }
+    public void setHoneyAmount(int honeyAmount) { this.honeyAmount = honeyAmount; }
 }

@@ -1,12 +1,12 @@
 package Simulation.Model.Agents;
 
-import Simulation.Model.BoardCells.CellType;
 import Simulation.Model.MovementStrategies.AgentContext;
 import Simulation.Model.MovementStrategies.RandomMovement;
 import Simulation.Model.MovementStrategies.TargetedMovement;
 import Simulation.Model.Board;
 import Simulation.Model.Hive;
 import Simulation.Model.BoardCells.Cell;
+import Simulation.Model.BoardCells.CellType;
 import Simulation.Model.MovementStrategies.TeleportMovement;
 
 import java.awt.*;
@@ -69,11 +69,11 @@ public class Forager extends Bee {
         if (newPos.equals(board.getStashDestination(HONEY_STASH)) && this.energy <= 30) {
             Hive ul = board.getHive();
             int energyNeeded = 100 - (int)this.energy;
-            int foodAvailable = ul.getFoodAmount();
+            int foodAvailable = ul.getHoneyAmount();
             int toConsume = Math.min(energyNeeded, foodAvailable);
-            ul.setFoodAmount(foodAvailable - toConsume);
+            ul.setHoneyAmount(foodAvailable - toConsume);
             this.energy += toConsume;
-            System.out.println("Zbieraczka " + ID + " zjadła " + toConsume + " miodu ze spiżarni. Zostało miodu: " + ul.getFoodAmount() + ". Energia pszczoły: " + this.energy);
+            System.out.println("Zbieraczka " + ID + " zjadła " + toConsume + " miodu ze spiżarni. Zostało miodu: " + ul.getHoneyAmount() + ". Energia pszczoły: " + this.energy);
         }
 
     }
@@ -161,8 +161,10 @@ public class Forager extends Bee {
 
     @Override
     public void interact(Cell cell) {
-        if (cell != null && cell.hasFlower()) {
-            int collectedPollen = cell.takePollen(SimulationConfig.POLLEN_COLLECTION_AMOUNT);
+        if (cell != null && cell.hasFlower() && this.carriedPollen < SimulationConfig.MAX_POLLEN_CAPACITY) { //ograniczenie ilosci niesionego pylku
+            int spaceAvailable = SimulationConfig.MAX_POLLEN_CAPACITY - this.carriedPollen; //ile miejsca na pylek zostalo
+            int amountToTry = Math.min(SimulationConfig.POLLEN_COLLECTION_AMOUNT, spaceAvailable); //bierze tyle ile moze
+            int collectedPollen = cell.takePollen(amountToTry);
             if (collectedPollen > 0) {
                 this.carriedPollen += collectedPollen;
                 System.out.println("Zbieraczka " + ID + " zebrała " + collectedPollen + " pyłku. Posiada teraz: " + carriedPollen + "/" + SimulationConfig.MAX_POLLEN_CAPACITY);
@@ -172,3 +174,16 @@ public class Forager extends Bee {
 
     public AgentContext getMovementContext() { return this.movementContext; }
 }
+
+
+
+/*
+public void interact(Cell cell) {
+    if (cell != null && cell.hasFlower()) {
+        int collectedPollen = cell.takePollen(SimulationConfig.POLLEN_COLLECTION_AMOUNT);
+        if (collectedPollen > 0) {
+            this.carriedPollen += collectedPollen;
+            System.out.println("Zbieraczka " + ID + " zebrała " + collectedPollen + " pyłku. Posiada teraz: " + carriedPollen + "/" + SimulationConfig.MAX_POLLEN_CAPACITY);
+}
+}
+ */
