@@ -172,6 +172,27 @@ public class SimulationEngine {
 
     public Board getBoard (){return board;}
 
+    public int getForagerCount() {
+        int count = 0;
+        for (Bee bee : agents) {
+            if (bee instanceof Forager) count++;
+        }
+        return count;
+    }
+
+    public Hive getHive() {
+        return this.board.getHive();
+    }
+
+    public int getStorerCount() {
+        int count = 0;
+        for (Bee bee : agents) {
+            if (bee instanceof Storer) count++;
+        }
+        return count;
+    }
+
+
     private Point findEmptySpawnPosition(Board board, int startX, int startY) {
         int maxRadius = Math.max(board.getWidth(), board.getHeight());
 

@@ -78,6 +78,7 @@ public class SimulationController {
     private SimulationEngine engine;
     private final GridBoard gridBoard;
     private Timeline gameLoop;
+    private Runnable onTickCallback;
 
     // The View passes the drawing canvas to the controller so it can tell it when to redraw
     public SimulationController(GridBoard gridBoard) {
@@ -92,30 +93,40 @@ public class SimulationController {
     }
 
     private void startLoop() {
-        // Safety check: if they click "Start" twice, stop the old loop first
         if (gameLoop != null) {
             gameLoop.stop();
         }
 
-        // Create a timer that ticks every 250 milliseconds (4 frames per second)
         gameLoop = new Timeline(new KeyFrame(Duration.millis(250), event -> {
 
-            // Phase 1: Update the math (Model)
-            engine.run(5);
+            // Phase 1: Update the math
+            engine.run(1); // Running 5 steps per frame (speeds up the simulation!)
 
-            // Phase 2: Draw the new math to the screen (View)
+            // Phase 2: Draw the new math to the screen
             gridBoard.render(engine.getBoard());
 
+            // Phase 3: THE FIX - Tell the UI to update the numbers!
+            if (onTickCallback != null) {
+                onTickCallback.run();
+            }
         }));
 
-        gameLoop.setCycleCount(Timeline.INDEFINITE); // Tell it to loop forever
+        gameLoop.setCycleCount(Timeline.INDEFINITE);
         gameLoop.play();
-
     }
 
     public void stopLoop(){
         if (gameLoop != null) {
             gameLoop.stop();
         }
+    }
+
+    public void setOnTickCallback(Runnable callback) {
+        this.onTickCallback = callback;
+    }
+
+    // 2. Add this getter so MainWindow can read the live stats
+    public SimulationEngine getEngine() {
+        return this.engine;
     }
 }
