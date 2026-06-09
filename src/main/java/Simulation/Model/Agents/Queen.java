@@ -47,11 +47,6 @@ public class Queen extends Bee{
         return this.position;
     }
 
-    @Override
-    public boolean isDead() {
-        // The Queen never dies! (At least for now)
-        return false;
-    }
 
     @Override
     public AgentContext getMovementContext(){
@@ -65,7 +60,7 @@ public class Queen extends Bee{
 
     @Override
     public Point getBeePosition() {
-        // Force the engine to always use her exact throne coordinates
+
         return this.position;
     }
 

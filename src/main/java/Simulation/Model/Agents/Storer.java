@@ -31,8 +31,36 @@ public class Storer extends Bee{
         Point oldPos = new Point(movementContext.getPosition());
         movementContext.performMove(board);
         Point newPos = movementContext.getPosition();
-        board.moveAgent(this, oldPos, newPos);
-        System.out.println("Magazynierka " + ID + " poruszyla sie");
+
+        if (board.isValidMove(newPos.x, newPos.y)) {
+            board.moveAgent(this, oldPos, newPos);
+        } else {
+            // 2. TRAFFIC JAM! Try to sidestep instead of giving up!
+            boolean dodged = false;
+
+            // Look at the 8 adjacent tiles surrounding the bee
+            for (int xOffset = -1; xOffset <= 1 && !dodged; xOffset++) {
+                for (int yOffset = -1; yOffset <= 1 && !dodged; yOffset++) {
+
+                    int dodgeX = oldPos.x + xOffset;
+                    int dodgeY = oldPos.y + yOffset;
+
+                    // If we find an empty tile nearby, slide into it!
+                    if (board.isValidMove(dodgeX, dodgeY)) {
+                        Point dodgePos = new Point(dodgeX, dodgeY);
+                        movementContext.setPosition(dodgePos);
+                        board.moveAgent(this, oldPos, dodgePos);
+                        dodged = true; // Mark as successful to stop the loop
+                    }
+                }
+            }
+
+            // 3. If completely surrounded on all 8 sides, just wait patiently
+            if (!dodged) {
+                movementContext.setPosition(oldPos);
+            }
+        }
+
 
         this.age++;
         this.burnEnergy(1.0f);
