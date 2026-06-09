@@ -30,6 +30,10 @@ public abstract class Bee {
         return this.energy <=0;
     }
 
+    public boolean isTooOld() {
+        return this.age > SimulationConfig.MAX_BEE_AGE;
+    }
+
     public Point getBeePosition() {
         if (this.getMovementContext() != null) {
             return this.getMovementContext().getPosition();

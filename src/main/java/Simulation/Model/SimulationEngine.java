@@ -91,8 +91,9 @@ public class SimulationEngine {
             Cell currentCell = board.getCell(pos.x, pos.y);
             bee.interact(currentCell);
 
-            if (bee.isDead()) {
+            if (bee.isDead() || bee.isTooOld()) {
                 removeAgent(bee);
+                //System.out.println("dowidzenia");
             }
         }
 

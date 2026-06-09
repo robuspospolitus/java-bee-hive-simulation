@@ -30,6 +30,11 @@ public class Queen extends Bee{
         }
     }
 
+    @Override
+    public boolean isTooOld() {
+        return false; // Królowa nigdy nie jest "za stara"
+    }
+
     public boolean canLayEgg(){
         return eggLayCooldown == 0 && this.getEnergy() > 30; //ile musi miec energi by zmiesc jajo
     }
