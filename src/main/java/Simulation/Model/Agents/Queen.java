@@ -47,14 +47,21 @@ public class Queen extends Bee{
         return this.position;
     }
 
+
     @Override
     public AgentContext getMovementContext(){
         return this.movementContext;
     }
 
-    public Larva layEggs(int newId){
-        System.out.println ("Jaja zostały złożone przez królową");
-        return new Larva(newId, (int)this.position.getX(), (int)this.position.getY());
+    public Larva layEggs(int newId, int safeX, int safeY){
+        System.out.println("Jaja zostały złożone przez królową na " + safeX + ", " + safeY);
+        return new Larva(newId, safeX, safeY);
+    }
+
+    @Override
+    public Point getBeePosition() {
+
+        return this.position;
     }
 
 

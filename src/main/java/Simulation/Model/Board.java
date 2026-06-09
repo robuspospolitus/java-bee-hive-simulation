@@ -66,8 +66,7 @@ public class Board {
     public boolean isValidMove(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y >= height) return false;
         if (grid[x][y].getType() == CellType.OBSTACLE) return false;
-        return true;
-       // return grid[x][y].isEmpty();
+       return grid[x][y].isEmpty();
     }
 
     // Handles moving bee from old cell to new cell

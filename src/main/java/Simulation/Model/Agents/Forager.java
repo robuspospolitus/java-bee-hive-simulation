@@ -47,13 +47,36 @@ public class Forager extends Bee {
         movementContext.performMove(board);
         Point newPos = movementContext.getPosition();
 
+
         if (board.isValidMove(newPos.x, newPos.y)) {
             board.moveAgent(this, oldPos, newPos);
-            System.out.println("Zbieraczka porusza sie na: X: "+ newPos.x + ", Y: " + newPos.y);
         } else {
-            movementContext.setPosition(oldPos);
-            System.out.println("Bee" + ID + " bumped into an obstacle.");
+            // 2. TRAFFIC JAM! Try to sidestep instead of giving up!
+            boolean dodged = false;
+
+            // Look at the 8 adjacent tiles surrounding the bee
+            for (int xOffset = -1; xOffset <= 1 && !dodged; xOffset++) {
+                for (int yOffset = -1; yOffset <= 1 && !dodged; yOffset++) {
+
+                    int dodgeX = oldPos.x + xOffset;
+                    int dodgeY = oldPos.y + yOffset;
+
+                    // If we find an empty tile nearby, slide into it!
+                    if (board.isValidMove(dodgeX, dodgeY)) {
+                        Point dodgePos = new Point(dodgeX, dodgeY);
+                        movementContext.setPosition(dodgePos);
+                        board.moveAgent(this, oldPos, dodgePos);
+                        dodged = true; // Mark as successful to stop the loop
+                    }
+                }
+            }
+
+            // 3. If completely surrounded on all 8 sides, just wait patiently
+            if (!dodged) {
+                movementContext.setPosition(oldPos);
+            }
         }
+
 
         this.age++;
         this.burnEnergy(SimulationConfig.ENERGY_CONSUMPTION_FORAGER);
