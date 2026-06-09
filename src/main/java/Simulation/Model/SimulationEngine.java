@@ -48,10 +48,10 @@ public class SimulationEngine {
             this.board.getCell(safePos.x, safePos.y).setAgent(newBee);
         }
         // Queen spawn
-        Queen queen = new Queen(Bee.getTotalNum(), 0, 8, 1);
+        Queen queen = new Queen(Bee.getTotalNum(), 1, 5, 8);
         this.agents.add(queen);
         this.board.setQueen(queen);
-        this.board.getCell(8, 1).setAgent(queen);
+        this.board.getCell(5, 8).setAgent(queen);
         System.out.println("Simulation initialized");
     }
 
@@ -82,7 +82,7 @@ public class SimulationEngine {
             }
         }
 
-        Queen queen = board.getQueen();
+       /* Queen queen = board.getQueen();
         if (queen != null && queen.canLayEgg()) {
             int newId = this.agents.size();
             if(queen.canLayEgg()){
@@ -91,6 +91,30 @@ public class SimulationEngine {
                 this.board.moveAgent(newLarva, null, newLarva.getBeePosition());
                 queen.resetEggCooldown();
             }
+        }*/
+
+        Queen queen = board.getQueen();
+        if (queen != null && queen.canLayEgg()) {
+            int newId = this.agents.size();
+
+            // 1. Get the Queen's current location
+            Point queenPos = queen.getBeePosition();
+
+            // 2. Find an empty spot nearby for the egg!
+            Point nurseryPos = findEmptySpawnPosition(this.board, queenPos.x, queenPos.y);
+
+            // 3. Create the Larva
+            Larva newLarva = queen.layEggs(newId, nurseryPos.x, nurseryPos.y);
+
+            // 4. IMPORTANT: Update the new Larva's position to the empty spot!
+            // (Assuming your Larva/Bee class has a way to set its position, like this:)
+            newLarva.getMovementContext().setPosition(nurseryPos);
+
+            // 5. Now add it to the board at the SAFE position
+            this.agents.add(newLarva);
+            this.board.moveAgent(newLarva, null, nurseryPos);
+
+            queen.resetEggCooldown();
         }
 
         if (this.currentTick % SimulationConfig.POLLEN_REGENERATION_TIME == 0) {

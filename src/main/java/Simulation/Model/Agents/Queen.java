@@ -48,13 +48,25 @@ public class Queen extends Bee{
     }
 
     @Override
+    public boolean isDead() {
+        // The Queen never dies! (At least for now)
+        return false;
+    }
+
+    @Override
     public AgentContext getMovementContext(){
         return this.movementContext;
     }
 
-    public Larva layEggs(int newId){
-        System.out.println ("Jaja zostały złożone przez królową");
-        return new Larva(newId, (int)this.position.getX(), (int)this.position.getY());
+    public Larva layEggs(int newId, int safeX, int safeY){
+        System.out.println("Jaja zostały złożone przez królową na " + safeX + ", " + safeY);
+        return new Larva(newId, safeX, safeY);
+    }
+
+    @Override
+    public Point getBeePosition() {
+        // Force the engine to always use her exact throne coordinates
+        return this.position;
     }
 
 
