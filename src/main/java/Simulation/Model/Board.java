@@ -13,11 +13,15 @@ public class Board {
     private Point hiveEntrance = new Point (15,1);
     private Point hiveExit = new Point (11,1);
 
+    private Hive hive;
+    private Simulation.Model.Agents.Queen queen;
 
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
         this.grid = new Cell[width][height];
+
+        this.hive = new Hive();
 
         // Initialize every single coordinate with a blank Cell object
         for (int x = 0; x < width; x++) {
@@ -40,6 +44,11 @@ public class Board {
             grid[x][0].setType(CellType.POLLEN_STASH);
             grid[x][1].setType(CellType.HONEY_STASH);
     }
+    }
+
+
+    public Hive getHive() {
+        return this.hive;
     }
 
     // Regenerate pollen on Cells
@@ -108,6 +117,14 @@ public class Board {
             return grid[x][y].getAgent();
         }
         return null;
+    }
+
+    public Simulation.Model.Agents.Queen getQueen() {
+        return this.queen;
+    }
+
+    public void setQueen(Simulation.Model.Agents.Queen queen) {
+        this.queen = queen;
     }
 
     private boolean isValidCoordinate(int x, int y) {

@@ -5,6 +5,7 @@ import Simulation.Model.MovementStrategies.AgentContext;
 import Simulation.Model.MovementStrategies.RandomMovement;
 import Simulation.Model.MovementStrategies.TargetedMovement;
 import Simulation.Model.Board;
+import Simulation.Model.Hive;
 import Simulation.Model.BoardCells.Cell;
 import Simulation.Model.MovementStrategies.TeleportMovement;
 
@@ -16,7 +17,6 @@ import static Simulation.Model.BoardCells.CellType.POLLEN_STASH;
 public class Forager extends Bee {
     int numPollen=10;
     int carriedPollen;
-    int age;
     int spawnX;
     int spawnY;
     Point spawnPosition;
@@ -47,7 +47,7 @@ public class Forager extends Bee {
         movementContext.performMove();
         Point newPos = movementContext.getPosition();
 
-        if (board.isValidMove(newPos.x, newPos.y)) {
+          if (board.isValidMove(newPos.x, newPos.y)) {
             board.moveAgent(this, oldPos, newPos);
             System.out.println("Zbieraczka porusza sie na: X: "+ newPos.x + ", Y: " + newPos.y);
         } else {
@@ -55,11 +55,35 @@ public class Forager extends Bee {
             System.out.println("Bee" + ID + " bumped into an obstacle.");
         }
 
-       // board.moveAgent(this, oldPos, newPos);
-       //System.out.println("Zbieraczka porusza sie na: "+ "X: "+ newPos.x + ", Y: " + newPos.y);
+        this.age++;
+        this.burnEnergy(1.0f);
+
+        if (newPos.x == 0 && newPos.y == 0 && this.carriedPollen > 0) { //wspolrzedne ula
+            Hive ul = board.getHive();
+
+            //przekazujemy cały zebrany pyłek do ula
+            ul.setPollenAmount(ul.getPollenAmount() + this.carriedPollen);
+            System.out.println(" Zbieraczka " + ID + " rozładowała " + this.carriedPollen + " szt. pyłku do ula!");
+            this.carriedPollen = 0;
+
+            //Skoro jest w ulu to je
+            if (ul.getFoodAmount() > 0) {
+                ul.setFoodAmount(ul.getFoodAmount() - 1); // zjada jedzenie ula
+                this.setEnergy(100);
+                System.out.println(" Zbieraczka " + ID + " zjadła");
+            } else {
+                System.out.println(" Zbieraczka " + ID + " jest w ulu, ale glodna");
+            }
+        }
     }
 
     protected Point findDestination(Board board) {
+        if(this.getEnergy() < 25.0f || carriedPollen >= 10){
+            System.out.println("zbieraczka " + ID + " wraca do ula");
+            movementContext.setStrategy(new TargetedMovement(new Point (0,0))); //wspolrzedne ula
+            return new Point(0,0);
+        }
+
         Point currentPos = this.movementContext.getPosition();
         Cell[][] grid = board.getGrid();
 

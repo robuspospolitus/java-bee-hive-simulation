@@ -41,10 +41,9 @@ public class SimulationEngine {
 
     public int steps() {
         if (!isRunning) return currentTick;
-        List<Bee> currentAgents = new ArrayList<>(this.agents);
-
-        for (Bee bee : currentAgents) {
-            bee.move(this.board);
+        for (int i = this.agents.size() - 1; i >= 0; i--) { //lecimy od tylu by wyrzucanie agentow nie psulo dzialania fora
+            Bee bee = this.agents.get(i);
+            bee.move(this.board); //ruch, spadek energii i starzenie sie
 
             // Gathering pollen
             if (bee instanceof Forager) {
@@ -60,9 +59,9 @@ public class SimulationEngine {
                     }
                 }
             }
-            //if (bee.getEnergy() <= 0) {
-            //    removeAgent(bee);
-            //}
+            if (bee.isDead()) {
+                removeAgent(bee);
+            }
         }
 
         board.regenerateEnvironment();
@@ -100,8 +99,15 @@ public class SimulationEngine {
     }
 
     void removeAgent(Bee bee) {
-        //this.agents.remove(bee);
-        //this.board.moveAgent(null, bee.getCoordinates(), null);
+        Point deadPos = bee.getBeePosition(); // gdzie pszcola umarla
+
+        // 2. Jeśli pozycja istnieje, mówimy planszy, żeby ją zresetowała
+        if (deadPos != null) {
+            this.board.moveAgent((Bee) null, deadPos, (Point) null);
+        }
+
+        // 3. Usuwamy pszczołę z listy żywych agentów
+        this.agents.remove(bee);
         System.out.println("Usunięto agenta o ID: ");
     }
 
