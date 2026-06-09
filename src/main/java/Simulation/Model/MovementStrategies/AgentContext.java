@@ -1,5 +1,7 @@
 package Simulation.Model.MovementStrategies;
 
+import Simulation.Model.Board;
+
 import java.awt.Point;
 
 public class AgentContext {
@@ -18,8 +20,8 @@ public class AgentContext {
         this.strategy = strategy;
     }
 
-    public void performMove() {
-        strategy.move(name, position);
+    public void performMove(Board board) {
+        strategy.move(name, position, board);
     }
 
     public Point getPosition() {

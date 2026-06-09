@@ -11,9 +11,9 @@ import Simulation.Model.MovementStrategies.TeleportMovement;
 
 import java.awt.*;
 
-import static Simulation.Model.BoardCells.CellType.HIVE;
-import static Simulation.Model.BoardCells.CellType.POLLEN_STASH;
 import Simulation.Model.SimulationConfig;
+
+import static Simulation.Model.BoardCells.CellType.*;
 
 public class Forager extends Bee {
     private int spawnX, spawnY;
@@ -44,7 +44,7 @@ public class Forager extends Bee {
     public void move(Board board) {
         findDestination(board);
         Point oldPos = new Point(movementContext.getPosition());
-        movementContext.performMove();
+        movementContext.performMove(board);
         Point newPos = movementContext.getPosition();
 
           if (board.isValidMove(newPos.x, newPos.y)) {
@@ -58,62 +58,87 @@ public class Forager extends Bee {
         this.age++;
         this.burnEnergy(SimulationConfig.ENERGY_CONSUMPTION_FORAGER);
 
-        if (newPos.equals(board.getStashDestination(POLLEN_STASH)) && this.carriedPollen > 0) { //wspolrzedne ula
+        // stash pollen
+        if (newPos.equals(board.getStashDestination(POLLEN_STASH)) && this.carriedPollen > 0) {
             Hive ul = board.getHive();
-
-            //przekazujemy cały zebrany pyłek do ula
             ul.setPollenAmount(ul.getPollenAmount() + this.carriedPollen);
-            System.out.println(" Zbieraczka " + ID + " rozładowała " + this.carriedPollen + " szt. pyłku do ula!");
+            System.out.println(" Zbieraczka " + ID + " rozładowała " + this.carriedPollen + " szt. pyłku do ula. Razem w ulu: " + ul.getPollenAmount());
             this.carriedPollen = 0;
-
-            //Skoro jest w ulu to je
-            if (ul.getFoodAmount() > 0) {
-                ul.setFoodAmount(ul.getFoodAmount() - 1); // zjada jedzenie ula
-                this.setEnergy(SimulationConfig.ENERGY_FULL);
-                System.out.println(" Zbieraczka " + ID + " zjadła");
-            } else {
-                System.out.println(" Zbieraczka " + ID + " jest w ulu, ale glodna");
-            }
         }
+        // eat
+        if (newPos.equals(board.getStashDestination(HONEY_STASH)) && this.energy <= 30) {
+            Hive ul = board.getHive();
+            int energyNeeded = 100 - (int)this.energy;
+            int honeyAvailable = ul.getHoneyAmount();
+            int toConsume = Math.min(energyNeeded, honeyAvailable);
+
+            ul.setHoneyAmount(honeyAvailable - toConsume);
+            this.energy += toConsume;
+            System.out.println("Zbieraczka " + ID + " zjadła " + toConsume + " miodu ze spiżarni. Zostało miodu: " + ul.getHoneyAmount() + ". Energia pszczoły: " + this.energy);
+        }
+
     }
 
     protected Point findDestination(Board board) {
         Point currentPos = this.movementContext.getPosition();
-        Cell currentCell = board.getCell(currentPos.x, currentPos.y);
+        boolean isInHiveZone = currentPos.x < 12;
 
-        if (this.getEnergy() < SimulationConfig.ENERGY_THRESHOLD_RETURN || carriedPollen >= SimulationConfig.MAX_POLLEN_CAPACITY) {
-            System.out.println("Zbieraczka " + ID + " leci zdac pylek");
-
-            if(currentPos.equals(board.getHiveEntrance())){
-                System.out.println("Zbieraczka " + ID + " teleportuje sie");
-                movementContext.setStrategy(new TeleportMovement(board.getTeleportDestination(currentPos)));
-                return board.getTeleportDestination(currentPos);
+        // IN HIVE
+        if (isInHiveZone) {
+            // teleport to meadow
+            if (currentPos.equals(board.getHiveExit())) {
+                if (this.carriedPollen == 0 && this.energy > 30) {
+                    System.out.println("Zbieraczka " + ID + " jest pusta, najedzona i przechodzi przez wyjscie na lake");
+                    Point destination = board.getTeleportDestination(currentPos);
+                    movementContext.setStrategy(new TeleportMovement(destination));
+                    return destination;
+                }
             }
-            if (currentCell.getType() == CellType.MEADOW) {
-                System.out.println("Going back to hive");
-                movementContext.setStrategy(new TargetedMovement(board.getHiveEntrance()));
-                return board.getHiveEntrance();
-            }
-            if(currentCell.getType() == CellType.HIVE || currentPos.equals(board.getHiveExit())){
-                System.out.println("About to stash pollen");
+            // stash pollen
+            if (this.carriedPollen > 0) {
+                System.out.println("Zbieraczka " + ID + " leci zlozyc pylek do magazynu");
                 movementContext.setStrategy(new TargetedMovement(board.getStashDestination(POLLEN_STASH)));
                 return board.getStashDestination(POLLEN_STASH);
             }
-        }
+            // eat
+            if (this.energy <= 30) {
+                System.out.println("Zbieraczka " + ID + " jest glodna i leci do HONEY_STASH");
+                movementContext.setStrategy(new TargetedMovement(board.getStashDestination(HONEY_STASH)));
+                return board.getStashDestination(HONEY_STASH);
+            }
+            // exit
+            System.out.println("Zbieraczka " + ID + " kieruje sie do wyjscia z ula");
+            movementContext.setStrategy(new TargetedMovement(board.getHiveExit()));
+            return board.getHiveExit();
 
-        // Looking for flowers
-        Point flower = findClosestTarget(board, CellType.MEADOW);
-        if (flower != null) {
-            return flower;
-        }
+        } else { //MEADOW
+            // Low energy or full capacity
+            if (this.getEnergy() < SimulationConfig.ENERGY_THRESHOLD_RETURN || this.carriedPollen >= SimulationConfig.MAX_POLLEN_CAPACITY) {
+                System.out.println("Zbieraczka " + ID + " leci do portalu wejściowego");
+                if (currentPos.equals(board.getHiveEntrance())) {
+                    System.out.println("Zbieraczka " + ID + " przechodzi przez portal do wnętrza ula");
+                    Point destination = board.getTeleportDestination(currentPos);
+                    movementContext.setStrategy(new TeleportMovement(destination));
+                    return destination;
+                }
+                movementContext.setStrategy(new TargetedMovement(board.getHiveEntrance()));
+                return board.getHiveEntrance();
+            }
 
-        // Nothing in sight
-        System.out.println("I don't see anything, flying random...");
-        movementContext.setStrategy(new RandomMovement());
-        return currentPos;
+            // Looking for flowers
+            Point flower = findClosestTarget(board);
+            if (flower != null) {
+                return flower;
+            }
+
+            // Nothing in sight
+            System.out.println("Nic nie widzę, lecę losowo...");
+            movementContext.setStrategy(new RandomMovement());
+            return currentPos;
+        }
     }
 
-    private Point findClosestTarget(Board board, CellType typeToFind) {
+    private Point findClosestTarget(Board board) {
         Point currentPos = this.movementContext.getPosition();
         Cell[][] grid = board.getGrid();
 

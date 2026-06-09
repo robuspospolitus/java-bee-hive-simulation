@@ -29,7 +29,7 @@ public class Storer extends Bee{
     public void move(Board board){
         findDestination(board);
         Point oldPos = new Point(movementContext.getPosition());
-        movementContext.performMove();
+        movementContext.performMove(board);
         Point newPos = movementContext.getPosition();
         board.moveAgent(this, oldPos, newPos);
         System.out.println("Magazynierka " + ID + " poruszyla sie");

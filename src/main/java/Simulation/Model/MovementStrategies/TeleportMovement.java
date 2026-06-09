@@ -1,5 +1,7 @@
 package Simulation.Model.MovementStrategies;
 
+import Simulation.Model.Board;
+
 import java.awt.*;
 
 public class TeleportMovement implements MovementStrategy{
@@ -11,7 +13,7 @@ public class TeleportMovement implements MovementStrategy{
     }
 
     @Override
-    public void move(String agentName, Point position) {
+    public void move(String agentName, Point position, Board board) {
 
         position.x = target.x;
         position.y = target.y;
