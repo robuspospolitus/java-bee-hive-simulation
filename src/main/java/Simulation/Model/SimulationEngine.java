@@ -50,6 +50,17 @@ public class SimulationEngine {
         if (!isRunning) return currentTick;
         for (int i = this.agents.size() - 1; i >= 0; i--) { //lecimy od tylu by wyrzucanie agentow nie psulo dzialania fora
             Bee bee = this.agents.get(i);
+
+            if (bee instanceof Larva larva) {
+                if (larva.isReadyToTransform()) {
+                    Point larvaPos = larva.getBeePosition();
+                    int larvaId = larva.getID();
+                    removeAgent(larva);
+                    Storer newStorer = new Storer(larvaId, 0, larvaPos.x, larvaPos.y);
+                    addAgent(newStorer);
+                    continue;
+                }
+            }
             bee.move(this.board); // ruch, spadek energii i starzenie sie
 
             // Gathering pollen
