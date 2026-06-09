@@ -84,9 +84,9 @@ public class SimulationController {
         this.gridBoard = gridBoard;
     }
 
-    public void start(int workers, double flowerChance) {
+    public void start(int storers, int foragers, double flowerChance) {
 
-        this.engine = new SimulationEngine(workers, flowerChance);
+        this.engine = new SimulationEngine(storers, foragers, flowerChance);
 
         startLoop();
     }

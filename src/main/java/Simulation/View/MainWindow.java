@@ -19,28 +19,26 @@ public class MainWindow extends Application {
 
         // 2. Create the Controller and give it the canvas
         SimulationController controller = new SimulationController(gridBoard);
-
-        Spinner<Integer> workerSpinner = new Spinner<>(1, 20, 3);
+        Spinner<Integer> storerSpinner = new Spinner<>(1, 20, 1);
+        Spinner<Integer> foragerSpinner = new Spinner<>(1, 20, 3);
         Spinner<Double> flowerSpinner = new Spinner<>(0.01, 0.9, 0.01, 0.02);
 
         // 3. Create a simple button to launch it
         Button startBtn = new Button("Start Simulation");
         startBtn.setOnAction(event -> {
             // Just grab the numbers directly from the boxes when they click start!
-            int workers = workerSpinner.getValue();
+            int foragers = foragerSpinner.getValue();
+            int storers = storerSpinner.getValue();
             Double flowers = flowerSpinner.getValue();
 
-            controller.start(workers, flowers);
+            controller.start(storers, foragers, flowers);
         });
         Button stopBtn = new Button("Stop Simulation");
         stopBtn.setOnAction(event -> controller.stopLoop());
-        //Button stepBtn = new Button("Next Step");
-       // stepBtn.setOnAction(event -> controller.step());
-
-        // 4. Stack them in a simple layout (Button on top, Map on bottom)
 
         VBox controls = new VBox(5, startBtn, stopBtn,
-                new Label("Number of Workers:"), workerSpinner,
+                new Label("Number of Foragers:"), foragerSpinner,
+                new Label("Number of Storers:"), storerSpinner,
                 new Label("Chance for flower appearing:"), flowerSpinner);
 
         BorderPane layout = new BorderPane();
@@ -51,7 +49,7 @@ public class MainWindow extends Application {
         //layout.getChildren().addAll(startBtn, stopBtn);
         Scene scene = new Scene(layout, 1280, 640);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Test Run");
+        primaryStage.setTitle("Bee Simulation");
         primaryStage.show();
     }
 

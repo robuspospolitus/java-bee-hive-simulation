@@ -12,15 +12,17 @@ public class SimulationEngine {
     private List<Bee> agents;
     private int currentTick;
     private boolean isRunning;
-    private int numWorkers;
+    private int numStorers;
+    private int numForagers;
 
 
-    public SimulationEngine(int numWorkers, double flowerChance) {
+    public SimulationEngine(int numStorers, int numForagers, double flowerChance) {
         Cell.setFlowerChance(flowerChance);
         this.board = new Board(32, 16);
         this.agents = new ArrayList<>();
         this.currentTick = 0;
-        this.numWorkers = numWorkers;
+        this.numStorers = numStorers;
+        this.numForagers = numForagers;
         initializeSimulation();
     }
 
@@ -30,15 +32,22 @@ public class SimulationEngine {
         int defaultSpawnX = 16;
         int defaultSpawnY = 1;
 
-        // Foragers spawn
-        for (int i = 0; i < numWorkers; i++) {
+        // Storers spawn
+        for (int i = 0; i < numStorers; i++) {
             Point safePos = findEmptySpawnPosition(this.board, defaultSpawnX, defaultSpawnY);
-            Forager newBee = new Forager(i, 0, safePos.x, safePos.y);
+            Storer newBee = new Storer(i, 0, safePos.x, safePos.y);
 
             this.agents.add(newBee);
             this.board.getCell(safePos.x, safePos.y).setAgent(newBee);
         }
-        // Queen spawn (yellow dot)
+        //Foragers spawn
+        for (int i = 0; i < numForagers; i++) {
+            Point safePos = findEmptySpawnPosition(this.board, defaultSpawnX, defaultSpawnY);
+            Forager newBee = new Forager(i, 10, safePos.x, safePos.y);
+            this.agents.add(newBee);
+            this.board.getCell(safePos.x, safePos.y).setAgent(newBee);
+        }
+        // Queen spawn
         Queen queen = new Queen(Bee.getTotalNum(), 0, 8, 1);
         this.agents.add(queen);
         this.board.setQueen(queen);
