@@ -71,10 +71,16 @@ public class MainWindow extends Application {
 
             controller.start(storers, foragers, flowers);
         });
+
         Button stopBtn = new Button("Stop Simulation");
         stopBtn.setOnAction(event -> controller.stopLoop());
 
-        VBox controls = new VBox(5, startBtn, stopBtn,
+        Button continueBtn = new Button("Continue Old Simulation");
+        continueBtn.setOnAction(event -> controller.continueLoop());
+
+
+
+        VBox controls = new VBox(5, startBtn, stopBtn, continueBtn,
                 new Label("Number of Foragers:"), foragerSpinner,
                 new Label("Number of Storers:"), storerSpinner,
                 new Label("Chance for flower appearing:"), flowerSpinner);

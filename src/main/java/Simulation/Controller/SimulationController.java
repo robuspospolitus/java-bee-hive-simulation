@@ -115,6 +115,11 @@ public class SimulationController {
         gameLoop.play();
     }
 
+    public void continueLoop(){
+        if(gameLoop!=null)
+        startLoop();
+    }
+
     public void stopLoop(){
         if (gameLoop != null) {
             gameLoop.stop();

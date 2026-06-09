@@ -28,6 +28,8 @@ public class Board {
             for (int y = 0; y < height; y++) {
                 if((x==hiveEntrance.x && y==hiveEntrance.y)|| (x==hiveExit.x && y==hiveExit.y)){
                    grid[x][y] = new Cell(x, y, CellType.TELEPORT);
+                } else if(x<=16 && x>=14 && y<=2){
+                    grid[x][y] = new Cell (x,y, CellType.EMPTY);
                 } else {
                     grid[x][y] = x<12 ? new Cell(x, y, CellType.HIVE) :
                             x==12 ? new Cell(x, y, CellType.OBSTACLE) :
