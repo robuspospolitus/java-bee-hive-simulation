@@ -15,7 +15,8 @@ import static Simulation.Model.BoardCells.CellType.HIVE;
 import static Simulation.Model.BoardCells.CellType.POLLEN_STASH;
 
 public class Forager extends Bee {
-    private int numPollen=10, carriedPollen, spawnX, spawnY;
+    private int maxPollenCapacity=10;
+    private int carriedPollen, spawnX, spawnY;
     private Point spawnPosition;
 
     protected int sightRadius = 4;
@@ -33,7 +34,10 @@ public class Forager extends Bee {
     }
 
     public void collectPollen(int amount) {
-        this.carriedPollen += amount;
+        int spaceAvailable = maxPollenCapacity - this.carriedPollen;
+        int amountToTake = Math.min(amount, spaceAvailable);
+
+        this.carriedPollen += amountToTake;
         System.out.println("Zbieraczka " + ID + " zebrala pylek. Posiada teraz: " + carriedPollen);
     }
 
@@ -78,7 +82,7 @@ public class Forager extends Bee {
         Point currentPos = this.movementContext.getPosition();
         Cell currentCell = board.getCell(currentPos.x, currentPos.y);
 
-        if (this.getEnergy() < 25.0f || carriedPollen >= 10) {
+        if (this.getEnergy() < 25.0f || carriedPollen >= maxPollenCapacity) {
             System.out.println("Zbieraczka " + ID + " wraca do ula");
 
             if (currentPos.equals(board.getHiveEntrance())) {
@@ -108,7 +112,7 @@ public class Forager extends Bee {
         // Nothing in sight
         System.out.println("I don't see anything, flying random...");
         movementContext.setStrategy(new RandomMovement());
-        return new Point(1, 1);
+        return currentPos;
     }
 
     private Point findClosestTarget(Board board, CellType typeToFind) {
@@ -132,8 +136,5 @@ public class Forager extends Bee {
         }
         return null;
     }
-
-
     public AgentContext getMovementContext() { return this.movementContext; }
-
 }
