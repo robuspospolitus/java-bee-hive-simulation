@@ -73,7 +73,20 @@ public class MainWindow extends Application {
         });
 
         Button stopBtn = new Button("Stop Simulation");
-        stopBtn.setOnAction(event -> controller.stopLoop());
+        stopBtn.setOnAction(event -> {
+            controller.stopLoop();
+
+            SimulationEngine engine = controller.getEngine();
+            if (engine != null) {
+                Statistics stats = new Statistics(
+                        storerSpinner.getValue(),
+                        foragerSpinner.getValue(),
+                        flowerSpinner.getValue(),
+                        engine
+                );
+                stats.saveToCsv("simulation_statistics.csv");
+            }
+        });
 
         Button continueBtn = new Button("Continue Old Simulation");
         continueBtn.setOnAction(event -> controller.continueLoop());
