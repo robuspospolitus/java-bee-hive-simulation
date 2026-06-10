@@ -61,7 +61,6 @@ public class Storer extends Bee{
             }
         }
 
-
         this.age++;
         this.burnEnergy(5.0f);
         zasoby(board);
