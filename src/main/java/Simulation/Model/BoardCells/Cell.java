@@ -25,7 +25,8 @@ public class Cell {
     }
 
     public boolean isEmpty() {
-        return !hasFlower && agent == null;
+        // Kafelek jest pusty do chodzenia, jeśli nie stoi na nim inna pszczoła
+        return agent == null;
     }
 
     public int takePollen(int amount) {
