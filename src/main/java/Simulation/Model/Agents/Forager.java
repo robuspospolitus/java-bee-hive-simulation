@@ -192,12 +192,11 @@ public class Forager extends Bee {
         return null;
     }
 
+
     @Override
     public void interact(Cell cell) {
-        if (cell != null && cell.hasFlower() && this.carriedPollen < SimulationConfig.MAX_POLLEN_CAPACITY) { //ograniczenie ilosci niesionego pylku
-            int spaceAvailable = SimulationConfig.MAX_POLLEN_CAPACITY - this.carriedPollen; //ile miejsca na pylek zostalo
-            int amountToTry = Math.min(SimulationConfig.POLLEN_COLLECTION_AMOUNT, spaceAvailable); //bierze tyle ile moze
-            int collectedPollen = cell.takePollen(amountToTry);
+        if (cell != null && cell.hasFlower()) {
+            int collectedPollen = cell.takePollen(SimulationConfig.POLLEN_COLLECTION_AMOUNT);
             if (collectedPollen > 0) {
                 this.carriedPollen += collectedPollen;
                 System.out.println("Zbieraczka " + ID + " zebrała " + collectedPollen + " pyłku. Posiada teraz: " + carriedPollen + "/" + SimulationConfig.MAX_POLLEN_CAPACITY);
@@ -211,7 +210,7 @@ public class Forager extends Bee {
 
 
 /*
-public void interact(Cell cell) {
+public void interact(Cell cell) {   //wydaje mi sie ze tu przynosza wiecej niz 10 pylku
     if (cell != null && cell.hasFlower()) {
         int collectedPollen = cell.takePollen(SimulationConfig.POLLEN_COLLECTION_AMOUNT);
         if (collectedPollen > 0) {
@@ -219,4 +218,19 @@ public void interact(Cell cell) {
             System.out.println("Zbieraczka " + ID + " zebrała " + collectedPollen + " pyłku. Posiada teraz: " + carriedPollen + "/" + SimulationConfig.MAX_POLLEN_CAPACITY);
 }
 }
+ */
+
+
+/*
+public void interact(Cell cell) { //tu ograniczenie chyba dziala
+        if (cell != null && cell.hasFlower() && this.carriedPollen < SimulationConfig.MAX_POLLEN_CAPACITY) { //ograniczenie ilosci niesionego pylku
+            int spaceAvailable = SimulationConfig.MAX_POLLEN_CAPACITY - this.carriedPollen; //ile miejsca na pylek zostalo
+            int amountToTry = Math.min(SimulationConfig.POLLEN_COLLECTION_AMOUNT, spaceAvailable); //bierze tyle ile moze
+            int collectedPollen = cell.takePollen(amountToTry);
+            if (collectedPollen > 0) {
+                this.carriedPollen += collectedPollen;
+                System.out.println("Zbieraczka " + ID + " zebrała " + collectedPollen + " pyłku. Posiada teraz: " + carriedPollen + "/" + SimulationConfig.MAX_POLLEN_CAPACITY);
+            }
+        }
+    }
  */
