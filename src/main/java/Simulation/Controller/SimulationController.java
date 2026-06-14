@@ -80,14 +80,12 @@ public class SimulationController {
     private Timeline gameLoop;
     private Runnable onTickCallback;
 
-    // The View passes the drawing canvas to the controller so it can tell it when to redraw
     public SimulationController(GridBoard gridBoard) {
         this.gridBoard = gridBoard;
     }
 
     public void start(int storers, int foragers, double flowerChance) {
         this.engine = new SimulationEngine(storers, foragers, flowerChance);
-
         startLoop();
     }
 
@@ -95,21 +93,13 @@ public class SimulationController {
         if (gameLoop != null) {
             gameLoop.stop();
         }
-
         gameLoop = new Timeline(new KeyFrame(Duration.millis(250), event -> {
-
-            // Phase 1: Update the math
-            engine.run(1); // Running 5 steps per frame (speeds up the simulation!)
-
-            // Phase 2: Draw the new math to the screen
+            engine.run(1);
             gridBoard.render(engine.getBoard());
-
-            // Phase 3: THE FIX - Tell the UI to update the numbers!
             if (onTickCallback != null) {
                 onTickCallback.run();
             }
         }));
-
         gameLoop.setCycleCount(Timeline.INDEFINITE);
         gameLoop.play();
     }
@@ -126,11 +116,9 @@ public class SimulationController {
     }
 
     public void setOnTickCallback(Runnable callback) {
-        this.onTickCallback = callback;
+        onTickCallback = callback;
     }
-
-    // 2. Add this getter so MainWindow can read the live stats
     public SimulationEngine getEngine() {
-        return this.engine;
+        return engine;
     }
 }

@@ -23,7 +23,7 @@ public class Board {
         grid = new Cell[width][height];
         hive = new Hive();
 
-        // Initialize every single coordinate with a blank Cell object
+        // Initialize every single Cell
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if((x==hiveEntrance.x && y==hiveEntrance.y)|| (x==hiveExit.x && y==hiveExit.y)){
@@ -37,7 +37,6 @@ public class Board {
                 }
             }
         }
-
         setStashCells();
     }
 
@@ -61,7 +60,6 @@ public class Board {
         }
     }
 
-    // --- Core Movement Logic ---
 
     // Checks if a coordinate is actually on the map, and if no other bee is there
     public boolean isValidMove(int x, int y) {

@@ -73,10 +73,18 @@ public class Storer extends Bee{
 
         // eat
         if(energy < SimulationConfig.ENERGY_THRESHOLD_RETURN){
-            if(ul.getHoneyAmount() > 0){
-                ul.setHoneyAmount(ul.getHoneyAmount() - 1);
-                energy = SimulationConfig.ENERGY_FULL;
-                System.out.println("Magazynierka " + ID + "zjadla, energia: " + energy);
+            int foodAvailable = ul.getHoneyAmount();
+            if(foodAvailable > 0) {
+                float energyNeeded = SimulationConfig.ENERGY_FULL - energy;
+                int honeyNeeded = (int) Math.ceil(energyNeeded / SimulationConfig.ENERGY_PER_HONEY);
+                int toConsume = Math.min(honeyNeeded, foodAvailable);
+
+                ul.setHoneyAmount(foodAvailable - toConsume);
+                energy += toConsume * SimulationConfig.ENERGY_PER_HONEY;
+                if (energy > SimulationConfig.ENERGY_FULL) {
+                    energy = SimulationConfig.ENERGY_FULL;
+                }
+                System.out.println("Magazynierka " + ID + " zjadła " + toConsume + " miodu, energia: " + energy);
             } else {
                 System.out.println("Magazynierka " + ID + " glodna, nie zjadla");
             }
@@ -85,7 +93,7 @@ public class Storer extends Bee{
         // production of honey
         if(ul.getPollenAmount() > 0){
             ul.setPollenAmount(ul.getPollenAmount() - 1);
-            ul.setHoneyAmount(ul.getHoneyAmount() + 1);
+            ul.setHoneyAmount(ul.getHoneyAmount() + SimulationConfig.HONEY_FROM_POLLEN);
         }
 
     }

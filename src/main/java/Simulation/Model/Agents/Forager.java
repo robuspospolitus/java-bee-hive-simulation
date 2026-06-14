@@ -75,12 +75,15 @@ public class Forager extends Bee {
                 int foodAvailable = ul.getHoneyAmount();
 
                 if (foodAvailable > 0) {
-                    int energyNeeded = 100 - (int) energy;
-                    int toConsume = Math.min(energyNeeded, foodAvailable);
+                    float energyNeeded = SimulationConfig.ENERGY_FULL - energy;
+                    int honeyNeeded = (int) Math.ceil(energyNeeded / SimulationConfig.ENERGY_PER_HONEY);
+                    int toConsume = Math.min(honeyNeeded, foodAvailable);
 
                     ul.setHoneyAmount(foodAvailable - toConsume);
-                    energy += toConsume;
-
+                    energy += toConsume * SimulationConfig.ENERGY_PER_HONEY;
+                    if (energy > SimulationConfig.ENERGY_FULL) {
+                        energy = SimulationConfig.ENERGY_FULL;
+                    }
                     System.out.println("Zbieraczka " + ID + " zjadła " + toConsume + " miodu. Aktualna energia: " + energy);
                 }
             }
