@@ -4,20 +4,20 @@ public class Hive {
     private int honeyAmount;
 
     public Hive() {
-        this.pollenAmount = 0;
-        this.honeyAmount = SimulationConfig.INITIAL_HIVE_FOOD;
+        pollenAmount = 0;
+        honeyAmount = SimulationConfig.INITIAL_HIVE_FOOD;
     }
 
     public synchronized int consumeFood(int amountNeeded) {
-        if (this.honeyAmount <= 0) {
+        if (honeyAmount <= 0) {
             return 0;
         }
-        if (this.honeyAmount >= amountNeeded) {
-            this.honeyAmount -= amountNeeded;
+        if (honeyAmount >= amountNeeded) {
+            honeyAmount -= amountNeeded;
             return amountNeeded;
         } else {
-            int availableFood = this.honeyAmount;
-            this.honeyAmount = 0;
+            int availableFood = honeyAmount;
+            honeyAmount = 0;
             return availableFood;
         }
     }

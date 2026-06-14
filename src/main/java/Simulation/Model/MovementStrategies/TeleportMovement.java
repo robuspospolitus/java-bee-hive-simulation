@@ -5,7 +5,6 @@ import Simulation.Model.Board;
 import java.awt.*;
 
 public class TeleportMovement implements MovementStrategy{
-
     private Point target;
 
     public TeleportMovement(Point target) {
@@ -14,7 +13,6 @@ public class TeleportMovement implements MovementStrategy{
 
     @Override
     public void move(String agentName, Point position, Board board) {
-
         position.x = target.x;
         position.y = target.y;
         System.out.println(agentName + " nienawidzi portali");

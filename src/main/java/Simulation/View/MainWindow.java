@@ -3,7 +3,6 @@ package Simulation.View;
 import Simulation.Controller.SimulationController;
 import Simulation.Model.Hive;
 import Simulation.Model.SimulationEngine;
-import Simulation.Model.Statistics;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -15,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MainWindow extends Application {
-
     private SimulationController controller;
     private Label honeyLabel;
     private Label pollenLabel;
@@ -25,7 +23,6 @@ public class MainWindow extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-
         tickLabel = new Label("Tick: 0");
         honeyLabel = new Label("Honey: 0");
         pollenLabel = new Label("Pollen: 0");
@@ -44,28 +41,25 @@ public class MainWindow extends Application {
         dashboard.setStyle("-fx-background-color: #f4f4f4; -fx-border-color: #cccccc; -fx-border-width: 0 0 0 2;");
         dashboard.getChildren().addAll(tickLabel, honeyLabel, pollenLabel, foragerLabel, storerLabel);
 
-        // 1. Create the drawing canvas (e.g., 40 tiles * 20px = 800px width)
+        // Drawing canvas (e.g., 40 tiles * 20px = 800px width)
         GridBoard gridBoard = new GridBoard(32, 16);
 
-        // 2. Create the Controller and give it the canvas
+        // Controller with the canvas
         SimulationController controller = new SimulationController(gridBoard);
 
         Spinner<Integer> storerSpinner = new Spinner<>(1, 20, 1);
         Spinner<Integer> foragerSpinner = new Spinner<>(1, 20, 3);
         Spinner<Double> flowerSpinner = new Spinner<>(0.01, 0.9, 0.01, 0.02);
 
-
         this.controller = controller;
 
-        //update collected data
-        this.controller.setOnTickCallback(() -> {
-            updateDashboard();
-        });
+        // Update collected data
+        this.controller.setOnTickCallback(() -> updateDashboard());
 
-        // 3. Create a simple button to launch it
+        // Launch button
         Button startBtn = new Button("Start New Simulation");
-        startBtn.setOnAction(event -> {
-            // Just grab the numbers directly from the boxes when they click start!
+        startBtn.setOnAction(_ -> {
+            // Get values from user inputs
             int foragers = foragerSpinner.getValue();
             int storers = storerSpinner.getValue();
             Double flowers = flowerSpinner.getValue();
@@ -73,8 +67,9 @@ public class MainWindow extends Application {
             controller.start(storers, foragers, flowers);
         });
 
+        // Stop button
         Button stopBtn = new Button("Stop Simulation");
-        stopBtn.setOnAction(event -> {
+        stopBtn.setOnAction(_ -> {
             controller.stopLoop();
             SimulationEngine engine = controller.getEngine();
             if (engine != null) {
@@ -87,11 +82,12 @@ public class MainWindow extends Application {
                 stats.saveToCsv("simulation_statistics.csv");
             }
         });
+
+        // Continue button
         Button continueBtn = new Button("Continue Old Simulation");
-        continueBtn.setOnAction(event -> controller.continueLoop());
+        continueBtn.setOnAction(_ -> controller.continueLoop());
 
-
-
+        // Inputs
         VBox controls = new VBox(5, startBtn, stopBtn, continueBtn,
                 new Label("Number of Foragers:"), foragerSpinner,
                 new Label("Number of Storers:"), storerSpinner,
@@ -109,12 +105,8 @@ public class MainWindow extends Application {
         primaryStage.show();
     }
 
-
     private void updateDashboard() {
-        // Fetch the active engine from the controller
         SimulationEngine engine = controller.getEngine();
-
-        // Safety check to make sure the simulation actually started
         if (engine == null) return;
 
         Hive hive = engine.getHive();
@@ -122,11 +114,8 @@ public class MainWindow extends Application {
             honeyLabel.setText("Honey: " + hive.getHoneyAmount());
             pollenLabel.setText("Pollen: " + hive.getPollenAmount());
         }
-
         foragerLabel.setText("Foragers: " + engine.getForagerCount());
         storerLabel.setText("Storers: " + engine.getStorerCount());
-
-        // Because you run 5 steps per frame, this will jump by 5s!
         tickLabel.setText("Tick: " + engine.steps());
     }
 }

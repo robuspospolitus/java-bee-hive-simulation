@@ -1,52 +1,31 @@
 package Simulation.Model.Agents;
 import Simulation.Model.Board;
 import Simulation.Model.MovementStrategies.AgentContext;
+import Simulation.Model.MovementStrategies.RandomMovement;
 import Simulation.Model.SimulationConfig;
 import java.awt.Point;
 
 public class Larva extends Bee {
-    private Point position;
-    private int feedingsRequired = SimulationConfig.LARVA_FEEDINGS_NEEDED;
     private int feedingsReceived = 0;
-    private AgentContext movementContext;
 
     public Larva(int ID, int spawnX, int spawnY) {
-        this.ID = ID;
-        this.age = 0;
-        this.position = new Point(spawnX, spawnY);
-        this.movementContext = new AgentContext("Larva " + ID, null, this.position);
-        totalNumBees++;
+        super(ID, 0, spawnX, spawnY, null, "Larwa");
     }
 
     @Override
-    public void move(Board board) {
-        this.age++;
-    }
-
-    public void beFed() {
-        this.feedingsReceived++;
-    }
-
-    public boolean isReadyToTransform() {
-        return this.feedingsReceived >= this.feedingsRequired;
-    }
-
+    public void move(Board board) { age++; }
     @Override
-    Point findDestination(Board board) {
-        return this.position;
-    }
-
+    Point findDestination(Board board) { return spawnPosition; }
     @Override
-    public AgentContext getMovementContext() {
-        return this.movementContext;
-    }
-
-    public Point getPosition() {
-        return this.position;
-    }
+    public AgentContext getMovementContext() { return movementContext; }
     @Override
     public boolean isDead() {
         // Larvae don't die of starvation the same way adults do!
         return false;
     }
+
+    public void beFed() { feedingsReceived++; }
+    public boolean isReadyToTransform() {
+        int feedingsRequired = SimulationConfig.LARVA_FEEDINGS_NEEDED;
+        return feedingsReceived >= feedingsRequired; }
 }

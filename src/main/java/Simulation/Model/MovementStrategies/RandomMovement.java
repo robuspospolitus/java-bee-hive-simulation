@@ -25,6 +25,6 @@ public class RandomMovement implements MovementStrategy {
         position.x = Math.max(0, Math.min(31, position.x));
         position.y = Math.max(0, Math.min(15, position.y));
 
-        System.out.println( agentName + "Random move performed, current position [" +position.x + ", " + position.y +" ]");
+        System.out.println( agentName + " Random move performed, current position [" +position.x + ", " + position.y +"]");
     }
 }

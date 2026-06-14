@@ -2,6 +2,7 @@ package Simulation.Model;
 
 
 import Simulation.Model.Agents.Bee;
+import Simulation.Model.Agents.Queen;
 import Simulation.Model.BoardCells.Cell;
 import Simulation.Model.BoardCells.CellType;
 import java.awt.*;
@@ -10,8 +11,8 @@ public class Board {
     private int width;
     private int height;
     private Cell[][] grid;
-    private Point hiveEntrance = new Point (15,1);
-    private Point hiveExit = new Point (11,1);
+    private final Point hiveEntrance = new Point (15,1);
+    private final Point hiveExit = new Point (11,1);
 
     private Hive hive;
     private Simulation.Model.Agents.Queen queen;
@@ -19,11 +20,10 @@ public class Board {
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
-        this.grid = new Cell[width][height];
+        grid = new Cell[width][height];
+        hive = new Hive();
 
-        this.hive = new Hive();
-
-        // Initialize every single coordinate with a blank Cell object
+        // Initialize every single Cell
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 if((x==hiveEntrance.x && y==hiveEntrance.y)|| (x==hiveExit.x && y==hiveExit.y)){
@@ -37,7 +37,6 @@ public class Board {
                 }
             }
         }
-
         setStashCells();
     }
 
@@ -45,12 +44,11 @@ public class Board {
         for (int x = 0; x <= 2; x++){
             grid[x][0].setType(CellType.POLLEN_STASH);
             grid[x][1].setType(CellType.HONEY_STASH);
+        }
     }
-    }
-
 
     public Hive getHive() {
-        return this.hive;
+        return hive;
     }
 
     // Regenerate pollen on Cells
@@ -62,7 +60,6 @@ public class Board {
         }
     }
 
-    // --- Core Movement Logic ---
 
     // Checks if a coordinate is actually on the map, and if no other bee is there
     public boolean isValidMove(int x, int y) {
@@ -73,7 +70,6 @@ public class Board {
 
     // Handles moving bee from old cell to new cell
     public void moveAgent(Bee bee, Point oldPos, Point newPos) {
-
             // Clear the old cell if the bee was already on the board
             if (oldPos != null) {
                 grid[oldPos.x][oldPos.y].setAgent(null);
@@ -85,9 +81,7 @@ public class Board {
             }
     }
 
-
     public Point getTeleportDestination(Point entrance) {
-
         if (entrance.equals(hiveEntrance)) {
             return hiveExit;
         } else if (entrance.equals(hiveExit)) {
@@ -95,7 +89,6 @@ public class Board {
         }
         return null;
     }
-
 
     public Point getStashDestination(CellType stashType){
         if (stashType==CellType.POLLEN_STASH) {
@@ -120,11 +113,11 @@ public class Board {
         return null;
     }
 
-    public Simulation.Model.Agents.Queen getQueen() {
-        return this.queen;
+    public Queen getQueen() {
+        return queen;
     }
 
-    public void setQueen(Simulation.Model.Agents.Queen queen) {
+    public void setQueen(Queen queen) {
         this.queen = queen;
     }
 

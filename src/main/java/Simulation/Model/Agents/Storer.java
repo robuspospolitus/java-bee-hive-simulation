@@ -9,20 +9,8 @@ import Simulation.Model.SimulationConfig;
 import java.awt.*;
 
 public class Storer extends Bee{
-    int spawnX;
-    int spawnY;
-    Point spawnPosition;
-
-    private AgentContext movementContext;
-
     public Storer (int ID, int age, int spawnX, int spawnY){
-        this.ID = ID;
-        this.age = age;
-        this.spawnX = spawnX;
-        this.spawnY = spawnY;
-        this.spawnPosition = new Point(spawnX, spawnY);
-        this.movementContext = new AgentContext("Storer" + ID, new RandomMovement(), this.spawnPosition);
-        totalNumBees++;
+        super(ID, age, spawnX, spawnY, new RandomMovement(), "Magazynierka");
     }
 
     @Override
@@ -35,48 +23,47 @@ public class Storer extends Bee{
         if (board.isValidMove(newPos.x, newPos.y)) {
             board.moveAgent(this, oldPos, newPos);
         } else {
-            // 2. TRAFFIC JAM! Try to sidestep instead of giving up!
             boolean dodged = false;
 
-            // Look at the 8 adjacent tiles surrounding the bee
+            // Look at tiles surrounding the bee
             for (int xOffset = -1; xOffset <= 1 && !dodged; xOffset++) {
                 for (int yOffset = -1; yOffset <= 1 && !dodged; yOffset++) {
 
                     int dodgeX = oldPos.x + xOffset;
                     int dodgeY = oldPos.y + yOffset;
 
-                    // If we find an empty tile nearby, slide into it!
+                    // If an empty tile nearby, go
                     if (board.isValidMove(dodgeX, dodgeY)) {
                         Point dodgePos = new Point(dodgeX, dodgeY);
                         movementContext.setPosition(dodgePos);
                         board.moveAgent(this, oldPos, dodgePos);
-                        dodged = true; // Mark as successful to stop the loop
+                        dodged = true;
                     }
                 }
             }
 
-            // 3. If completely surrounded on all 8 sides, just wait patiently
+            // If surrounded on all 8 sides, wait
             if (!dodged) {
                 movementContext.setPosition(oldPos);
             }
         }
 
-        this.age++;
-        this.burnEnergy(5.0f);
+        age++;
+        burnEnergy(SimulationConfig.ENERGY_CONSUMPTION_STORER);
         zasoby(board);
     }
 
     protected Point findDestination(Board board){
         System.out.println ("Sprzątaczka porusza sie po ulu");
         movementContext.setStrategy(new RandomMovement());
-        return new Point(spawnX, spawnY);
+        return new Point(getBeePosition().x, getBeePosition().y);
     }
 
     private void zasoby(Board board){
         Hive ul = board.getHive();
-        Simulation.Model.Agents.Queen queen = board.getQueen();
-        //Queen queen = board.getQueen;
-        //karmienie krolowej
+        Queen queen = board.getQueen();
+
+        // feeding the queen
         if(queen != null && queen.getEnergy() < 40.0f){
             if(ul.getHoneyAmount() > 0){
                 ul.setHoneyAmount(ul.getHoneyAmount() - 1);
@@ -84,30 +71,38 @@ public class Storer extends Bee{
             }
         }
 
-        //same jedza
-        if(this.getEnergy() < SimulationConfig.ENERGY_THRESHOLD_RETURN){
-            if(ul.getHoneyAmount() > 0){
-                ul.setHoneyAmount(ul.getHoneyAmount() - 1);
-                this.setEnergy(SimulationConfig.ENERGY_FULL);
-                System.out.println("Magazynierka " + ID + "zjadla, energia 100%");
+        // eat
+        if(energy < SimulationConfig.ENERGY_THRESHOLD_RETURN){
+            int foodAvailable = ul.getHoneyAmount();
+            if(foodAvailable > 0) {
+                float energyNeeded = SimulationConfig.ENERGY_FULL - energy;
+                int honeyNeeded = (int) Math.ceil(energyNeeded / SimulationConfig.ENERGY_PER_HONEY);
+                int toConsume = Math.min(honeyNeeded, foodAvailable);
+
+                ul.setHoneyAmount(foodAvailable - toConsume);
+                energy += toConsume * SimulationConfig.ENERGY_PER_HONEY;
+                if (energy > SimulationConfig.ENERGY_FULL) {
+                    energy = SimulationConfig.ENERGY_FULL;
+                }
+                System.out.println("Magazynierka " + ID + " zjadła " + toConsume + " miodu, energia: " + energy);
             } else {
                 System.out.println("Magazynierka " + ID + " glodna, nie zjadla");
             }
         }
 
-        //wytwarzanie jedzenia/miodu
+        // production of honey
         if(ul.getPollenAmount() > 0){
             ul.setPollenAmount(ul.getPollenAmount() - 1);
-            ul.setHoneyAmount(ul.getHoneyAmount() + 1);
+            ul.setHoneyAmount(ul.getHoneyAmount() + SimulationConfig.HONEY_FROM_POLLEN);
         }
 
     }
 
     public boolean isReadyToEvolve() {
-        return this.age >= SimulationConfig.TICKS_TO_EVOLVE;
+        return age >= SimulationConfig.TICKS_TO_EVOLVE;
     }
 
     public AgentContext getMovementContext(){
-        return this.movementContext;
+        return movementContext;
     }
 }

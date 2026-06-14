@@ -21,11 +21,10 @@ public class Cell {
         this.y = y;
         agent = null;
         hasFlower = type.equals(CellType.MEADOW) && Math.random() < flowerChance;
-        this.pollenAmount = hasFlower ? maxPollenAmount : 0;
+        pollenAmount = hasFlower ? maxPollenAmount : 0;
     }
 
     public boolean isEmpty() {
-        // Kafelek jest pusty do chodzenia, jeśli nie stoi na nim inna pszczoła
         return agent == null;
     }
 
