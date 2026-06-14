@@ -6,7 +6,6 @@ import Simulation.Model.SimulationConfig;
 import java.awt.Point;
 
 public class Larva extends Bee {
-    private int feedingsRequired = SimulationConfig.LARVA_FEEDINGS_NEEDED;
     private int feedingsReceived = 0;
 
     public Larva(int ID, int spawnX, int spawnY) {
@@ -26,6 +25,7 @@ public class Larva extends Bee {
     }
 
     public void beFed() { feedingsReceived++; }
-    public boolean isReadyToTransform() { return feedingsReceived >= feedingsRequired; }
-    public Point getPosition() { return spawnPosition; }
+    public boolean isReadyToTransform() {
+        int feedingsRequired = SimulationConfig.LARVA_FEEDINGS_NEEDED;
+        return feedingsReceived >= feedingsRequired; }
 }

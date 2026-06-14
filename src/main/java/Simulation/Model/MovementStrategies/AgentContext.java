@@ -9,7 +9,6 @@ public class AgentContext {
     private String name;
     private Point position;
 
-
     public AgentContext(String name, MovementStrategy strategy, Point startPosition) {
         this.name = name;
         this.strategy = strategy;
@@ -25,11 +24,11 @@ public class AgentContext {
     }
 
     public Point getPosition() {
-        return this.position;
+        return position;
     }
 
     public void setPosition(Point pos) {
-       this.position = pos;
+       position = pos;
     }
 
 

@@ -23,34 +23,33 @@ public class Storer extends Bee{
         if (board.isValidMove(newPos.x, newPos.y)) {
             board.moveAgent(this, oldPos, newPos);
         } else {
-            // 2. TRAFFIC JAM! Try to sidestep instead of giving up!
             boolean dodged = false;
 
-            // Look at the 8 adjacent tiles surrounding the bee
+            // Look at tiles surrounding the bee
             for (int xOffset = -1; xOffset <= 1 && !dodged; xOffset++) {
                 for (int yOffset = -1; yOffset <= 1 && !dodged; yOffset++) {
 
                     int dodgeX = oldPos.x + xOffset;
                     int dodgeY = oldPos.y + yOffset;
 
-                    // If we find an empty tile nearby, slide into it!
+                    // If an empty tile nearby, go
                     if (board.isValidMove(dodgeX, dodgeY)) {
                         Point dodgePos = new Point(dodgeX, dodgeY);
                         movementContext.setPosition(dodgePos);
                         board.moveAgent(this, oldPos, dodgePos);
-                        dodged = true; // Mark as successful to stop the loop
+                        dodged = true;
                     }
                 }
             }
 
-            // 3. If completely surrounded on all 8 sides, just wait patiently
+            // If surrounded on all 8 sides, wait
             if (!dodged) {
                 movementContext.setPosition(oldPos);
             }
         }
 
-        this.age++;
-        this.burnEnergy(5.0f);
+        age++;
+        burnEnergy(SimulationConfig.ENERGY_CONSUMPTION_STORER);
         zasoby(board);
     }
 
@@ -62,9 +61,9 @@ public class Storer extends Bee{
 
     private void zasoby(Board board){
         Hive ul = board.getHive();
-        Simulation.Model.Agents.Queen queen = board.getQueen();
-        //Queen queen = board.getQueen;
-        //karmienie krolowej
+        Queen queen = board.getQueen();
+
+        // feeding the queen
         if(queen != null && queen.getEnergy() < 40.0f){
             if(ul.getHoneyAmount() > 0){
                 ul.setHoneyAmount(ul.getHoneyAmount() - 1);
@@ -72,18 +71,18 @@ public class Storer extends Bee{
             }
         }
 
-        //same jedza
-        if(this.getEnergy() < SimulationConfig.ENERGY_THRESHOLD_RETURN){
+        // eat
+        if(energy < SimulationConfig.ENERGY_THRESHOLD_RETURN){
             if(ul.getHoneyAmount() > 0){
                 ul.setHoneyAmount(ul.getHoneyAmount() - 1);
-                this.setEnergy(SimulationConfig.ENERGY_FULL);
-                System.out.println("Magazynierka " + ID + "zjadla, energia 100%");
+                energy = SimulationConfig.ENERGY_FULL;
+                System.out.println("Magazynierka " + ID + "zjadla, energia: " + energy);
             } else {
                 System.out.println("Magazynierka " + ID + " glodna, nie zjadla");
             }
         }
 
-        //wytwarzanie jedzenia/miodu
+        // production of honey
         if(ul.getPollenAmount() > 0){
             ul.setPollenAmount(ul.getPollenAmount() - 1);
             ul.setHoneyAmount(ul.getHoneyAmount() + 1);
@@ -92,10 +91,10 @@ public class Storer extends Bee{
     }
 
     public boolean isReadyToEvolve() {
-        return this.age >= SimulationConfig.TICKS_TO_EVOLVE;
+        return age >= SimulationConfig.TICKS_TO_EVOLVE;
     }
 
     public AgentContext getMovementContext(){
-        return this.movementContext;
+        return movementContext;
     }
 }

@@ -21,7 +21,7 @@ public abstract class Bee {
         this.ID = ID;
         this.age = age;
         spawnPosition = new Point(x, y);
-        movementContext = new AgentContext(prefix + ID, strategy, this.spawnPosition);
+        movementContext = new AgentContext(prefix + " " + ID, strategy, spawnPosition);
         energy = SimulationConfig.ENERGY_FULL;
         carryCapacity = SimulationConfig.MAX_POLLEN_CAPACITY;
         totalNumBees++;
@@ -35,16 +35,16 @@ public abstract class Bee {
     }
 
     public boolean isDead(){
-        return this.energy <= 0;
+        return energy <= 0;
     }
 
     public boolean isTooOld() {
-        return this.age > SimulationConfig.MAX_BEE_AGE;
+        return age > SimulationConfig.MAX_BEE_AGE;
     }
 
     public Point getBeePosition() {
-        if (this.getMovementContext() != null) {
-            return this.getMovementContext().getPosition();
+        if (getMovementContext() != null) {
+            return getMovementContext().getPosition();
         }
         return null;
     }
@@ -55,7 +55,7 @@ public abstract class Bee {
 
     public int getID (){
         return ID;
-    };
+    }
 
     public static int getTotalNum(){
         return totalNumBees;

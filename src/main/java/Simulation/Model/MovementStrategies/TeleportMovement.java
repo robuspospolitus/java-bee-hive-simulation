@@ -5,7 +5,6 @@ import Simulation.Model.Board;
 import java.awt.*;
 
 public class TeleportMovement implements MovementStrategy{
-
     private Point target;
 
     public TeleportMovement(Point target) {

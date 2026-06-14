@@ -17,16 +17,15 @@ public class SimulationEngine {
 
     public SimulationEngine(int numStorers, int numForagers, double flowerChance) {
         Cell.setFlowerChance(flowerChance);
-        this.board = new Board(32, 16);
-        this.agents = new ArrayList<>();
-        this.currentTick = 0;
+        board = new Board(32, 16);
+        agents = new ArrayList<>();
+        currentTick = 0;
         this.numStorers = numStorers;
         this.numForagers = numForagers;
         initializeSimulation();
     }
 
     void initializeSimulation() {
-        // Spawn initial Foragers INSIDE the logical hive coordinates
         int defaultSpawnX = 16;
         int defaultSpawnY = 1;
 
@@ -36,9 +35,9 @@ public class SimulationEngine {
         spawnBees(numForagers, 10, defaultSpawnX, defaultSpawnY, Forager::new);
         // Queen spawn
         Queen queen = new Queen(Bee.getTotalNum(), 1, 5, 8);
-        this.agents.add(queen);
-        this.board.setQueen(queen);
-        this.board.getCell(5, 8).setAgent(queen);
+        agents.add(queen);
+        board.setQueen(queen);
+        board.getCell(5, 8).setAgent(queen);
         System.out.println("Simulation initialized");
     }
 
@@ -102,33 +101,33 @@ public class SimulationEngine {
             queen.resetEggCooldown();
         }
 
-        if (this.currentTick % SimulationConfig.POLLEN_REGENERATION_TIME == 0) {
+        if (currentTick % SimulationConfig.POLLEN_REGENERATION_TIME == 0) {
             board.regenerateEnvironment();
         }
 
-        this.currentTick++;
+        currentTick++;
         System.out.println("Steps ran\n");
         return currentTick;
     }
 
     public void run(int totalSteps) {
-        this.isRunning = true;
+        isRunning = true;
         System.out.println("Starting simulation execution for " + totalSteps + " steps.");
 
         for (int i = 0; i < totalSteps; i++) {
             steps();
         }
-        this.isRunning = false;
+        isRunning = false;
         System.out.println("Simulation run completed.");
         System.out.println(totalSteps + " steps ran");
 
     }
 
     void addAgent(Bee bee) {
-        this.agents.add(bee);
+        agents.add(bee);
 
         Point startPos = bee.getMovementContext().getPosition();
-        this.board.moveAgent(bee, null, startPos);
+        board.moveAgent(bee, null, startPos);
         System.out.println("Dodano agenta o ID: " + bee.getID());
     }
 
@@ -136,9 +135,9 @@ public class SimulationEngine {
         Point deadPos = bee.getBeePosition(); // gdzie pszczola umarla
 
         if (deadPos != null) {
-            this.board.moveAgent((Bee) null, deadPos, (Point) null);
+            board.moveAgent(null, deadPos, null);
         }
-        this.agents.remove(bee);
+        agents.remove(bee);
         System.out.println("Usunięto agenta o ID: "+ bee.getID());
     }
 
@@ -153,7 +152,7 @@ public class SimulationEngine {
     }
 
     public Hive getHive() {
-        return this.board.getHive();
+        return board.getHive();
     }
 
     public int getStorerCount() {
@@ -167,11 +166,11 @@ public class SimulationEngine {
     private void spawnBees(int count, int age, int defaultX, int defaultY, IBeeCreator creator) {
         for (int i = 0; i < count; i++) {
             int nextId = Bee.getTotalNum();
-            Point safePos = findEmptySpawnPosition(this.board, defaultX, defaultY);
+            Point safePos = findEmptySpawnPosition(board, defaultX, defaultY);
             Bee newBee = creator.create(nextId, age, safePos.x, safePos.y);
 
-            this.agents.add(newBee);
-            this.board.getCell(safePos.x, safePos.y).setAgent(newBee);
+            agents.add(newBee);
+            board.getCell(safePos.x, safePos.y).setAgent(newBee);
         }
     }
 

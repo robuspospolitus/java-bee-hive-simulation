@@ -6,7 +6,7 @@ import Simulation.Model.SimulationConfig;
 import java.awt.Point;
 
 public class Queen extends Bee{
-    private int eggLayCooldown = 0; //licznik tur do zlozenia jaj
+    private int eggLayCooldown = 0; // licznik tur do zlozenia jaj
 
     public Queen (int ID, int age, int spawnX, int spawnY){
         super(ID, age, spawnX, spawnY, null, "Królowa");
@@ -14,8 +14,8 @@ public class Queen extends Bee{
 
     @Override
     public void move(Board board){
-        this.age++;
-        this.burnEnergy(SimulationConfig.ENERGY_CONSUMPTION_QUEEN);
+        age++;
+        burnEnergy(SimulationConfig.ENERGY_CONSUMPTION_QUEEN);
 
         if(eggLayCooldown > 0){
             eggLayCooldown--;

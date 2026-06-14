@@ -6,7 +6,6 @@ import Simulation.Model.MovementStrategies.TargetedMovement;
 import Simulation.Model.Board;
 import Simulation.Model.Hive;
 import Simulation.Model.BoardCells.Cell;
-import Simulation.Model.BoardCells.CellType;
 import Simulation.Model.MovementStrategies.TeleportMovement;
 
 import java.awt.*;

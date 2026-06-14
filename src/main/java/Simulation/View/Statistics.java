@@ -1,11 +1,11 @@
-package Simulation.Model;
+package Simulation.View;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import Simulation.Model.*;
 
 public class Statistics {
-
     private final int initialForagers;
     private final int initialStorers;
     private final double flowerChance;
@@ -21,17 +21,17 @@ public class Statistics {
         this.flowerChance = flowerChance;
 
         if (engine != null) {
-            this.finalTick = engine.steps(); // Pobiera aktualny krok (zgodnie z logiką updateDashboard)
-            this.finalHoney = engine.getHive() != null ? engine.getHive().getHoneyAmount() : 0;
-            this.finalPollen = engine.getHive() != null ? engine.getHive().getPollenAmount() : 0;
-            this.finalForagers = engine.getForagerCount();
-            this.finalStorers = engine.getStorerCount();
+            finalTick = engine.steps();
+            finalHoney = engine.getHive() != null ? engine.getHive().getHoneyAmount() : 0;
+            finalPollen = engine.getHive() != null ? engine.getHive().getPollenAmount() : 0;
+            finalForagers = engine.getForagerCount();
+            finalStorers = engine.getStorerCount();
         } else {
-            this.finalTick = 0;
-            this.finalHoney = 0;
-            this.finalPollen = 0;
-            this.finalForagers = 0;
-            this.finalStorers = 0;
+            finalTick = 0;
+            finalHoney = 0;
+            finalPollen = 0;
+            finalForagers = 0;
+            finalStorers = 0;
         }
     }
 

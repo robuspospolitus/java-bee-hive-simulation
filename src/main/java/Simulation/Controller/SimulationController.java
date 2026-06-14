@@ -86,7 +86,6 @@ public class SimulationController {
     }
 
     public void start(int storers, int foragers, double flowerChance) {
-
         this.engine = new SimulationEngine(storers, foragers, flowerChance);
 
         startLoop();
@@ -117,7 +116,7 @@ public class SimulationController {
 
     public void continueLoop(){
         if(gameLoop!=null)
-        startLoop();
+        startLoop(); // ?
     }
 
     public void stopLoop(){
