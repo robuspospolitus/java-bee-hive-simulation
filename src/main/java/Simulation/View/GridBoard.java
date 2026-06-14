@@ -59,7 +59,7 @@ public class GridBoard extends Canvas {
                 }
 
                 Bee bee = board.getAgentAt(x, y);
-                if(bee == null) return;
+                if(bee == null) continue;
                 switch (bee) {
                     case Forager _ -> gc.drawImage(beeSprite, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
                     case Storer _ -> gc.drawImage(storerSprite, x * TILE_SIZE, y * TILE_SIZE, TILE_SIZE, TILE_SIZE);
