@@ -16,25 +16,10 @@ import Simulation.Model.SimulationConfig;
 import static Simulation.Model.BoardCells.CellType.*;
 
 public class Forager extends Bee {
-    private Point spawnPosition;
-    private AgentContext movementContext;
-
     public Forager(int ID, int age, int spawnX, int spawnY) {
+        super(ID, age, spawnX, spawnY, new RandomMovement(), "Zbieraczka");
         sightRadius = 4;
         carriedPollen = 0;
-        this.ID = ID;
-        this.age = age;
-        spawnPosition = new Point(spawnX, spawnY);
-        movementContext = new AgentContext("Zbieraczka" + ID, new RandomMovement(), spawnPosition);
-        totalNumBees++;
-    }
-
-    public void collectPollen(int amount) {
-        int spaceAvailable = SimulationConfig.MAX_POLLEN_CAPACITY - carriedPollen;
-        int amountToTake = Math.min(amount, spaceAvailable);
-
-        carriedPollen += amountToTake;
-        System.out.println("Zbieraczka " + ID + " zebrała pyłek. Posiada teraz: " + carriedPollen);
     }
 
     @Override

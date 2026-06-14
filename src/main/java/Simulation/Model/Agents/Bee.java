@@ -2,6 +2,7 @@ package Simulation.Model.Agents;
 import Simulation.Model.Board;
 import Simulation.Model.BoardCells.Cell;
 import Simulation.Model.MovementStrategies.AgentContext;
+import Simulation.Model.MovementStrategies.MovementStrategy;
 import Simulation.Model.SimulationConfig;
 
 import java.awt.Point;
@@ -13,16 +14,23 @@ public abstract class Bee {
     static int totalNumBees;
     protected int ID;
     protected int age;
+    protected AgentContext movementContext;
+    protected Point spawnPosition;
 
-    public Bee() {
-        this.energy = SimulationConfig.ENERGY_FULL;
-        this.carryCapacity = SimulationConfig.MAX_POLLEN_CAPACITY;
+    public Bee(int ID, int age, int x, int y, MovementStrategy strategy, String prefix) {
+        this.ID = ID;
+        this.age = age;
+        spawnPosition = new Point(x, y);
+        movementContext = new AgentContext(prefix + ID, strategy, this.spawnPosition);
+        energy = SimulationConfig.ENERGY_FULL;
+        carryCapacity = SimulationConfig.MAX_POLLEN_CAPACITY;
+        totalNumBees++;
     }
 
     public void burnEnergy(float amount){
-        this.energy -= amount;
-        if(this.energy < 0){
-            this.energy = 0;
+        energy -= amount;
+        if(energy < 0){
+            energy = 0;
         }
     }
 

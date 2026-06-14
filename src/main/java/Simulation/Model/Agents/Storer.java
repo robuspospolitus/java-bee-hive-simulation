@@ -9,20 +9,8 @@ import Simulation.Model.SimulationConfig;
 import java.awt.*;
 
 public class Storer extends Bee{
-    int spawnX;
-    int spawnY;
-    Point spawnPosition;
-
-    private AgentContext movementContext;
-
     public Storer (int ID, int age, int spawnX, int spawnY){
-        this.ID = ID;
-        this.age = age;
-        this.spawnX = spawnX;
-        this.spawnY = spawnY;
-        this.spawnPosition = new Point(spawnX, spawnY);
-        this.movementContext = new AgentContext("Storer" + ID, new RandomMovement(), this.spawnPosition);
-        totalNumBees++;
+        super(ID, age, spawnX, spawnY, new RandomMovement(), "Magazynierka");
     }
 
     @Override
@@ -69,7 +57,7 @@ public class Storer extends Bee{
     protected Point findDestination(Board board){
         System.out.println ("Sprzątaczka porusza sie po ulu");
         movementContext.setStrategy(new RandomMovement());
-        return new Point(spawnX, spawnY);
+        return new Point(getBeePosition().x, getBeePosition().y);
     }
 
     private void zasoby(Board board){
