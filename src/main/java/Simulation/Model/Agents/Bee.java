@@ -74,7 +74,7 @@ public abstract class Bee {
     }
 
     public int getAge() {
-        return this.age;
+        return age;
     }
 
     public void interact(Cell cell) { }

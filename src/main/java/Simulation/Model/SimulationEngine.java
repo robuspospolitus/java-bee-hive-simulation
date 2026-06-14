@@ -31,20 +31,9 @@ public class SimulationEngine {
         int defaultSpawnY = 1;
 
         // Storers spawn
-        for (int i = 0; i < numStorers; i++) {
-            Point safePos = findEmptySpawnPosition(this.board, defaultSpawnX, defaultSpawnY);
-            Storer newBee = new Storer(i, 0, safePos.x, safePos.y);
-
-            this.agents.add(newBee);
-            this.board.getCell(safePos.x, safePos.y).setAgent(newBee);
-        }
+        spawnBees(numStorers, 0, defaultSpawnX, defaultSpawnY, Storer::new);
         // Foragers spawn
-        for (int i = 0; i < numForagers; i++) {
-            Point safePos = findEmptySpawnPosition(this.board, defaultSpawnX, defaultSpawnY);
-            Forager newBee = new Forager(i, 10, safePos.x, safePos.y);
-            this.agents.add(newBee);
-            this.board.getCell(safePos.x, safePos.y).setAgent(newBee);
-        }
+        spawnBees(numForagers, 10, defaultSpawnX, defaultSpawnY, Forager::new);
         // Queen spawn
         Queen queen = new Queen(Bee.getTotalNum(), 1, 5, 8);
         this.agents.add(queen);
@@ -175,6 +164,16 @@ public class SimulationEngine {
         return count;
     }
 
+    private void spawnBees(int count, int age, int defaultX, int defaultY, IBeeCreator creator) {
+        for (int i = 0; i < count; i++) {
+            int nextId = Bee.getTotalNum();
+            Point safePos = findEmptySpawnPosition(this.board, defaultX, defaultY);
+            Bee newBee = creator.create(nextId, age, safePos.x, safePos.y);
+
+            this.agents.add(newBee);
+            this.board.getCell(safePos.x, safePos.y).setAgent(newBee);
+        }
+    }
 
     private Point findEmptySpawnPosition(Board board, int startX, int startY) {
         int maxRadius = Math.max(board.getWidth(), board.getHeight());
