@@ -9,17 +9,11 @@ public class Hive {
     }
 
     public synchronized int consumeFood(int amountNeeded) {
-        if (honeyAmount <= 0) {
-            return 0;
-        }
-        if (honeyAmount >= amountNeeded) {
-            honeyAmount -= amountNeeded;
-            return amountNeeded;
-        } else {
-            int availableFood = honeyAmount;
-            honeyAmount = 0;
-            return availableFood;
-        }
+        if (honeyAmount <= 0) return 0;
+
+        int toConsume = Math.min(amountNeeded, honeyAmount);
+        honeyAmount -= toConsume;
+        return toConsume;
     }
     public synchronized void depositPollen(int amount) {
         if (amount > 0) {
