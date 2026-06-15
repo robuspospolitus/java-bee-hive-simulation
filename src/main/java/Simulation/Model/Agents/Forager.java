@@ -54,9 +54,10 @@ public class Forager extends Bee {
 
         if (newPos.equals(board.getStashDestination(POLLEN_STASH)) && carriedPollen > 0) {
             Hive ul = board.getHive();
-            ul.setPollenAmount(ul.getPollenAmount() + carriedPollen);
-            System.out.println("Forager " + ID + " unloaded " + carriedPollen + " pollen pieces to the hive. Pollen in total: " + ul.getPollenAmount() + ". Energy: " + energy);
-            carriedPollen = 0;
+            if(ul.depositPollen(carriedPollen) > 0) {
+                System.out.println("Forager " + ID + " unloaded " + carriedPollen + " pollen pieces to the hive. Energy: " + energy);
+                carriedPollen = 0;
+            }
         }
 
         age++;
