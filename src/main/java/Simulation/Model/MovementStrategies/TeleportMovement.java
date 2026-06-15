@@ -15,6 +15,6 @@ public class TeleportMovement implements MovementStrategy{
     public void move(String agentName, Point position, Board board) {
         position.x = target.x;
         position.y = target.y;
-        System.out.println(agentName + " nienawidzi portali");
+        System.out.println(agentName + " hates portals");
     }
 }

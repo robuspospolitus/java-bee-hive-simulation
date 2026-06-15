@@ -51,6 +51,6 @@ public class TargetedMovement implements MovementStrategy {
         position.y = Math.max(0, Math.min(15, position.y));
 
         double distance = position.distance(target);
-        System.out.println(agentName + " leci do celu. Zostało: " + distance);
+        System.out.println(agentName + " is flying to its destination. Left: " + distance);
     }
 }

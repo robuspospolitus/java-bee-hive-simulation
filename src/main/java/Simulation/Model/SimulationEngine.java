@@ -48,7 +48,7 @@ public class SimulationEngine {
 
         HashMap<Bee, DeathType> toRemove = new HashMap<>();
         Map<DeathType, String> deathReason = Map.of(
-                DeathType.TRANSFORMATION, "has gone through tranformation",
+                DeathType.TRANSFORMATION, "has gone through transformation",
                 DeathType.OLD_AGE, "died of old age",
                 DeathType.STARVATION, "died of starvation"
         );
@@ -62,6 +62,7 @@ public class SimulationEngine {
                     Point larvaPos = larva.getBeePosition();
                     toRemove.put(larva, DeathType.TRANSFORMATION);
                     toAdd.add(new Storer(larva.getID(), 0, larvaPos.x, larvaPos.y));
+                    System.out.println("Larva " + larva.getID() + " became a Storer!");
                     continue;
                 }
             }
@@ -71,12 +72,12 @@ public class SimulationEngine {
                     Point storerPos = storer.getMovementContext().getPosition();
                     toRemove.put(storer, DeathType.TRANSFORMATION);
                     toAdd.add(new Forager(storer.getID(), 0, storerPos.x, storerPos.y));
-                    System.out.println("Magazynierka " + storer.getID() + " stala sie Zbieraczka!");
+                    System.out.println("Storer " + storer.getID() + " became a Forager!");
                     continue;
                 }
             }
 
-            bee.move(board); // ruch, spadek energii i starzenie sie
+            bee.move(board); // movement, energy loss and aging
 
             if (bee.isDead()) {
                 toRemove.put(bee, DeathType.STARVATION);
@@ -142,7 +143,7 @@ public class SimulationEngine {
 
         Point startPos = bee.getMovementContext().getPosition();
         board.moveAgent(bee, null, startPos);
-        System.out.println("Dodano agenta o ID: " + bee.getID());
+        System.out.println("Added agent ID: " + bee.getID());
     }
 
     void removeAgent(Bee bee) {

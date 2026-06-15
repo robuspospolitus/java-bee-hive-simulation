@@ -9,7 +9,7 @@ public class Larva extends Bee {
     private int feedingsReceived = 0;
 
     public Larva(int ID, int spawnX, int spawnY) {
-        super(ID, 0, spawnX, spawnY, null, "Larwa");
+        super(ID, 0, spawnX, spawnY, null, "Larva");
     }
 
     @Override
