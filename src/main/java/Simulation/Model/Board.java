@@ -1,6 +1,5 @@
 package Simulation.Model;
 
-
 import Simulation.Model.Agents.Bee;
 import Simulation.Model.Agents.Queen;
 import Simulation.Model.BoardCells.Cell;

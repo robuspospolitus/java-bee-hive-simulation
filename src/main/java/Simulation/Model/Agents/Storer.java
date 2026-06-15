@@ -65,9 +65,12 @@ public class Storer extends Bee{
         Queen queen = board.getQueen();
 
         // feeding the queen
-        if(queen != null && queen.getEnergy() < 40.0f && ul.getHoneyAmount() > 0){
-            feedTheQueen(ul, queen);
-            return;
+        if(queen != null && queen.getEnergy() < 40.0f){
+            if (ul.consumeFood(1) > 0) {
+                queen.receiveFood();
+                System.out.println("Storer " + ID + " fed the Queen.");
+                return;
+            }
         }
         // eat
         if(energy < SimulationConfig.ENERGY_THRESHOLD_RETURN) {
@@ -93,22 +96,12 @@ public class Storer extends Bee{
         return movementContext;
     }
 
-    // Private methods
-
-    private void feedTheQueen(Hive ul, Queen queen) {
-        ul.setHoneyAmount(ul.getHoneyAmount() - 1);
-        queen.receiveFood();
-        System.out.println("Storer " + ID + " fed the Queen.");
-    }
-
     private void eat(Hive ul) {
-        int foodAvailable = ul.getHoneyAmount();
-        if(foodAvailable > 0) {
-            float energyNeeded = SimulationConfig.ENERGY_FULL - energy;
-            int honeyNeeded = (int) Math.ceil(energyNeeded / SimulationConfig.ENERGY_PER_HONEY);
-            int toConsume = Math.min(honeyNeeded, foodAvailable);
+        float energyNeeded = SimulationConfig.ENERGY_FULL - energy;
+        int honeyNeeded = (int) Math.ceil(energyNeeded / SimulationConfig.ENERGY_PER_HONEY);
+        int toConsume = ul.consumeFood(honeyNeeded);
 
-            ul.setHoneyAmount(foodAvailable - toConsume);
+        if(toConsume > 0) {
             energy += toConsume * SimulationConfig.ENERGY_PER_HONEY;
             if (energy > SimulationConfig.ENERGY_FULL) {
                 energy = SimulationConfig.ENERGY_FULL;
@@ -129,9 +122,10 @@ public class Storer extends Bee{
             for (int y = 0; y < board.getHeight(); y++) {
                 Cell cell = board.getCell(x, y);
                 if (cell != null && cell.getAgent() instanceof Larva larva) {
-                    ul.setHoneyAmount(ul.getHoneyAmount() - 1);
-                    larva.beFed();
-                    System.out.println("Storer " + ID + " fed larva " + larva.getID() + " in position  (" + x + "," + y + ")");
+                    if (ul.consumeFood(1) > 0) {
+                        larva.beFed();
+                        System.out.println("Storer " + ID + " fed larva " + larva.getID() + " in position  (" + x + ", " + y + ")");
+                    } else  System.out.println("Storer " + ID + " wanted to feed larva, but there is no honey in the hive.");
                     return;
                 }
             }

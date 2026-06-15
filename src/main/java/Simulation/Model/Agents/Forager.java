@@ -54,9 +54,10 @@ public class Forager extends Bee {
 
         if (newPos.equals(board.getStashDestination(POLLEN_STASH)) && carriedPollen > 0) {
             Hive ul = board.getHive();
-            ul.setPollenAmount(ul.getPollenAmount() + carriedPollen);
-            System.out.println("Forager " + ID + " unloaded " + carriedPollen + " pollen pieces to the hive. Pollen in total: " + ul.getPollenAmount() + ". Energy: " + energy);
-            carriedPollen = 0;
+            if(ul.depositPollen(carriedPollen) > 0) {
+                System.out.println("Forager " + ID + " unloaded " + carriedPollen + " pollen pieces to the hive. Energy: " + energy);
+                carriedPollen = 0;
+            }
         }
 
         age++;
@@ -72,18 +73,13 @@ public class Forager extends Bee {
             // eat whenever is in hive
             if (energy < 90.0) {
                 Hive ul = board.getHive();
-                int foodAvailable = ul.getHoneyAmount();
+                float energyNeeded = SimulationConfig.ENERGY_FULL - energy;
+                int honeyNeeded = (int) Math.ceil(energyNeeded / SimulationConfig.ENERGY_PER_HONEY);
+                int toConsume = ul.consumeFood(honeyNeeded);
 
-                if (foodAvailable > 0) {
-                    float energyNeeded = SimulationConfig.ENERGY_FULL - energy;
-                    int honeyNeeded = (int) Math.ceil(energyNeeded / SimulationConfig.ENERGY_PER_HONEY);
-                    int toConsume = Math.min(honeyNeeded, foodAvailable);
-
-                    ul.setHoneyAmount(foodAvailable - toConsume);
+                if (toConsume > 0) {
                     energy += toConsume * SimulationConfig.ENERGY_PER_HONEY;
-                    if (energy > SimulationConfig.ENERGY_FULL) {
-                        energy = SimulationConfig.ENERGY_FULL;
-                    }
+                    if (energy > SimulationConfig.ENERGY_FULL) { energy = SimulationConfig.ENERGY_FULL; }
                     System.out.println("Forager " + ID + " ate " + toConsume + " honey. Energy: " + energy);
                 }
             }
