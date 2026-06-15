@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class Storer extends Bee{
     public Storer (int ID, int age, int spawnX, int spawnY){
-        super(ID, age, spawnX, spawnY, new RandomMovement(), "Magazynierka");
+        super(ID, age, spawnX, spawnY, new RandomMovement(), "Storer");
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Storer extends Bee{
     }
 
     protected Point findDestination(Board board){
-        System.out.println ("Sprzątaczka porusza sie po ulu");
+        System.out.println ("Storer "+ID+" moves around the hive");
         movementContext.setStrategy(new RandomMovement());
         return new Point(getBeePosition().x, getBeePosition().y);
     }
@@ -98,7 +98,7 @@ public class Storer extends Bee{
     private void feedTheQueen(Hive ul, Queen queen) {
         ul.setHoneyAmount(ul.getHoneyAmount() - 1);
         queen.receiveFood();
-        System.out.println("Magazynierka " + ID + " nakarmiła Królową.");
+        System.out.println("Storer " + ID + " fed the Queen.");
     }
 
     private void eat(Hive ul) {
@@ -113,16 +113,15 @@ public class Storer extends Bee{
             if (energy > SimulationConfig.ENERGY_FULL) {
                 energy = SimulationConfig.ENERGY_FULL;
             }
-            System.out.println("Magazynierka " + ID + " zjadła " + toConsume + " miodu, energia: " + energy);
+            System.out.println("Storer " + ID + " ate " + toConsume + " honey, energy: " + energy);
         } else {
-            System.out.println("Magazynierka " + ID + " glodna, nie zjadla");
+            System.out.println("Storer " + ID + " is hungry, did not eat");
         }
     }
     private void makeHoney(Hive ul) {
         ul.setPollenAmount(ul.getPollenAmount() - 1);
         ul.setHoneyAmount(ul.getHoneyAmount() + SimulationConfig.HONEY_FROM_POLLEN);
-        System.out.println("Magazynierka " + ID + " przetworzyła pyłek na miód.");
-        return;
+        System.out.println("Storer " + ID + " processed pollen into honey.");
     }
     private void feedLarva(Board board) {
         Hive ul = board.getHive();
@@ -132,7 +131,7 @@ public class Storer extends Bee{
                 if (cell != null && cell.getAgent() instanceof Larva larva) {
                     ul.setHoneyAmount(ul.getHoneyAmount() - 1);
                     larva.beFed();
-                    System.out.println("Magazynierka " + ID + " nakarmiła Larwę " + larva.getID() + " na pozycji (" + x + "," + y + ")");
+                    System.out.println("Storer " + ID + " fed larva " + larva.getID() + " in position  (" + x + "," + y + ")");
                     return;
                 }
             }

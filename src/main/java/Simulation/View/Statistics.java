@@ -37,7 +37,7 @@ public class Statistics {
 
     public void saveToCsv(String filePath) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, false))) {
-            writer.println("Parametr,Wartosc");
+            writer.println("Parameter,Value");
             writer.println("Initial Foragers," + initialForagers);
             writer.println("Initial Storers," + initialStorers);
             writer.println("Flower Chance," + flowerChance);
@@ -46,9 +46,9 @@ public class Statistics {
             writer.println("Final Pollen," + finalPollen);
             writer.println("Final Foragers," + finalForagers);
             writer.println("Final Storers," + finalStorers);
-            System.out.println("Statystyki zostaly pomyślnie zapisane do pliku: " + filePath);
+            System.out.println("Statistics were successfully written to file: " + filePath);
         } catch (IOException e) {
-            System.err.println("Blad podczas zapisu statystyk do pliku CSV: " + e.getMessage());
+            System.err.println("Error occurred while saving statistics to CSV file: " + e.getMessage());
         }
     }
 }
