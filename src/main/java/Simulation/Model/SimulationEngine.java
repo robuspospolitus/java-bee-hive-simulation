@@ -64,7 +64,6 @@ public class SimulationEngine {
                     toAdd.add(new Storer(larva.getID(), 0, larvaPos.x, larvaPos.y));
                     continue;
                 }
-                else larva.beFed();
             }
             // TRANSFORM STORERS INTO FORAGERS IF OLD ENOUGH
             if (bee instanceof Storer storer) {
