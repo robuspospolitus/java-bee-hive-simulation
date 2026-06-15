@@ -72,6 +72,8 @@ public class MainWindow extends Application {
         stopBtn.setOnAction(_ -> {
             controller.stopLoop();
             SimulationEngine engine = controller.getEngine();
+
+            // Statistics setup
             if (engine != null) {
                 Statistics stats = new Statistics(
                         storerSpinner.getValue(),

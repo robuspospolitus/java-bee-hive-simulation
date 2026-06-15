@@ -79,4 +79,9 @@ public abstract class Bee {
 
     public void interact(Cell cell) { }
 
+    // ensuring that testing doesn't interfere with counter
+    public static void resetTotalNumBeesForTesting() {
+        totalNumBees = 0;
+    }
+
 }

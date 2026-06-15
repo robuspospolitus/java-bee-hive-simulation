@@ -139,4 +139,6 @@ public class Board {
 
     public Point getHiveEntrance(){return hiveEntrance;}
     public Point getHiveExit(){return hiveExit;}
+
+
 }

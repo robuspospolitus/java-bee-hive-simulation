@@ -106,7 +106,7 @@ public class SimulationController {
 
     public void continueLoop(){
         if(gameLoop!=null)
-        startLoop(); // ?
+            startLoop();
     }
 
     public void stopLoop(){
