@@ -121,13 +121,13 @@ public class SimulationEngine {
         }
 
         currentTick++;
-        System.out.println("Steps ran\n");
+        System.out.println("Steps ran");
         return currentTick;
     }
 
     public void run(int totalSteps) {
         isRunning = true;
-        System.out.println("Starting simulation execution for " + totalSteps + " steps.");
+        System.out.println("\nStarting simulation execution for " + totalSteps + " steps.");
 
         for (int i = 0; i < totalSteps; i++) {
             steps();
@@ -207,6 +207,9 @@ public class SimulationEngine {
             }
         }
         return new Point(startX, startY);
+    }
+    public int getCurrentTick() {
+        return currentTick;
     }
 }
 enum DeathType {

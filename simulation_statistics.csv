@@ -1,9 +1,8 @@
-Parametr,Wartosc
-Initial Foragers,3
-Initial Storers,1
-Flower Chance,0.01
-Final Tick,42
-Final Honey,17
-Final Pollen,0
-Final Foragers,0
-Final Storers,4
+Parameter;10;20;30;40;50;60
+Initial Foragers;3;3;3;3;3;3
+Initial Storers;1;1;1;1;1;1
+Flower Chance;0.01;0.01;0.01;0.01;0.01;0.01
+Honey;11;0;2;33;16;10
+Pollen;0;0;13;3;0;0
+Foragers;3;3;3;3;3;4
+Storers;1;2;2;2;4;4
