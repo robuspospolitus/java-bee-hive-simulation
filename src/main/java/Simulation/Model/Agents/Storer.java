@@ -1,5 +1,6 @@
 package Simulation.Model.Agents;
 
+import Simulation.Logger.Logger;
 import Simulation.Model.Board;
 import Simulation.Model.BoardCells.Cell;
 import Simulation.Model.Hive;
@@ -55,7 +56,7 @@ public class Storer extends Bee{
     }
 
     protected Point findDestination(Board board){
-        System.out.println ("Storer "+ID+" moves around the hive");
+        Logger.log ("Storer "+ID+" moves around the hive");
         movementContext.setStrategy(new RandomMovement());
         return new Point(getBeePosition().x, getBeePosition().y);
     }
@@ -68,7 +69,7 @@ public class Storer extends Bee{
         if(queen != null && queen.getEnergy() < 40.0f){
             if (ul.consumeFood(1) > 0) {
                 queen.receiveFood();
-                System.out.println("Storer " + ID + " fed the Queen.");
+                Logger.log("Storer " + ID + " fed the Queen.");
                 return;
             }
         }
@@ -106,15 +107,15 @@ public class Storer extends Bee{
             if (energy > SimulationConfig.ENERGY_FULL) {
                 energy = SimulationConfig.ENERGY_FULL;
             }
-            System.out.println("Storer " + ID + " ate " + toConsume + " honey, energy: " + energy);
+            Logger.log("Storer " + ID + " ate " + toConsume + " honey, energy: " + energy);
         } else {
-            System.out.println("Storer " + ID + " is hungry, did not eat");
+            Logger.log("Storer " + ID + " is hungry, did not eat");
         }
     }
     private void makeHoney(Hive ul) {
         ul.setPollenAmount(ul.getPollenAmount() - 1);
         ul.setHoneyAmount(ul.getHoneyAmount() + SimulationConfig.HONEY_FROM_POLLEN);
-        System.out.println("Storer " + ID + " processed pollen into honey.");
+        Logger.log("Storer " + ID + " processed pollen into honey.");
     }
     private void feedLarva(Board board) {
         Hive ul = board.getHive();
@@ -124,8 +125,8 @@ public class Storer extends Bee{
                 if (cell != null && cell.getAgent() instanceof Larva larva) {
                     if (ul.consumeFood(1) > 0) {
                         larva.beFed();
-                        System.out.println("Storer " + ID + " fed larva " + larva.getID() + " in position  (" + x + ", " + y + ")");
-                    } else  System.out.println("Storer " + ID + " wanted to feed larva, but there is no honey in the hive.");
+                        Logger.log("Storer " + ID + " fed larva " + larva.getID() + " in position  (" + x + ", " + y + ")");
+                    } else  Logger.log("Storer " + ID + " wanted to feed larva, but there is no honey in the hive.");
                     return;
                 }
             }

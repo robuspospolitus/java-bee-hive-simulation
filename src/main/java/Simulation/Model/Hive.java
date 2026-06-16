@@ -1,4 +1,7 @@
 package Simulation.Model;
+
+import Simulation.Logger.Logger;
+
 public class Hive {
     private int pollenAmount;
     private int honeyAmount;
@@ -18,7 +21,7 @@ public class Hive {
     public synchronized int depositPollen(int amount) {
         if (amount == 0) return 0;
         pollenAmount += amount;
-        System.out.println(amount+ " pollen stashed in hive. Current stash: "+ pollenAmount);
+        Logger.log(amount+ " pollen stashed in hive. Current stash: "+ pollenAmount);
         return pollenAmount;
     }
 

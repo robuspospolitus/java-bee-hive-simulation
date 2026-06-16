@@ -1,4 +1,4 @@
-package Simulation.View;
+package Simulation.Logger;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -45,9 +45,9 @@ public class Statistics {
             print(writer, "Pollen", pollens);
             print(writer, "Foragers", foragersList);
             print(writer, "Storers", storersList);
-            System.out.println("Statistics saved successfully to: " + filePath);
+            Logger.log("Statistics saved successfully to: " + filePath);
         } catch (IOException e) {
-            System.err.println("Error occurred while saving statistics: " + e.getMessage());
+            Logger.log("Error occurred while saving statistics: " + e.getMessage());
         }
     }
     private void print(PrintWriter writer, String text, List<? extends Number> list) {

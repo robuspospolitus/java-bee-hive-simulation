@@ -1,4 +1,5 @@
 package Simulation.Model.MovementStrategies;
+import Simulation.Logger.Logger;
 import Simulation.Model.Board;
 
 import java.awt.Point;
@@ -25,6 +26,6 @@ public class RandomMovement implements MovementStrategy {
         position.x = Math.max(0, Math.min(31, position.x));
         position.y = Math.max(0, Math.min(15, position.y));
 
-        System.out.println( agentName + " random move performed, current position [" +position.x + ", " + position.y +"]");
+        Logger.log( agentName + " random move performed, current position [" +position.x + ", " + position.y +"]");
     }
 }

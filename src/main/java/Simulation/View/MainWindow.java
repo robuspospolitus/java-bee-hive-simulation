@@ -1,6 +1,7 @@
 package Simulation.View;
 
 import Simulation.Controller.SimulationController;
+import Simulation.Logger.Statistics;
 import Simulation.Model.Hive;
 import Simulation.Model.SimulationEngine;
 import javafx.application.Application;

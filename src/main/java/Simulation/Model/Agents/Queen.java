@@ -1,4 +1,5 @@
 package Simulation.Model.Agents;
+import Simulation.Logger.Logger;
 import Simulation.Model.Board;
 import Simulation.Model.MovementStrategies.AgentContext;
 import Simulation.Model.SimulationConfig;
@@ -43,7 +44,7 @@ public class Queen extends Bee{
         setEnergy(SimulationConfig.ENERGY_FULL);
     }
     public Larva layEggs(int newId, int safeX, int safeY){
-        System.out.println("The eggs were laid by the queen on " + safeX + ", " + safeY);
+        Logger.log("The eggs were laid by the queen on " + safeX + ", " + safeY);
         return new Larva(newId, safeX, safeY);
     }
 }

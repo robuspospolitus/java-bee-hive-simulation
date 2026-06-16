@@ -1,5 +1,6 @@
 package Simulation.View;
 
+import Simulation.Logger.Logger;
 import Simulation.Model.Agents.*;
 import Simulation.Model.Board;
 import Simulation.Model.BoardCells.Cell;
@@ -34,6 +35,7 @@ public class GridBoard extends Canvas {
             larvaSprite = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/Larvae.png")));
             flowerSprite = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/Flower.png")));
         } catch (Exception e) {
+            Logger.log("A critical error occurred while loading images.");
             System.err.println("A critical error occurred while loading images.");
         }
     }
