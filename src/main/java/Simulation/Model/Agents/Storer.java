@@ -11,6 +11,13 @@ import Simulation.Model.SimulationConfig;
 import java.awt.*;
 
 public class Storer extends Bee{
+    /**
+     * Creates a new Storer bee with random movement behavior inside the hive.
+     * @param ID unique identifier of the bee
+     * @param age initial age of the bee
+     * @param spawnX starting X coordinate
+     * @param spawnY starting Y coordinate
+     */
     public Storer (int ID, int age, int spawnX, int spawnY){
         super(ID, age, spawnX, spawnY, new RandomMovement(), "Storer");
     }
@@ -55,12 +62,21 @@ public class Storer extends Bee{
         interact(board);
     }
 
+    /**
+     * Forces the storer to move randomly within its defined hive boundaries.
+     * @param board the simulation board
+     * @return the calculated destination coordinate point
+     */
     protected Point findDestination(Board board){
         Logger.log ("Storer "+ID+" moves around the hive");
         movementContext.setStrategy(new RandomMovement());
         return new Point(getBeePosition().x, getBeePosition().y);
     }
 
+    /**
+     * Executes storer duties by checking priorities like feeding the queen, eating, making honey, or feeding larvae.
+     * @param board the simulation board
+     */
     private void interact(Board board){
         Hive ul = board.getHive();
         Queen queen = board.getQueen();
@@ -89,14 +105,27 @@ public class Storer extends Bee{
         }
     }
 
+    /**
+     * Checks if the storer bee has met the minimum age threshold required to evolve.
+     * @return true if the bee is old enough to evolve, false otherwise
+     */
     public boolean isReadyToEvolve() {
         return age >= SimulationConfig.TICKS_TO_EVOLVE;
     }
 
+    /**
+     * Retrieves the current movement context of the storer bee.
+     * @return the active agent movement context
+     */
+    @Override
     public AgentContext getMovementContext(){
         return movementContext;
     }
 
+    /**
+     * Eats honey from the hive storage to recover energy up to its maximum capacity.
+     * @param ul the hive object containing food resources
+     */
     private void eat(Hive ul) {
         float energyNeeded = SimulationConfig.ENERGY_FULL - energy;
         int honeyNeeded = (int) Math.ceil(energyNeeded / SimulationConfig.ENERGY_PER_HONEY);
@@ -112,11 +141,19 @@ public class Storer extends Bee{
             Logger.log("Storer " + ID + " is hungry, did not eat");
         }
     }
+    /**
+     * Processes a single unit of pollen into honey and updates hive totals.
+     * @param ul the hive object where resources are updated
+     */
     private void makeHoney(Hive ul) {
         ul.setPollenAmount(ul.getPollenAmount() - 1);
         ul.setHoneyAmount(ul.getHoneyAmount() + SimulationConfig.HONEY_FROM_POLLEN);
         Logger.log("Storer " + ID + " processed pollen into honey.");
     }
+    /**
+     * Scans the grid area to find a Larva agent and feeds it with honey.
+     * @param board the simulation board
+     */
     private void feedLarva(Board board) {
         Hive ul = board.getHive();
         for (int x = 0; x < 12; x++) {

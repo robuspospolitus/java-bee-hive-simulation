@@ -6,16 +6,25 @@ import Simulation.Model.BoardCells.Cell;
 import Simulation.Model.BoardCells.CellType;
 import java.awt.*;
 
+/**
+ * Represents the main simulation board managing the grid layout, environmental cells,
+ * and spatial synchronization of bee agents.
+ */
 public class Board {
     private int width;
     private int height;
     private Cell[][] grid;
     private final Point hiveEntrance = new Point (15,1);
     private final Point hiveExit = new Point (11,1);
-
     private Hive hive;
     private Simulation.Model.Agents.Queen queen;
 
+    /**
+     * Initializes a new Board with specified dimensions, constructs the grid cells,
+     * maps specific zones like the hive, obstacle boundaries, and meadows, and configures resource stashes.
+     * @param width the horizontal size of the board grid
+     * @param height the vertical size of the board grid
+     */
     public Board(int width, int height) {
         this.width = width;
         this.height = height;
@@ -39,6 +48,9 @@ public class Board {
         setStashCells();
     }
 
+    /**
+     * Configures dedicated storage locations for pollen and honey within the grid.
+     */
     private void setStashCells() {
         for (int x = 0; x <= 2; x++){
             grid[x][0].setType(CellType.POLLEN_STASH);
@@ -46,11 +58,17 @@ public class Board {
         }
     }
 
+    /**
+     * Retrieves the core Hive object associated with this simulation board.
+     * @return the hive instance managing total global resources
+     */
     public Hive getHive() {
         return hive;
     }
 
-    // Regenerate pollen on Cells
+    /**
+     * Iterates through the entire grid and triggers pollen restoration for available flower cells.
+     */
     public void regenerateEnvironment() {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
@@ -60,14 +78,24 @@ public class Board {
     }
 
 
-    // Checks if a coordinate is actually on the map, and if no other bee is there
+    /**
+     * Checks if a target coordinate is within valid bounds, not blocked by an obstacle, and currently unoccupied.
+     * @param x target X coordinate
+     * @param y target Y coordinate
+     * @return true if the cell is valid and available for movement, false otherwise
+     */
     public boolean isValidMove(int x, int y) {
         if (x < 0 || x >= width || y < 0 || y >= height) return false;
         if (grid[x][y].getType() == CellType.OBSTACLE) return false;
        return grid[x][y].isEmpty();
     }
 
-    // Handles moving bee from old cell to new cell
+    /**
+     * Handles the spatial transfer of an agent from an old cell position to a new destination on the grid.
+     * @param bee the bee agent executing the transition
+     * @param oldPos the previous position coordinates, or null if entering the board
+     * @param newPos the target destination coordinates, or null if leaving the board
+     */
     public void moveAgent(Bee bee, Point oldPos, Point newPos) {
             // Clear the old cell if the bee was already on the board
             if (oldPos != null) {
@@ -80,6 +108,11 @@ public class Board {
             }
     }
 
+    /**
+     * Determines the opposite endpoint mapping for portal locations like hive entrances or exits.
+     * @param entrance the origin portal point
+     * @return the linked destination point, or null if the coordinate is not a recognized portal
+     */
     public Point getTeleportDestination(Point entrance) {
         if (entrance.equals(hiveEntrance)) {
             return hiveExit;
@@ -89,6 +122,11 @@ public class Board {
         return null;
     }
 
+    /**
+     * Gives extraction points for resource stashes depending on the storage type.
+     * @param stashType resource storage type
+     * @return the designated default coordinate point for that stash category
+     */
     public Point getStashDestination(CellType stashType){
         if (stashType==CellType.POLLEN_STASH) {
             return new Point (0,0);
@@ -98,6 +136,12 @@ public class Board {
         return null;
     }
 
+    /**
+     * Gets a grid cell at the given coordinates after verifying boundary validity.
+     * @param x cell X coordinate
+     * @param y cell Y coordinate
+     * @return the Cell object, or null if coordinates are out of bounds
+     */
     public Cell getCell(int x, int y) {
         if (isValidCoordinate(x, y)) {
             return grid[x][y];
@@ -105,6 +149,12 @@ public class Board {
         return null;
     }
 
+    /**
+     * Identifies any agent currently positioned at the specified coordinates.
+     * @param x search X coordinate
+     * @param y search Y coordinate
+     * @return the occupying Bee agent instance, or null if the coordinate is empty or invalid
+     */
     public Bee getAgentAt(int x, int y) {
         if (isValidCoordinate(x, y)) {
             return grid[x][y].getAgent();
@@ -112,30 +162,61 @@ public class Board {
         return null;
     }
 
+    /**
+     * Gets the single Queen agent tracked by this board instance
+     * @return the queen instance
+     */
     public Queen getQueen() {
         return queen;
     }
 
+    /**
+     * Registers the new queen bee instance
+     * @param queen the queen agent object
+     */
     public void setQueen(Queen queen) {
         this.queen = queen;
     }
 
+    /**
+     * Checks if a point falls within the legal boundaries of the board configuration grid.
+     */
     private boolean isValidCoordinate(int x, int y) {
         return x >= 0 && x < width && y >= 0 && y < height;
     }
 
+    /**
+     * Gets the current width of the simulation board.
+     * @return total grid width
+     */
     public int getWidth() {
         return width;
     }
 
+    /**
+     * Gets the current height of the simulation board.
+     * @return total grid height
+     */
     public int getHeight() {
         return height;
     }
 
+    /**
+     * Gets the two-dimensional cell grid representation.
+     * @return the raw matrix array of grid cells
+     */
     public Cell[][] getGrid() {
         return this.grid;
     }
 
+    /**
+     * Gets hive entrance
+     * @return hive entrance location
+     */
     public Point getHiveEntrance(){return hiveEntrance;}
+    /**
+     * Gets hive exit
+     * @return hive exit location
+     */
     public Point getHiveExit(){return hiveExit;}
 }
