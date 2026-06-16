@@ -219,4 +219,6 @@ public class Board {
      * @return hive exit location
      */
     public Point getHiveExit(){return hiveExit;}
+
+
 }
