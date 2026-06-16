@@ -9,6 +9,9 @@ import java.util.List;
 
 import Simulation.Model.*;
 
+/**
+ * Manages historical performance metrics and environmental states throughout the simulation lifecycle, providing functionality to export data snapshots into CSV format.
+ */
 public class Statistics {
     private final int initialForagers;
     private final int initialStorers;
@@ -19,12 +22,22 @@ public class Statistics {
     private final List<Integer> foragersList = new ArrayList<>();
     private final List<Integer> storersList = new ArrayList<>();
 
+    /**
+     * Initializes a new Statistics instance with the starting parameters of the simulation.
+     * @param initialStorers the starting number of storer bees in the simulation
+     * @param initialForagers the starting number of forager bees in the simulation
+     * @param flowerChance the probability factor configured for flower generation
+     */
     public Statistics(int initialStorers, int initialForagers, double flowerChance) {
         this.initialStorers = initialStorers;
         this.initialForagers = initialForagers;
         this.flowerChance = flowerChance;
     }
 
+    /**
+     * Captures and appends a single metrics snapshot from the current state of the simulation engine
+     * @param engine the active simulation engine instance providing the data to record
+     */
     public void recordSnapshot(SimulationEngine engine) {
         if (engine != null) {
             ticks.add(engine.getCurrentTick());
@@ -35,6 +48,10 @@ public class Statistics {
         }
     }
 
+    /**
+     * Exports all collected simulation statistics into a CSV file at the specified file location.
+     * @param filePath the destination path where the CSV data file will be written
+     */
     public void saveToCsv(String filePath) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, false))) {
             print(writer, "Parameter", ticks);
@@ -50,6 +67,13 @@ public class Statistics {
             Logger.log("Error occurred while saving statistics: " + e.getMessage());
         }
     }
+
+    /**
+     * Helper method that formats and writes a single row of numeric data into the CSV file.
+     * @param writer the PrintWriter instance handling the file output stream
+     * @param text the label representing the data parameter in the current row
+     * @param list the collection of numerical records to be appended to the row
+     */
     private void print(PrintWriter writer, String text, List<? extends Number> list) {
         writer.print(text);
         for (Number value : list) writer.print(";" + value);

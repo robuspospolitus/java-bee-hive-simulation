@@ -5,9 +5,18 @@ import Simulation.Model.Board;
 import java.awt.Point;
 import java.util.Random;
 
+/**
+ * Movement strategy that moves an agent to a random adjacent cell.
+ */
 public class RandomMovement implements MovementStrategy {
     private final Random random = new Random();
 
+    /**
+     * Calculates and applies a random valid move for the agent.
+     * @param agentName the identifier name of the agent
+     * @param position the current position to modify
+     * @param board the simulation board
+     */
     @Override
     public void move(String agentName, Point position, Board board){
         int attempts = 0;

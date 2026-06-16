@@ -5,13 +5,26 @@ import Simulation.Model.Board;
 
 import java.awt.*;
 
+/**
+ * Movement strategy that guides an agent towards a specific target coordinate.
+ */
 public class TargetedMovement implements MovementStrategy {
     private Point target;
 
+    /**
+     * Creates a targeted movement strategy with a defined destination point.
+     * @param target the target coordinates to reach
+     */
     public TargetedMovement(Point target) {
         this.target = target;
     }
 
+    /**
+     * Moves the agent one step closer to the target, handling obstacle avoidance if the path is blocked.
+     * @param agentName the identifier name of the agent
+     * @param position the current position to modify
+     * @param board the simulation board
+     */
     @Override
     public void move(String agentName, Point position, Board board) {
         int dx = Integer.compare(target.x, position.x);

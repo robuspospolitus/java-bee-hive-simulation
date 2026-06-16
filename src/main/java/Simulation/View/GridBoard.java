@@ -20,12 +20,20 @@ public class GridBoard extends Canvas {
     private Image larvaSprite;
     private Image storerSprite;
 
+    /**
+     * Constructs a new GridBoard and adjusts the canvas sizes according to the simulation dimensions.
+     * @param gridWidth number of columns on the board
+     * @param gridHeight number of rows on the board
+     */
     public GridBoard(int gridWidth, int gridHeight) {
         setWidth(gridWidth * TILE_SIZE);
         setHeight(gridHeight * TILE_SIZE);
         loadSprites();
     }
 
+    /**
+     * Loads graphical image files into memory from the application resources folder.
+     */
     private void loadSprites() {
         try {
             BoardView = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/BoardView.png")));
@@ -40,6 +48,10 @@ public class GridBoard extends Canvas {
         }
     }
 
+    /**
+     * Clears the current canvas frame and performs a full redraw of the background matrix, environmental flowers, and active bee agents
+     * @param board the current state data source of the simulation board
+     */
     public void render(Board board) {
         GraphicsContext gc = getGraphicsContext2D();
 

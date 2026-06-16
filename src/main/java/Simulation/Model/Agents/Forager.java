@@ -15,13 +15,25 @@ import Simulation.Model.SimulationConfig;
 
 import static Simulation.Model.BoardCells.CellType.*;
 
+
 public class Forager extends Bee {
+    /**
+     * Creates a new Forager bee with random movement and empty pollen storage.
+     * @param ID unique identifier of the bee
+     * @param age initial age of the bee
+     * @param spawnX starting X coordinate
+     * @param spawnY starting Y coordinate
+     */
     public Forager(int ID, int age, int spawnX, int spawnY) {
         super(ID, age, spawnX, spawnY, new RandomMovement(), "Forager");
         sightRadius = 4;
         carriedPollen = 0;
     }
 
+    /**
+     * Handles the bee movement, dodges obstacles, deposits pollen, and updates age and energy.
+     * @param board the simulation board
+     */
     @Override
     public void move(Board board) {
         findDestination(board);
@@ -126,6 +138,11 @@ public class Forager extends Bee {
         return currentPos;
     }
 
+    /**
+     * Looks for the nearest flower with available pollen within the sight radius.
+     * @param board the simulation board
+     * @return coordinates of the closest flower, or null if none found
+     */
     private Point findClosestTarget(Board board) {
         Point currentPos = movementContext.getPosition();
         Cell[][] grid = board.getGrid();
@@ -148,6 +165,10 @@ public class Forager extends Bee {
         return null;
     }
 
+    /**
+     * Collects pollen from a flower cell if the bee has enough storage space.
+     * @param cell the cell to interact with
+     */
     @Override
     public void interact(Cell cell) {
         if (cell != null && cell.hasFlower() && carriedPollen < SimulationConfig.MAX_POLLEN_CAPACITY) {
@@ -161,5 +182,9 @@ public class Forager extends Bee {
         }
     }
 
+    /**
+     * Gets the movement context of the forager bee.
+     * @return the current agent movement context
+     */
     public AgentContext getMovementContext() { return movementContext; }
 }

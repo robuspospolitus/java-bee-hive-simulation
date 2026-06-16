@@ -23,6 +23,10 @@ public class MainWindow extends Application {
     private Label tickLabel;
     private Statistics currentStats;
 
+    /**
+     * Initializes the primary stage layout, setting up controls, registration of callback handlers, and coordinates the positioning of dashboard layouts.
+     * @param primaryStage the primary stage for this JavaFX application
+     */
     @Override
     public void start(Stage primaryStage) {
         tickLabel = new Label("Tick: 0");
@@ -101,6 +105,9 @@ public class MainWindow extends Application {
         primaryStage.show();
     }
 
+    /**
+     * Retrieves the latest operational metrics from the simulation engine and synchronizes the text readouts displayed on the dashboard metrics label panel.
+     */
     private void updateDashboard() {
         SimulationEngine engine = controller.getEngine();
         if (engine == null) return;
