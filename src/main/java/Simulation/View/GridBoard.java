@@ -10,7 +10,7 @@ import javafx.scene.image.Image;
 import java.util.Objects;
 
 public class GridBoard extends Canvas {
-    private final int TILE_SIZE = 32;
+    private final int TILE_SIZE = 30;
 
     // Images
     private Image flowerSprite;

@@ -1,0 +1,89 @@
+.root {
+    -fx-background-color: ghostwhite;
+}
+.title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: darkslategrey;
+    -fx-border-color: gold;
+    -fx-border-width: 0 0 2px 0;
+    -fx-padding: 0 0 5px 0;
+}
+
+// CONTROLS PANEL
+.controls-panel {
+    -fx-background-color: #ffffff;
+    -fx-border-color: gainsboro;
+    -fx-border-width: 0 1px 0 0;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 5, 0);
+}
+
+.primary-btn {
+    -fx-background-color: gold;
+    -fx-text-fill: darkslategrey;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-min-width: 180px;
+    -fx-padding: 10px;
+}
+
+.secondary-btn {
+    -fx-background-color: white;
+    -fx-text-fill: goldenrod;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-min-width: 180px;
+    -fx-padding: 10px;
+    -fx-border-color: goldenrod;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+}
+
+.danger-btn {
+    -fx-background-color: #e74c3c;
+    -fx-text-fill: #ffffff;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-background-radius: 6px;
+    -fx-cursor: hand;
+    -fx-min-width: 180px;
+    -fx-padding: 10px;
+}
+
+.text-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: slategrey;
+    -fx-font-weight: bold;
+}
+
+// SIMULATION STATS
+.dashboard-panel {
+    -fx-background-color: #ffffff;
+    -fx-border-color: gainsboro;
+    -fx-border-width: 0 0 0 1px;
+    -fx-padding: 20px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, -5, 0);
+}
+
+.metric-value {
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-text-fill: darkslategrey;
+}
+
+.tick-value {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #e67e22;
+}
+
+.spinner {
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-min-width: 180px;
+}
