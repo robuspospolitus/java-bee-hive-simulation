@@ -1,71 +1,3 @@
-/*(package Simulation.Controller;
-import Simulation.Model.SimulationEngine;
-import java.util.Scanner;
-
-public class SimulationController {
-    private SimulationEngine engine;
-    private final Scanner scanner;
-
-    public SimulationController() {
-        this.scanner = new Scanner(System.in);
-        start();
-    }
-
-    public void start() {
-        System.out.println("=== Ustawienia symulacji ===");
-
-        System.out.print("Podaj liczbe robotnic: ");
-        int workers = readIntInput();
-
-        System.out.print("Podaj liczbe kwiatow: ");
-        int flowers = readIntInput();
-
-        this.engine = new SimulationEngine(workers, flowers);
-
-        runConsoleMenu();
-    }
-
-    private void runConsoleMenu() {
-        boolean running = true;
-        System.out.println("\nUstawienia zapisane - wybierz tryb: [I] = pojedynczy krok, [X] = 10 kroków, [w] = wyjdź");
-
-        while (running) {
-            System.out.print("\nCommand: ");
-            String command = scanner.next().toUpperCase().trim();
-
-            switch (command) {
-                case "I":
-                    int currentTick = engine.steps();
-                    System.out.println("--- Tick " + currentTick + " ---");
-                    break;
-                case "X":
-                    System.out.println("Running 10 steps automatically...");
-                    engine.run(10);
-                    break;
-                case "w":
-                    running = false;
-                    System.out.println("Exiting simulation.");
-                    break;
-                default:
-                    System.out.println("Nieznana komenda (spróbuj: [I] = pojedynczy krok, [X] = 10 kroków, [w] = wyjdź)");
-            }
-        }
-        scanner.close();
-    }
-
-    private int readIntInput() {
-        while (!scanner.hasNextInt()) {
-            System.out.println("That's not a valid number! Try again.");
-            scanner.next();
-        }
-        return scanner.nextInt();
-    }
-
-
-
-}
-*/
-
 package Simulation.Controller;
 
 import Simulation.Model.SimulationEngine;
@@ -74,21 +6,38 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;
 
+/**
+ * Controls the execution flow of the simulation, binding the core business logic
+ * inside the engine with the visual rendering layer using a JavaFX loop.
+ */
 public class SimulationController {
     private SimulationEngine engine;
     private final GridBoard gridBoard;
     private Timeline gameLoop;
     private Runnable onTickCallback;
 
+    /**
+     * Constructs a SimulationController and associates it with the drawing canvas.
+     * @param gridBoard the canvas display component used for rendering the board state
+     */
     public SimulationController(GridBoard gridBoard) {
         this.gridBoard = gridBoard;
     }
 
+    /**
+     * Initializes a fresh simulation engine state and triggers the main animation timer loop.
+     * @param storers the initial number of storer bees to create
+     * @param foragers the initial number of forager bees to create
+     * @param flowerChance the resource spawn probability factor
+     */
     public void start(int storers, int foragers, double flowerChance) {
         this.engine = new SimulationEngine(storers, foragers, flowerChance);
         startLoop();
     }
 
+    /**
+     * Configures, schedules, and starts the asynchronous JavaFX Timeline loop responsible for step execution and UI synchronization.
+     */
     private void startLoop() {
         if (gameLoop != null) {
             gameLoop.stop();
@@ -104,20 +53,33 @@ public class SimulationController {
         gameLoop.play();
     }
 
+    /**
+     * Resumes the existing simulation loop sequence if it has already been initialized.
+     */
     public void continueLoop(){
-        if(gameLoop!=null)
-            startLoop();
+        if(gameLoop!=null) startLoop();
     }
 
+    /**
+     * Halts the active JavaFX timeline animation loop, pausing the simulation progression.
+     */
     public void stopLoop(){
         if (gameLoop != null) {
             gameLoop.stop();
         }
     }
 
+    /**
+     * Sets a notification callback to execute immediately after each simulation step completes.
+     * @param callback the task listener to run on every tick
+     */
     public void setOnTickCallback(Runnable callback) {
         onTickCallback = callback;
     }
+    /**
+     * Gets the internal simulation engine controller state instance.
+     * @return the active SimulationEngine object
+     */
     public SimulationEngine getEngine() {
         return engine;
     }

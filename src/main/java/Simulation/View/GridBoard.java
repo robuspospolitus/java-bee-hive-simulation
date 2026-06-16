@@ -1,5 +1,6 @@
 package Simulation.View;
 
+import Simulation.Logger.Logger;
 import Simulation.Model.Agents.*;
 import Simulation.Model.Board;
 import Simulation.Model.BoardCells.Cell;
@@ -9,7 +10,7 @@ import javafx.scene.image.Image;
 import java.util.Objects;
 
 public class GridBoard extends Canvas {
-    private final int TILE_SIZE = 32;
+    private final int TILE_SIZE = 30;
 
     // Images
     private Image flowerSprite;
@@ -19,12 +20,20 @@ public class GridBoard extends Canvas {
     private Image larvaSprite;
     private Image storerSprite;
 
+    /**
+     * Constructs a new GridBoard and adjusts the canvas sizes according to the simulation dimensions.
+     * @param gridWidth number of columns on the board
+     * @param gridHeight number of rows on the board
+     */
     public GridBoard(int gridWidth, int gridHeight) {
         setWidth(gridWidth * TILE_SIZE);
         setHeight(gridHeight * TILE_SIZE);
         loadSprites();
     }
 
+    /**
+     * Loads graphical image files into memory from the application resources folder.
+     */
     private void loadSprites() {
         try {
             BoardView = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/BoardView.png")));
@@ -34,10 +43,15 @@ public class GridBoard extends Canvas {
             larvaSprite = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/Larvae.png")));
             flowerSprite = new Image(Objects.requireNonNull(getClass().getResourceAsStream("/Images/Flower.png")));
         } catch (Exception e) {
+            Logger.log("A critical error occurred while loading images.");
             System.err.println("A critical error occurred while loading images.");
         }
     }
 
+    /**
+     * Clears the current canvas frame and performs a full redraw of the background matrix, environmental flowers, and active bee agents
+     * @param board the current state data source of the simulation board
+     */
     public void render(Board board) {
         GraphicsContext gc = getGraphicsContext2D();
 

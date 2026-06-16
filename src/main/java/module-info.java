@@ -10,4 +10,6 @@ module Bee.Simulation.main {
     // If you plan to use FXML files down the line:
 
    opens Simulation.View to javafx.graphics;
+    exports Simulation.Logger;
+    opens Simulation.Logger to javafx.graphics;
 }

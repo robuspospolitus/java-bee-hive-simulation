@@ -1,4 +1,5 @@
 package Simulation.Model;
+import Simulation.Logger.Logger;
 import Simulation.Model.Agents.*;
 import Simulation.Model.BoardCells.Cell;
 import Simulation.Model.BoardCells.CellType;
@@ -9,6 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Core engine responsible for orchestrating the simulation loop, managing agent life cycles, handling transformations, and updating the environmental state of the board.
+ */
 public class SimulationEngine {
     private Board board;
     private List<Bee> agents;
@@ -17,6 +21,12 @@ public class SimulationEngine {
     private int numStorers;
     private int numForagers;
 
+    /**
+     * Constructs a SimulationEngine, initializes the board grid, and sets the initial configurations.
+     * @param numStorers the initial number of storer bees to spawn
+     * @param numForagers the initial number of forager bees to spawn
+     * @param flowerChance the probability of flowers spawning on meadow cells
+     */
     public SimulationEngine(int numStorers, int numForagers, double flowerChance) {
         Cell.setFlowerChance(flowerChance);
         board = new Board(32, 16);
@@ -27,6 +37,9 @@ public class SimulationEngine {
         initializeSimulation();
     }
 
+    /**
+     * Initializes the simulation state by spawning the configured number of foragers, storers, placing the queen at her default position, and creating log tracks.
+     */
     void initializeSimulation() {
         int defaultSpawnX = 16;
         int defaultSpawnY = 1;
@@ -40,15 +53,20 @@ public class SimulationEngine {
         agents.add(queen);
         board.setQueen(queen);
         board.getCell(5, 8).setAgent(queen);
-        System.out.println("Simulation initialized");
+        Logger.createNewLogFile();
+        Logger.log("Simulation initialized");
     }
 
+    /**
+     * Executes a single evaluation tick of the simulation. Handles agent aging, movement, energy loss, evolutionary transformations, death cleanup, resource updates, and egg-laying routines.
+     * @return the updated current tick number
+     */
     public int steps() {
         if (!isRunning) return currentTick;
 
         HashMap<Bee, DeathType> toRemove = new HashMap<>();
         Map<DeathType, String> deathReason = Map.of(
-                DeathType.TRANSFORMATION, "has gone through tranformation",
+                DeathType.TRANSFORMATION, "has gone through transformation",
                 DeathType.OLD_AGE, "died of old age",
                 DeathType.STARVATION, "died of starvation"
         );
@@ -62,6 +80,7 @@ public class SimulationEngine {
                     Point larvaPos = larva.getBeePosition();
                     toRemove.put(larva, DeathType.TRANSFORMATION);
                     toAdd.add(new Storer(larva.getID(), 0, larvaPos.x, larvaPos.y));
+                    Logger.log("Larva " + larva.getID() + " became a Storer!");
                     continue;
                 }
             }
@@ -71,12 +90,12 @@ public class SimulationEngine {
                     Point storerPos = storer.getMovementContext().getPosition();
                     toRemove.put(storer, DeathType.TRANSFORMATION);
                     toAdd.add(new Forager(storer.getID(), 0, storerPos.x, storerPos.y));
-                    System.out.println("Magazynierka " + storer.getID() + " stala sie Zbieraczka!");
+                    Logger.log("Storer " + storer.getID() + " became a Forager!");
                     continue;
                 }
             }
 
-            bee.move(board); // ruch, spadek energii i starzenie sie
+            bee.move(board); // movement, energy loss and aging
 
             if (bee.isDead()) {
                 toRemove.put(bee, DeathType.STARVATION);
@@ -96,7 +115,7 @@ public class SimulationEngine {
         // removing and adding bees
         toRemove.forEach(((bee, deathType) -> {
             removeAgent(bee);
-            System.out.println("Bee of ID "+ bee.getID() + " " + deathReason.get(deathType));
+            Logger.log("Bee of ID "+ bee.getID() + " " + deathReason.get(deathType));
         }));
         for (Bee bee : toAdd) { addAgent(bee); }
 
@@ -120,31 +139,43 @@ public class SimulationEngine {
         }
 
         currentTick++;
-        System.out.println("Steps ran\n");
+        Logger.log("Steps ran");
         return currentTick;
     }
 
+    /**
+     * Starts the execution loop for a block of continuous simulation steps.
+     * @param totalSteps number of iterations to process
+     */
     public void run(int totalSteps) {
         isRunning = true;
-        System.out.println("Starting simulation execution for " + totalSteps + " steps.");
+        Logger.log("Starting simulation execution for " + totalSteps + " steps.");
 
         for (int i = 0; i < totalSteps; i++) {
             steps();
         }
         isRunning = false;
-        System.out.println("Simulation run completed.");
-        System.out.println(totalSteps + " steps ran");
+        Logger.log("Simulation run completed.");
+        Logger.log(totalSteps + " steps ran\n");
 
     }
 
+    /**
+     * Registers a new bee agent into the tracking system and assigns its physical location on the board grid.
+     * @param bee the bee agent to include
+     */
     void addAgent(Bee bee) {
         agents.add(bee);
 
         Point startPos = bee.getMovementContext().getPosition();
         board.moveAgent(bee, null, startPos);
-        System.out.println("Dodano agenta o ID: " + bee.getID());
+        Logger.log("Added agent ID: " + bee.getID());
     }
 
+    /**
+     * Unregisters an existing bee agent from tracking list and clears its square position from the grid.
+     * @param bee the bee agent to wipe
+     */
     void removeAgent(Bee bee) {
         Point deadPos = bee.getBeePosition();
 
@@ -154,8 +185,16 @@ public class SimulationEngine {
         agents.remove(bee);
     }
 
+    /**
+     * Gets the current board environment instance.
+     * @return the associated Board object
+     */
     public Board getBoard() { return board; }
 
+    /**
+     * Calculates the total amount of active forager bees in the tracking lists.
+     * @return count of active foragers
+     */
     public int getForagerCount() {
         int count = 0;
         for (Bee bee : agents) {
@@ -164,10 +203,18 @@ public class SimulationEngine {
         return count;
     }
 
+    /**
+     * Accesses the tracked global Hive storage resources directly from the board context.
+     * @return the active Hive instance
+     */
     public Hive getHive() {
         return board.getHive();
     }
 
+    /**
+     * Calculates the total amount of active storer bees in the tracking lists.
+     * @return count of active storers
+     */
     public int getStorerCount() {
         int count = 0;
         for (Bee bee : agents) {
@@ -176,6 +223,9 @@ public class SimulationEngine {
         return count;
     }
 
+    /**
+     * Iteratively creates and setups groups of bees
+     */
     private void spawnBees(int count, int age, int defaultX, int defaultY, IBeeCreator creator) {
         for (int i = 0; i < count; i++) {
             int nextId = Bee.getTotalNum();
@@ -187,6 +237,13 @@ public class SimulationEngine {
         }
     }
 
+    /**
+     * Scans outward from a center position to find the nearest valid, obstacle-free, and unoccupied space inside the hive.
+     * @param board the simulation board environment
+     * @param startX the starting anchor X coordinate
+     * @param startY the starting anchor Y coordinate
+     * @return a Point containing safe coordinate values for placement
+     */
     private Point findEmptySpawnPosition(Board board, int startX, int startY) {
         int maxRadius = Math.max(board.getWidth(), board.getHeight());
 
@@ -207,11 +264,12 @@ public class SimulationEngine {
         }
         return new Point(startX, startY);
     }
-}
-
-enum DeathType {
-    STARVATION,
-    TRANSFORMATION,
-    OLD_AGE
+    /**
+     * Retrieves the exact processing lifecycle tick counter.
+     * @return current tick integer
+     */
+    public int getCurrentTick() {
+        return currentTick;
+    }
 }
 

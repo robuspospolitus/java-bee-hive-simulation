@@ -1,5 +1,6 @@
 package Simulation.Model.Agents;
 
+import Simulation.Logger.Logger;
 import Simulation.Model.MovementStrategies.AgentContext;
 import Simulation.Model.MovementStrategies.RandomMovement;
 import Simulation.Model.MovementStrategies.TargetedMovement;
@@ -14,13 +15,25 @@ import Simulation.Model.SimulationConfig;
 
 import static Simulation.Model.BoardCells.CellType.*;
 
+
 public class Forager extends Bee {
+    /**
+     * Creates a new Forager bee with random movement and empty pollen storage.
+     * @param ID unique identifier of the bee
+     * @param age initial age of the bee
+     * @param spawnX starting X coordinate
+     * @param spawnY starting Y coordinate
+     */
     public Forager(int ID, int age, int spawnX, int spawnY) {
-        super(ID, age, spawnX, spawnY, new RandomMovement(), "Zbieraczka");
+        super(ID, age, spawnX, spawnY, new RandomMovement(), "Forager");
         sightRadius = 4;
         carriedPollen = 0;
     }
 
+    /**
+     * Handles the bee movement, dodges obstacles, deposits pollen, and updates age and energy.
+     * @param board the simulation board
+     */
     @Override
     public void move(Board board) {
         findDestination(board);
@@ -54,9 +67,10 @@ public class Forager extends Bee {
 
         if (newPos.equals(board.getStashDestination(POLLEN_STASH)) && carriedPollen > 0) {
             Hive ul = board.getHive();
-            ul.setPollenAmount(ul.getPollenAmount() + carriedPollen);
-            System.out.println(" Zbieraczka " + ID + " rozładowała " + carriedPollen + " szt. pyłku do ula. Razem w ulu: " + ul.getPollenAmount() + ". Energia: " + energy);
-            carriedPollen = 0;
+            if(ul.depositPollen(carriedPollen) > 0) {
+                Logger.log("Forager " + ID + " unloaded " + carriedPollen + " pollen pieces to the hive. Energy: " + energy);
+                carriedPollen = 0;
+            }
         }
 
         age++;
@@ -72,36 +86,31 @@ public class Forager extends Bee {
             // eat whenever is in hive
             if (energy < 90.0) {
                 Hive ul = board.getHive();
-                int foodAvailable = ul.getHoneyAmount();
+                float energyNeeded = SimulationConfig.ENERGY_FULL - energy;
+                int honeyNeeded = (int) Math.ceil(energyNeeded / SimulationConfig.ENERGY_PER_HONEY);
+                int toConsume = ul.consumeFood(honeyNeeded);
 
-                if (foodAvailable > 0) {
-                    float energyNeeded = SimulationConfig.ENERGY_FULL - energy;
-                    int honeyNeeded = (int) Math.ceil(energyNeeded / SimulationConfig.ENERGY_PER_HONEY);
-                    int toConsume = Math.min(honeyNeeded, foodAvailable);
-
-                    ul.setHoneyAmount(foodAvailable - toConsume);
+                if (toConsume > 0) {
                     energy += toConsume * SimulationConfig.ENERGY_PER_HONEY;
-                    if (energy > SimulationConfig.ENERGY_FULL) {
-                        energy = SimulationConfig.ENERGY_FULL;
-                    }
-                    System.out.println("Zbieraczka " + ID + " zjadła " + toConsume + " miodu. Aktualna energia: " + energy);
+                    if (energy > SimulationConfig.ENERGY_FULL) { energy = SimulationConfig.ENERGY_FULL; }
+                    Logger.log("Forager " + ID + " ate " + toConsume + " honey. Energy: " + energy);
                 }
             }
             // stash pollen
             if (carriedPollen > 0) {
-                System.out.println("Zbieraczka " + ID + " leci zlozyc pylek do magazynu. Energia: " + energy);
+                Logger.log("Forager " + ID + " flies to deposit pollen into storage. Energy: " + energy);
                 movementContext.setStrategy(new TargetedMovement(board.getStashDestination(POLLEN_STASH)));
                 return board.getStashDestination(POLLEN_STASH);
             }
             // exit
             if (currentPos.equals(board.getHiveExit()) && carriedPollen == 0 && (double)energy > (double)SimulationConfig.ENERGY_THRESHOLD_RETURN) {
-                System.out.println("Zbieraczka " + ID + " jest pusta, najedzona i przechodzi przez wyjscie na lake. Energia: " + energy);
+                Logger.log("Forager " + ID + " is empty, full and goes through the exit to the meadow. Energy: " + energy);
                 Point destination = board.getTeleportDestination(currentPos);
                 movementContext.setStrategy(new TeleportMovement(destination));
                 return destination;
             }
             // go towards exit
-            System.out.println("Zbieraczka " + ID + " kieruje sie do wyjscia z ula. Energia: " + energy);
+            Logger.log("Forager " + ID + " heads towards the hive exit. Energy: " + energy);
             movementContext.setStrategy(new TargetedMovement(board.getHiveExit()));
             return board.getHiveExit();
         }
@@ -109,7 +118,7 @@ public class Forager extends Bee {
         // IN MEADOW
         // return if low energy or full of pollen
         if (energy < SimulationConfig.ENERGY_THRESHOLD_RETURN || carriedPollen >= SimulationConfig.MAX_POLLEN_CAPACITY) {
-            System.out.println("Zbieraczka " + ID + " wraca do ula ze względu na stan zasobów. Energia: " + energy);
+            Logger.log("Forager " + ID + " returns to the hive due to the state of resources. Energy: " + energy);
             if (currentPos.equals(board.getHiveEntrance())) {
                 Point destination = board.getTeleportDestination(currentPos);
                 movementContext.setStrategy(new TeleportMovement(destination));
@@ -124,11 +133,16 @@ public class Forager extends Bee {
             return flower;
         }
         // nothing in sight, random movement
-        System.out.println("Nic nie widzę, lecę losowo... Energia: " + energy);
+        Logger.log("Forager "+ID+" cannot see anything, flying randomly... Energy: " + energy);
         movementContext.setStrategy(new RandomMovement());
         return currentPos;
     }
 
+    /**
+     * Looks for the nearest flower with available pollen within the sight radius.
+     * @param board the simulation board
+     * @return coordinates of the closest flower, or null if none found
+     */
     private Point findClosestTarget(Board board) {
         Point currentPos = movementContext.getPosition();
         Cell[][] grid = board.getGrid();
@@ -141,7 +155,7 @@ public class Forager extends Bee {
                 if (checkX >= 0 && checkX < grid.length && checkY >= 0 && checkY < grid[0].length) {
                     Cell cell = grid[checkX][checkY];
                     if (cell != null && cell.hasFlower() && cell.getPollenAmount() > 0 && cell.getAgent() == null) {
-                        System.out.println("Zbieraczka " + ID + " widzi kwiat w punkcie [" + checkX + ", " + checkY + "]. Energia: " + energy);
+                        Logger.log("Forager " + ID + " sees a flower at point [" + checkX + ", " + checkY + "]. Energy: " + energy);
                         movementContext.setStrategy(new TargetedMovement(new Point(checkX, checkY)));
                         return new Point(checkX, checkY);
                     }
@@ -151,6 +165,10 @@ public class Forager extends Bee {
         return null;
     }
 
+    /**
+     * Collects pollen from a flower cell if the bee has enough storage space.
+     * @param cell the cell to interact with
+     */
     @Override
     public void interact(Cell cell) {
         if (cell != null && cell.hasFlower() && carriedPollen < SimulationConfig.MAX_POLLEN_CAPACITY) {
@@ -159,10 +177,14 @@ public class Forager extends Bee {
             int collectedPollen = cell.takePollen(amountToTry);
             if (collectedPollen > 0) {
                 carriedPollen += collectedPollen;
-                System.out.println("Zbieraczka " + ID + " zebrała " + collectedPollen + " pyłku. Posiada teraz: " + carriedPollen + "/" + SimulationConfig.MAX_POLLEN_CAPACITY+". Energia: " + energy);
+                Logger.log("Forager " + ID + " collected " + collectedPollen + " pollen. Now carries: " + carriedPollen + "/" + SimulationConfig.MAX_POLLEN_CAPACITY+". Energy: " + energy);
             }
         }
     }
 
+    /**
+     * Gets the movement context of the forager bee.
+     * @return the current agent movement context
+     */
     public AgentContext getMovementContext() { return movementContext; }
 }
