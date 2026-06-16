@@ -1,6 +1,7 @@
 package Simulation.View;
 
 import Simulation.Controller.SimulationController;
+import Simulation.Logger.Statistics;
 import Simulation.Model.Hive;
 import Simulation.Model.SimulationEngine;
 import javafx.application.Application;
@@ -20,6 +21,7 @@ public class MainWindow extends Application {
     private Label foragerLabel;
     private Label storerLabel;
     private Label tickLabel;
+    private Statistics currentStats;
 
     @Override
     public void start(Stage primaryStage) {
@@ -64,6 +66,7 @@ public class MainWindow extends Application {
             int storers = storerSpinner.getValue();
             Double flowers = flowerSpinner.getValue();
 
+            currentStats = new Statistics(storers, foragers, flowers);
             controller.start(storers, foragers, flowers);
         });
 
@@ -71,15 +74,8 @@ public class MainWindow extends Application {
         Button stopBtn = new Button("Stop Simulation");
         stopBtn.setOnAction(_ -> {
             controller.stopLoop();
-            SimulationEngine engine = controller.getEngine();
-            if (engine != null) {
-                Statistics stats = new Statistics(
-                        storerSpinner.getValue(),
-                        foragerSpinner.getValue(),
-                        flowerSpinner.getValue(),
-                        engine
-                );
-                stats.saveToCsv("simulation_statistics.csv");
+            if (currentStats != null) {
+                currentStats.saveToCsv("simulation_statistics.csv");
             }
         });
 
@@ -116,6 +112,13 @@ public class MainWindow extends Application {
         }
         foragerLabel.setText("Foragers: " + engine.getForagerCount());
         storerLabel.setText("Storers: " + engine.getStorerCount());
-        tickLabel.setText("Tick: " + engine.steps());
+
+        int currentTick = engine.getCurrentTick();
+        tickLabel.setText("Tick: " + engine.getCurrentTick());
+
+        if (currentTick > 0 && currentTick % 10 == 0 && currentStats != null) {
+            currentStats.recordSnapshot(engine);
+            currentStats.saveToCsv("simulation_statistics.csv");
+        }
     }
 }

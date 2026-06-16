@@ -1,5 +1,6 @@
 package Simulation.Model.MovementStrategies;
 
+import Simulation.Logger.Logger;
 import Simulation.Model.Board;
 
 import java.awt.*;
@@ -15,6 +16,6 @@ public class TeleportMovement implements MovementStrategy{
     public void move(String agentName, Point position, Board board) {
         position.x = target.x;
         position.y = target.y;
-        System.out.println(agentName + " hates portals");
+        Logger.log(agentName + " hates portals");
     }
 }

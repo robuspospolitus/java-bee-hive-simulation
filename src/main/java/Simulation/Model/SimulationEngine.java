@@ -1,4 +1,5 @@
 package Simulation.Model;
+import Simulation.Logger.Logger;
 import Simulation.Model.Agents.*;
 import Simulation.Model.BoardCells.Cell;
 import Simulation.Model.BoardCells.CellType;
@@ -40,7 +41,8 @@ public class SimulationEngine {
         agents.add(queen);
         board.setQueen(queen);
         board.getCell(5, 8).setAgent(queen);
-        System.out.println("Simulation initialized");
+        Logger.createNewLogFile();
+        Logger.log("Simulation initialized");
     }
 
     public int steps() {
@@ -62,7 +64,7 @@ public class SimulationEngine {
                     Point larvaPos = larva.getBeePosition();
                     toRemove.put(larva, DeathType.TRANSFORMATION);
                     toAdd.add(new Storer(larva.getID(), 0, larvaPos.x, larvaPos.y));
-                    System.out.println("Larva " + larva.getID() + " became a Storer!");
+                    Logger.log("Larva " + larva.getID() + " became a Storer!");
                     continue;
                 }
             }
@@ -72,7 +74,7 @@ public class SimulationEngine {
                     Point storerPos = storer.getMovementContext().getPosition();
                     toRemove.put(storer, DeathType.TRANSFORMATION);
                     toAdd.add(new Forager(storer.getID(), 0, storerPos.x, storerPos.y));
-                    System.out.println("Storer " + storer.getID() + " became a Forager!");
+                    Logger.log("Storer " + storer.getID() + " became a Forager!");
                     continue;
                 }
             }
@@ -97,7 +99,7 @@ public class SimulationEngine {
         // removing and adding bees
         toRemove.forEach(((bee, deathType) -> {
             removeAgent(bee);
-            System.out.println("Bee of ID "+ bee.getID() + " " + deathReason.get(deathType));
+            Logger.log("Bee of ID "+ bee.getID() + " " + deathReason.get(deathType));
         }));
         for (Bee bee : toAdd) { addAgent(bee); }
 
@@ -121,20 +123,20 @@ public class SimulationEngine {
         }
 
         currentTick++;
-        System.out.println("Steps ran\n");
+        Logger.log("Steps ran");
         return currentTick;
     }
 
     public void run(int totalSteps) {
         isRunning = true;
-        System.out.println("Starting simulation execution for " + totalSteps + " steps.");
+        Logger.log("Starting simulation execution for " + totalSteps + " steps.");
 
         for (int i = 0; i < totalSteps; i++) {
             steps();
         }
         isRunning = false;
-        System.out.println("Simulation run completed.");
-        System.out.println(totalSteps + " steps ran");
+        Logger.log("Simulation run completed.");
+        Logger.log(totalSteps + " steps ran\n");
 
     }
 
@@ -143,7 +145,7 @@ public class SimulationEngine {
 
         Point startPos = bee.getMovementContext().getPosition();
         board.moveAgent(bee, null, startPos);
-        System.out.println("Added agent ID: " + bee.getID());
+        Logger.log("Added agent ID: " + bee.getID());
     }
 
     void removeAgent(Bee bee) {
@@ -207,6 +209,9 @@ public class SimulationEngine {
             }
         }
         return new Point(startX, startY);
+    }
+    public int getCurrentTick() {
+        return currentTick;
     }
 }
 enum DeathType {
