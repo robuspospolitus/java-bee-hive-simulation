@@ -72,6 +72,9 @@ public class Cell {
      */
     public boolean hasFlower() { return hasFlower; }
 
+    /**Sets if a cell contains a flower */
+    public void setFlower(boolean hasFlower){this.hasFlower=hasFlower;}
+
     /**
      * Gets the environmental type of the cell.
      * @return the current cell type

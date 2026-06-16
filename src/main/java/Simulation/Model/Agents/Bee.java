@@ -36,6 +36,12 @@ public abstract class Bee {
         totalNumBees++;
     }
 
+    
+    /**Needed for safe testing without interfering with actual number of bees */
+    public static void resetTotalNumBeesForTesting() {
+        totalNumBees=0;
+    }
+
     /**
      * Decreases the bee's current energy level by the specified amount, preventing it from dropping below zero.
      * @param amount the quantity of energy to consume during an action or tick
