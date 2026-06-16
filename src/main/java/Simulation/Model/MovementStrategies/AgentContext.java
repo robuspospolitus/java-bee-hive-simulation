@@ -31,6 +31,7 @@ public class AgentContext {
        position = pos;
     }
 
+    public MovementStrategy getStrategy(){return this.strategy;}
 
 
 }

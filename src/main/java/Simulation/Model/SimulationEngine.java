@@ -208,6 +208,7 @@ public class SimulationEngine {
         return new Point(startX, startY);
     }
 }
+
 enum DeathType {
     STARVATION,
     TRANSFORMATION,

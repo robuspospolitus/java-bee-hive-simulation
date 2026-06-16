@@ -62,7 +62,7 @@ public abstract class Bee {
     }
 
     public AgentContext getMovementContext() {
-        return null;
+        return movementContext;
     }
 
     public float getEnergy() {

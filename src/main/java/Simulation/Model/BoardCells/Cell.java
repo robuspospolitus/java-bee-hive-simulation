@@ -45,7 +45,7 @@ public class Cell {
     public int getY() { return y; }
 
     public boolean hasFlower() { return hasFlower; }
-
+    public void setFlower(boolean hasFlower){this.hasFlower=hasFlower;}
     public CellType getType() { return type; }
     public void setType(CellType typ) {this.type = typ;}
 
